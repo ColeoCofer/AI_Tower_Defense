@@ -67,12 +67,18 @@ class Enemy:
         #Take another step towards the point
         self.moveCount += 1
 
-        #Slope from current point to the next point
-        pathSlope =  (x2 - x1, y2 - y1)
+        dx = x2 - x1
+        dy = y2 - y1
 
         #Calculate distance to move in each direction
-        dx = self.x + pathSlope[0] * self.moveCount
-        dy = self.y + pathSlope[1] * self.moveCount
+        xMove = self.x + dx * self.moveCount
+        yMove = self.y + dy * self.moveCount
+
+        self.distanceMoved = math.sqrt((xMove-x1)**2 + (yMove-y1)**2)
+
+        print(f"Position: ({self.x}, {self.y})")
+        print(f"Distance moved: {self.distanceMoved}")
+        print(f"Distance to next: {distanceToNextPoint}")
 
         #We passed the point we are moving to
         if self.distanceMoved >= distanceToNextPoint:
@@ -83,8 +89,9 @@ class Enemy:
             if self.pathIndex >= numPathPositions:
                 return False
 
-        self.x = dx
-        self.y = dy
+        #Update characters new location
+        self.x = xMove
+        self.y = yMove
 
         return True
 

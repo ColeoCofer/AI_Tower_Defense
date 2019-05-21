@@ -42,7 +42,7 @@ class Game:
         while run:
             clock.tick(60) #FPS
 
-            pygame.time.delay(300) #Temp
+            # pygame.time.delay(300) #Temp
 
             self.handleEvents()
             self.removeEnemies()
