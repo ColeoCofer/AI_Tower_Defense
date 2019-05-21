@@ -40,9 +40,9 @@ class Game:
 
         run = True
         while run:
-            clock.tick(30) #FPS
+            clock.tick(60) #FPS
 
-            pygame.time.delay(100) #Temp
+            pygame.time.delay(300) #Temp
 
             self.handleEvents()
             self.removeEnemies()
@@ -85,7 +85,7 @@ class Game:
         #Render the background
         self.win.blit(self.bg, (0, 0))
 
-        #Uncomment to see click dots for path finding
+        #Uncomment to see clicked dots for path finding
         for p in self.clicks:
             pygame.draw.circle(self.win, (255, 0, 0), (p[0], p[1]), 5, 0)
 
@@ -93,6 +93,7 @@ class Game:
         for enemy in self.enemies:
             enemy.draw(self.win)
 
+        #Update the window
         pygame.display.update()
 
 

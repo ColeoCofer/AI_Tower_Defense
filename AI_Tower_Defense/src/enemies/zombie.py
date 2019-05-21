@@ -8,6 +8,7 @@ class Zombie(Enemy):
     #Load in the images
     images = []
     for i in range(NUM_IMAGES):
-        image = pygame.image.load(os.path.join("../assets/zombie", "zombie_" + str(i) + ".gif"))
-        # images.append(pygame.transform.scale(image, (64, 64)))
+        image = pygame.image.load(os.path.join("../assets/zombie", "zombie_" + str(i) + ".png"))
+        #Uncomment to transform to different size
+        #images.append(pygame.transform.scale(image, (64, 64)))
         images.append(image)
