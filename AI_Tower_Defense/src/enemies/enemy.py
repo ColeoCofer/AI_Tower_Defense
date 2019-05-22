@@ -1,17 +1,18 @@
 import pygame
 import math
 
-class Enemy:
-    images = []    #Animation images
+ANIMATION_SPEED = 3 #Smaller numbers animate faster
 
+class Enemy:
     def __init__(self):
+        images = []    #Animation images
         self.width = 64     #Image width
         self.height = 64    #Image height
         self.health = 2     #Default health
         self.velocity = 5   #Pixels per frame
 
         #List of coordinates that the enemy will follow
-        self.path = [(0, 437), (192, 430), (198, 203), (440, 207), (440, 508), (756, 504), (764, 364), (1192, 361), (1250, 361)]
+        self.path = [(-10, 443), (11, 433), (193, 429), (200, 206), (439, 203), (440, 504), (757, 506), (764, 366), (1196, 361), (1250, 361)]
         self.x = self.path[0][0]
         self.y = self.path[0][1]
 
@@ -26,15 +27,23 @@ class Enemy:
     def draw(self, win):
         ''' Draws the enemy with given images '''
         numImages = len(self.images)
-        self.image = self.images[self.animationCount // 3]   #Set the new image
-        self.animationCount += 1                        #Iterate to the next animation image
+
+        #Set the image for # of frames ('//' means integer division)
+        self.image = self.images[self.animationCount // ANIMATION_SPEED]
+
+        #Iterate to the next animation image
+        self.animationCount += 1
 
         #Reset the animation count if we rendered the last image
-        if self.animationCount >= (numImages * 3):
+        if self.animationCount >= (numImages * ANIMATION_SPEED):
             self.animationCount = 0
 
-        win.blit(self.image, (self.x, self.y))          #Update the image
-        self.move()                                     #Move the player after displaying
+        #Display from center of character
+        centerX = self.x - (self.width / 2)
+        centerY = self.y - (self.height / 2)
+
+        win.blit(self.image, (centerX, centerY))
+        self.move()
 
 
     def collide(self, col_x, col_y):
@@ -50,50 +59,55 @@ class Enemy:
         Moves the enemy closer to the next path coordinate.
         Uses the slope between the current position and the next position.
         '''
-        x1, y1 = self.path[self.pathIndex]
+        x1, y1 = self.path[self.pathIndex]    #Current location of character
         numPathPositions = len(self.path)
-        maxWidth = self.path[numPathPositions-1][0]
-        finalHeight = self.path[numPathPositions-1][1]
+
+        #Final point the char will move too
+        finalX = self.path[numPathPositions-1][0]
+        finalY = self.path[numPathPositions-1][1]
 
         #Check if we are at the end of the map
         if self.pathIndex + 1 >= numPathPositions:
-            x2 = maxWidth + (self.width * 2) #Offset enough so they walk off the screen
-            y2 = finalHeight
+            x2 = finalX + (self.width * 2) #Offset enough so they walk off the screen
+            y2 = finalY
         else:
             x2, y2 = self.path[self.pathIndex + 1]
 
-        distanceToNextPoint = math.sqrt((x2-x1)**2 + (y2-y1)**2)
+        #Distance between current location and destination point
+        distance = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
 
-        #Take another step towards the point
-        self.moveCount += 1
+        #Get the component vectors
+        dx = (x2 - x1) / distance
+        dy = (y2 - y1) / distance
 
-        dx = x2 - x1
-        dy = y2 - y1
+        self.x = self.x + dx
+        self.y = self.y + dy
 
-        #Calculate distance to move in each direction
-        xMove = self.x + dx * self.moveCount
-        yMove = self.y + dy * self.moveCount
+        self.didPassPoint(x2, y2, dx, dy)
 
-        self.distanceMoved = math.sqrt((xMove-x1)**2 + (yMove-y1)**2)
 
-        print(f"Position: ({self.x}, {self.y})")
-        print(f"Distance moved: {self.distanceMoved}")
-        print(f"Distance to next: {distanceToNextPoint}")
-
-        #We passed the point we are moving to
-        if self.distanceMoved >= distanceToNextPoint:
-            self.distanceMoved = 0
-            self.moveCount = 0
-            self.pathIndex += 1      #Target the next point
-
-            if self.pathIndex >= numPathPositions:
-                return False
-
-        #Update characters new location
-        self.x = xMove
-        self.y = yMove
-
-        return True
+    def didPassPoint(self, x2, y2, dx, dy):
+        '''
+        Increments the pathIndex if the enemy passes the next point.
+        First checks for the direction that the enemy is walking in,
+        and then if it surpassed the next point on the appropriate axis.
+        Note: pyGame axis starts from the top left corner
+        '''
+        if dx >= 0: #Moving right
+            if dy >= 0: #Moving down
+                if self.x >= x2 and self.y >= y2:
+                    self.pathIndex += 1
+            else:
+                if self.x >= x2 and self.y <= y2:
+                    self.pathIndex += 1
+        else:
+            if dy >= 0: #Moving left
+                if dy <= 0: #Moving up
+                    if self.x <= x2 and self.y >= y2:
+                        self.pathIndex += 1
+                else:
+                    if self.x <= x2 and self.y <= y2:
+                        self.pathIndex += 1
 
 
     def hit(self, damage=1):

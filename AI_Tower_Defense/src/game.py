@@ -42,7 +42,7 @@ class Game:
         while run:
             clock.tick(60) #FPS
 
-            # pygame.time.delay(300) #Temp
+            # pygame.time.delay(200) #Temp
 
             self.handleEvents()
             self.removeEnemies()
@@ -71,10 +71,7 @@ class Game:
         enemiesToDelete = []
         for enemy in self.enemies:
             if enemy.x > WIN_WIDTH:
-                enemiesToDelete.append(enemy)
-
-        for toDelete in enemiesToDelete:
-            self.enemies.remove(toDelete)
+                self.enemies.remove(enemy)
 
 
     def draw(self):
