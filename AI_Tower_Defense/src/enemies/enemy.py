@@ -76,9 +76,9 @@ class Enemy:
         #Distance between current location and destination point
         distance = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
 
-        #Get the component vectors
-        dx = (x2 - x1) / distance
-        dy = (y2 - y1) / distance
+        #Normalize the component vectors & add 20% of velocity
+        dx = ((x2 - x1) / distance) * (self.velocity * 0.2)
+        dy = ((y2 - y1) / distance) * (self.velocity * 0.2)
 
         self.x = self.x + dx
         self.y = self.y + dy

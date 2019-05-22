@@ -7,7 +7,9 @@ class Zombie(Enemy):
 
     def __init__(self):
         super().__init__() #I'm not sure if this is necessary...
+
         self.images = []
+        self.velocity = 4
         for i in range(self.numImages):
             image = pygame.image.load(os.path.join("../assets/zombie", "zombie_" + str(i) + ".png"))
             #Uncomment to transform to different size

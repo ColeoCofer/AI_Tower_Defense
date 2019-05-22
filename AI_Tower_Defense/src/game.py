@@ -8,8 +8,14 @@ WIN_HEIGHT = 800
 
 def main():
     ''' Entry point for game '''
+    #Setup Game
     pygame.init()
     pygame.display.set_caption("AI Tower Defense")
+
+    #Setup Fonts
+    pygame.font.init()
+
+    #Kick off main game loop
     g = Game()
     g.run()
 
@@ -32,6 +38,10 @@ class Game:
         self.bg = pygame.image.load(os.path.join("../assets", "bg.png"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
         self.clicks = [] #Temp
+
+        #Fonts
+        self.uiFont = pygame.font.SysFont('lucidagrandettc', 24)
+
 
 
     def run(self):
@@ -77,7 +87,8 @@ class Game:
     def draw(self):
         '''
         Redraw objects onces per frame.
-        Objects will be rendered sequentially.
+        Objects will be rendered sequentially,
+        meaning the code at the end will be rendered above all.
         '''
         #Render the background
         self.win.blit(self.bg, (0, 0))
@@ -90,8 +101,22 @@ class Game:
         for enemy in self.enemies:
             enemy.draw(self.win)
 
+        #Render UI Text Elements
+        self.displayTextUI(self.win)
+
         #Update the window
         pygame.display.update()
+
+
+    def displayTextUI(self, win):
+        ''' Render UI elements above all other graphics '''
+
+        #Enemies Remaining Surface UI
+        numEnemiesText = "Enemies Remaining: " + str(len(self.enemies))
+        numEnemiesPosition = (WIN_WIDTH-300, WIN_HEIGHT-50)
+        numEnemiesColor = (255, 255, 255)
+        numEnemiesSurface = self.uiFont.render(numEnemiesText, False, numEnemiesColor)
+        win.blit(numEnemiesSurface, numEnemiesPosition)
 
 
 if __name__ == "__main__":
