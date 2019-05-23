@@ -13,7 +13,7 @@ class Zombie(Enemy):
         self.images = []
         self.velocity = random.randint(self.health, self.health + (self.health // 2))
         for i in range(self.numImages):
-            image = pygame.image.load(os.path.join("../assets/zombie", "zombie_" + str(i) + ".png"))
+            image = pygame.image.load(os.path.join("../assets/enemy/zombie", "zombie_" + str(i) + ".png"))
             #Uncomment to transform to different size
             #images.append(pygame.transform.scale(image, (64, 64)))
             self.images.append(image)

@@ -1,15 +1,11 @@
 import pygame
 import math
 
-ANIMATION_SPEED = 3 #Smaller numbers animate faster
-
 class Enemy:
     def __init__(self, yOffset):
-        images = []    #Animation images
-        self.width = 64     #Image width
-        self.height = 64    #Image height
         self.health = 2     #Default health
-        self.velocity = 20   #Pixels per frame
+        self.velocity = 20  #Pixels per frame
+        self.animationSpeed = 3 #Smaller numbers animate faster
 
         #List of coordinates that the enemy will follow
         self.pathIndex = 0
@@ -21,22 +17,24 @@ class Enemy:
         for i in range(len(self.path)):
             self.path[i] = (self.path[i][0], self.path[i][1] + yOffset)
 
+        images = []         #Animation images
+        self.width = 64     #Image width
+        self.height = 64    #Image height
         self.animationCount = 0   #Keep track of which animation to display
         self.image = None         #Current image to render
-
 
     def draw(self, win):
         ''' Draws the enemy with given images '''
         numImages = len(self.images)
 
         #Set the image for # of frames ('//' means integer division)
-        self.image = self.images[self.animationCount // ANIMATION_SPEED]
+        self.image = self.images[self.animationCount // self.animationSpeed]
 
         #Iterate to the next animation image
         self.animationCount += 1
 
         #Reset the animation count if we rendered the last image
-        if self.animationCount >= (numImages * ANIMATION_SPEED):
+        if self.animationCount >= (numImages * self.animationSpeed):
             self.animationCount = 0
 
         #Display from center of character
