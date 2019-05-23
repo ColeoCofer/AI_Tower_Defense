@@ -110,6 +110,11 @@ class Game:
 
 
     def spawnEnemies(self):
+        '''
+        Spawns enemies with random chance based on self.spawnChance
+        This value should increase as levels get more difficult
+        Caps number of enemies at once with self.numEnemiesPerLevel
+        '''
         shouldSpawn = random.random()
         if shouldSpawn <= self.spawnChance and self.remainingEnemies < self.numEnemiesPerLevel:
             randVerticalOffset = random.randint(-Y_MAX_OFFSET, Y_MAX_OFFSET)

@@ -3,7 +3,8 @@ import math
 
 class Enemy:
     def __init__(self, yOffset):
-        self.health = 5              #Default health
+        self.maxHealth = 5
+        self.health = self.maxHealth
         self.healthBarWidth = 50
         self.healthBarHeight = 10
         self.healthBarYOffset = 10   #Larger numbers will move the health bar closer to the enemies head
@@ -20,11 +21,12 @@ class Enemy:
         for i in range(len(self.path)):
             self.path[i] = (self.path[i][0], self.path[i][1] + yOffset)
 
-        images = []         #Animation images
-        self.width = 64     #Image width
-        self.height = 64    #Image height
+        images = []               #Animation images
+        self.width = 64           #Image width
+        self.height = 64          #Image height
         self.animationCount = 0   #Keep track of which animation to display
         self.image = None         #Current image to render
+
 
     def draw(self, win):
         ''' Draws the enemy with given images '''
@@ -53,8 +55,14 @@ class Enemy:
     def drawHealthBox(self, win, centerX, centerY):
         ''' Draws a health box above each character '''
         if self.health > 0:
-            pygame.draw.rect(win, (255,0,0), (self.x - (self.healthBarWidth / 2), (self.y - self.height) + self.healthBarYOffset, self.healthBarWidth, self.healthBarHeight)) # NEW
-            pygame.draw.rect(win, (0,128,0), (self.x - (self.healthBarWidth / 2), (self.y - self.height) + self.healthBarYOffset, 50 - (5 * (10 - self.health)), 10)) # NEW
+            healthBarX = self.x - (self.healthBarWidth / 2)
+            healthBarY = self.y - self.height + self.healthBarYOffset
+            if self.health == self.maxHealth:
+                pygame.draw.rect(win, (255,0,0), (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Outline of health bar
+                pygame.draw.rect(win, (0,128,0), (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Inside of health bar
+            else:
+                pygame.draw.rect(win, (255,0,0), (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Outline health bar
+                pygame.draw.rect(win, (0,128,0), (healthBarX, healthBarY, (self.healthBarWidth / self.maxHealth) * self.health, self.healthBarHeight))
 
 
     def collide(self, col_x, col_y):

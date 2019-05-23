@@ -9,12 +9,13 @@ class Zombie(Enemy):
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        self.health = 4
+        self.maxHealth = 4
+        self.health = self.maxHealth
         self.images = []
         self.velocity = random.randint(self.health, self.health + (self.health // 2))
         self.healthBarYOffset = 30
+
+        #Load animation images
         for i in range(self.numImages):
             image = pygame.image.load(os.path.join("../assets/enemy/zombie", "zombie_" + str(i) + ".png"))
-            #Uncomment to transform to different size
-            #images.append(pygame.transform.scale(image, (64, 64)))
             self.images.append(image)
