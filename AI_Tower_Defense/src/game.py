@@ -9,9 +9,9 @@ from towers.squareTower import SquareTower
 
 TOWER_POSITIONS = [(30, 357), (99, 356), (95, 278), (85, 208), (97, 110), (230, 107), (329, 104), (453, 107), (546, 114), (536, 197), (531, 295), (530, 377), (531, 431), (656, 431), (654, 326), (758, 269), (882, 269), (1009, 270), (1117, 272), (1120, 447), (1002, 447), (884, 444), (882, 567), (774, 636), (646, 632), (513, 632), (400, 630), (283, 281), (356, 282), (288, 369), (353, 372), (350, 458), (278, 461), (348, 548), (200, 526), (118, 526), (37, 525)]
 
-
 TRAINING_MODE = False  #If true will uncap framerates
 VISUAL_MODE = True     #Set false to stop rendering
+PLAY_BG_MUSIC = True      #Set false to turn music off
 FPS = 60
 
 #Window Dimensions
@@ -20,20 +20,23 @@ WIN_HEIGHT = 800
 
 #Enemies
 ENEMY_TYPES = [Zombie, Dino, Dragon, Robot]
-Y_MAX_OFFSET = 35      #yOffset along enemy walking path
+Y_MAX_OFFSET = 30      #yOffset along enemy walking path
 
 #Towers
 TOWER_TYPES = [SquareTower]
+
+#Sounds
+BG_MUSIC = ["old_town.mp3", "get_it.mp3"]
 
 
 def main():
     ''' Entry point for game '''
     #Setup Game
     pygame.init()
-    pygame.display.set_caption("AI Tower Defense")
-
-    #Setup Fonts
     pygame.font.init()
+    pygame.mixer.init()
+    startBgMusic()
+    pygame.display.set_caption("AI Tower Defense")
 
     #Kick off main game loop
     g = Game()
@@ -171,6 +174,13 @@ class Game:
         fpsColor = (255, 255, 255)
         fpsSurface = self.uiFont.render(fpsText, False, fpsColor)
         win.blit(fpsSurface, fpsPosition)
+
+def startBgMusic():
+    if PLAY_BG_MUSIC:
+        randSong = random.randint(0, len(BG_MUSIC) - 1)
+        pygame.mixer.music.load("../assets/music/background/" + BG_MUSIC[randSong])
+        pygame.mixer.music.play(-1)
+
 
 if __name__ == "__main__":
     main()
