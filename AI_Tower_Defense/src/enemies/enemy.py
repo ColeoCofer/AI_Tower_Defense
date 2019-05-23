@@ -4,21 +4,22 @@ import math
 ANIMATION_SPEED = 3 #Smaller numbers animate faster
 
 class Enemy:
-    def __init__(self):
+    def __init__(self, yOffset):
         images = []    #Animation images
         self.width = 64     #Image width
         self.height = 64    #Image height
         self.health = 2     #Default health
-        self.velocity = 5   #Pixels per frame
+        self.velocity = 20   #Pixels per frame
 
         #List of coordinates that the enemy will follow
+        self.pathIndex = 0
         self.path = [(-10, 443), (11, 433), (193, 429), (200, 206), (439, 203), (440, 504), (757, 506), (764, 366), (1196, 361), (1250, 361)]
         self.x = self.path[0][0]
         self.y = self.path[0][1]
 
-        self.pathIndex = 0
-        self.moveCount = 0
-        self.distanceMoved = 0
+        #Slightly offset the y-axis
+        for i in range(len(self.path)):
+            self.path[i] = (self.path[i][0], self.path[i][1] + yOffset)
 
         self.animationCount = 0   #Keep track of which animation to display
         self.image = None         #Current image to render

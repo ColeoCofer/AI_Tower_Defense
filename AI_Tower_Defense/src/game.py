@@ -1,5 +1,6 @@
 import pygame
 import os
+import random
 from enemies.zombie import Zombie
 
 WIN_WIDTH = 1200
@@ -31,7 +32,8 @@ class Game:
         self.width = WIN_WIDTH
         self.height = WIN_HEIGHT
         self.win = pygame.display.set_mode((self.width, self.height))
-        self.enemies = [Zombie()]
+        self.enemies = []
+        self.numEnemiesPerLevel = 10
         self.towers = []
         self.lives = 10
         self.money = 100
@@ -50,10 +52,8 @@ class Game:
 
         run = True
         while run:
-            clock.tick(60) #FPS
-
-            # pygame.time.delay(200) #Temp
-
+            clock.tick(60)
+            self.spawnEnemies()
             self.handleEvents()
             self.removeEnemies()
             self.draw()
@@ -82,6 +82,14 @@ class Game:
         for enemy in self.enemies:
             if enemy.x > WIN_WIDTH:
                 self.enemies.remove(enemy)
+
+
+    def spawnEnemies(self):
+        shouldSpawn = random.random()
+        if shouldSpawn <= 0.1 and len(self.enemies) < self.numEnemiesPerLevel:
+            randVelocity = random.randint(4, 10)
+            randVerticalOffset = random.randint(-25, 25)
+            self.enemies.append(Zombie(randVelocity, randVerticalOffset))
 
 
     def draw(self):
