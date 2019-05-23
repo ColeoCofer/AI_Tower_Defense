@@ -3,9 +3,12 @@ import math
 
 class Enemy:
     def __init__(self, yOffset):
-        self.health = 2     #Default health
-        self.velocity = 20  #Pixels per frame
-        self.animationSpeed = 3 #Smaller numbers animate faster
+        self.health = 5              #Default health
+        self.healthBarWidth = 50
+        self.healthBarHeight = 10
+        self.healthBarYOffset = 10   #Larger numbers will move the health bar closer to the enemies head
+        self.velocity = 20           #Pixels per frame
+        self.animationSpeed = 3      #Smaller numbers animate faster
 
         #List of coordinates that the enemy will follow
         self.pathIndex = 0
@@ -41,8 +44,17 @@ class Enemy:
         centerX = self.x - (self.width / 2)
         centerY = self.y - (self.height / 2)
 
+        self.drawHealthBox(win, centerX, centerY)
+
         win.blit(self.image, (centerX, centerY))
         self.move()
+
+
+    def drawHealthBox(self, win, centerX, centerY):
+        ''' Draws a health box above each character '''
+        if self.health > 0:
+            pygame.draw.rect(win, (255,0,0), (self.x - (self.healthBarWidth / 2), (self.y - self.height) + self.healthBarYOffset, self.healthBarWidth, self.healthBarHeight)) # NEW
+            pygame.draw.rect(win, (0,128,0), (self.x - (self.healthBarWidth / 2), (self.y - self.height) + self.healthBarYOffset, 50 - (5 * (10 - self.health)), 10)) # NEW
 
 
     def collide(self, col_x, col_y):

@@ -66,18 +66,21 @@ class Game:
         self.uiFont = pygame.font.SysFont('lucidagrandettc', 24)
 
 
-
     def run(self):
         ''' Main game loop '''
         clock = pygame.time.Clock()
 
         run = True
         while run:
-            if TRAINING_MODE: clock.tick(FPS)
+            if TRAINING_MODE:
+                clock.tick(FPS)
+
             self.spawnEnemies()
             self.handleEvents()
             self.removeEnemies()
-            if VISUAL_MODE: self.draw()
+
+            if VISUAL_MODE:
+                self.draw(clock.get_fps())
 
         pygame.quit()
 
@@ -114,7 +117,7 @@ class Game:
             self.enemies.append(ENEMY_TYPES[randEnemyType](randVerticalOffset))
 
 
-    def draw(self):
+    def draw(self, fps):
         '''
         Redraw objects onces per frame.
         Objects will be rendered sequentially,
@@ -127,31 +130,37 @@ class Game:
         for p in self.clicks:
             pygame.draw.circle(self.win, (255, 0, 0), (p[0], p[1]), 5, 0)
 
-        #Render enemies
-        for enemy in self.enemies:
-            enemy.draw(self.win)
-
         #Render towers
         for tower in self.towers:
             tower.draw(self.win)
 
+        #Render enemies
+        for enemy in self.enemies:
+            enemy.draw(self.win)
+
         #Render UI Text Elements
-        self.displayTextUI(self.win)
+        self.displayTextUI(self.win, fps)
 
         #Update the window
         pygame.display.update()
 
 
-    def displayTextUI(self, win):
+    def displayTextUI(self, win, fps):
         ''' Render UI elements above all other graphics '''
 
         #Enemies Remaining Surface UI
-        numEnemiesText = "Enemies Remaining: " + str(len(self.enemies))
-        numEnemiesPosition = (WIN_WIDTH-300, WIN_HEIGHT-50)
+        numEnemiesText = "Enemies: " + str(len(self.enemies))
+        numEnemiesPosition = (WIN_WIDTH-180, WIN_HEIGHT-50)
         numEnemiesColor = (255, 255, 255)
         numEnemiesSurface = self.uiFont.render(numEnemiesText, False, numEnemiesColor)
         win.blit(numEnemiesSurface, numEnemiesPosition)
 
+        #Frames Per Second
+        fpsText = "FPS: " + str(int(fps))
+        fpsPosition = (WIN_WIDTH-100, 30)
+        fpsColor = (255, 255, 255)
+        fpsSurface = self.uiFont.render(fpsText, False, fpsColor)
+        win.blit(fpsSurface, fpsPosition)
 
 if __name__ == "__main__":
     main()

@@ -12,6 +12,7 @@ class Dino(Enemy):
         self.images = []
         self.velocity = random.randint(self.health, self.health + (self.health // 2))
         self.animationSpeed = 7
+        self.healthBarYOffset = 15
         for i in range(1, self.numImages):
             image = pygame.image.load(os.path.join("../assets/enemy/dino", "Walk (" + str(i) + ").png"))
             self.images.append(pygame.transform.scale(image, (64, 64)))
