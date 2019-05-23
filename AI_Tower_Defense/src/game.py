@@ -3,17 +3,19 @@ import os
 import random
 from enemies.zombie import Zombie
 from enemies.dino import Dino
+from enemies.dragon import Dragon
 
 
-TRAINING_MODE = True  #If true will uncap framerates
-VISUAL_MODE = True    #Set false to stop rendering
+TRAINING_MODE = False  #If true will uncap framerates
+VISUAL_MODE = True     #Set false to stop rendering
 FPS = 60
 
 #Window Dimensions
 WIN_WIDTH = 1200
 WIN_HEIGHT = 800
 
-ENEMY_TYPES = [Zombie, Dino]
+ENEMY_TYPES = [Zombie, Dino, Dragon]
+Y_MAX_OFFSET = 35      #yOffset along enemy walking path
 
 
 def main():
@@ -43,12 +45,14 @@ class Game:
         self.win = pygame.display.set_mode((self.width, self.height))
         self.enemies = []
         self.numEnemiesPerLevel = 10
+        self.remainingEnemies = 0
         self.towers = []
         self.lives = 10
         self.money = 100
         self.bg = pygame.image.load(os.path.join("../assets", "bg.png"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
         self.clicks = [] #Temp
+        self.spawnChance = 0.015
 
         #Fonts
         self.uiFont = pygame.font.SysFont('lucidagrandettc', 24)
@@ -91,16 +95,15 @@ class Game:
         for enemy in self.enemies:
             if enemy.x > WIN_WIDTH:
                 self.enemies.remove(enemy)
+                self.remainingEnemies -= 1
 
 
     def spawnEnemies(self):
         shouldSpawn = random.random()
-        if shouldSpawn <= 0.1 and len(self.enemies) < self.numEnemiesPerLevel:
-            randVelocity = random.randint(4, 10)
-            randVerticalOffset = random.randint(-25, 25)
-
+        if shouldSpawn <= self.spawnChance and self.remainingEnemies < self.numEnemiesPerLevel:
+            randVerticalOffset = random.randint(-Y_MAX_OFFSET, Y_MAX_OFFSET)
             randEnemyType = random.randint(0, len(ENEMY_TYPES) - 1)
-            self.enemies.append(ENEMY_TYPES[randEnemyType](randVelocity, randVerticalOffset))
+            self.enemies.append(ENEMY_TYPES[randEnemyType](randVerticalOffset))
 
 
     def draw(self):
