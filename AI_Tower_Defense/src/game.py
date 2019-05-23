@@ -2,9 +2,18 @@ import pygame
 import os
 import random
 from enemies.zombie import Zombie
+from enemies.dino import Dino
 
+
+TRAINING_MODE = True  #If true will uncap framerates
+VISUAL_MODE = True    #Set false to stop rendering
+FPS = 60
+
+#Window Dimensions
 WIN_WIDTH = 1200
 WIN_HEIGHT = 800
+
+ENEMY_TYPES = [Zombie, Dino]
 
 
 def main():
@@ -52,11 +61,11 @@ class Game:
 
         run = True
         while run:
-            clock.tick(60)
+            if TRAINING_MODE: clock.tick(FPS)
             self.spawnEnemies()
             self.handleEvents()
             self.removeEnemies()
-            self.draw()
+            if VISUAL_MODE: self.draw()
 
         pygame.quit()
 
@@ -89,7 +98,9 @@ class Game:
         if shouldSpawn <= 0.1 and len(self.enemies) < self.numEnemiesPerLevel:
             randVelocity = random.randint(4, 10)
             randVerticalOffset = random.randint(-25, 25)
-            self.enemies.append(Zombie(randVelocity, randVerticalOffset))
+
+            randEnemyType = random.randint(0, len(ENEMY_TYPES) - 1)
+            self.enemies.append(ENEMY_TYPES[randEnemyType](randVelocity, randVerticalOffset))
 
 
     def draw(self):
