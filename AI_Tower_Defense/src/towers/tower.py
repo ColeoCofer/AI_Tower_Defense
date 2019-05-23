@@ -43,12 +43,8 @@ class Tower:
 
                 enemyX, enemyY = enemies[closestEnemyIndex].x, enemies[closestEnemyIndex].y
                 self.enemiesBeingAttacked.append((enemyX, enemyY))
-
                 self.projectile.fire(enemies[closestEnemyIndex])
-
                 self.canAttackTime = ticks + self.projectile.reloadTime
-
-
 
         return enemies
 

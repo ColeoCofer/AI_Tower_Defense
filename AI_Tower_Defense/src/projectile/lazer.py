@@ -12,6 +12,13 @@ class Lazer(Projectile):
         self.velocity = 5
 
     def draw(self, win, tower, enemy):
+        newColor = []
+        for channel in color:
+            newColor.append(channel + random.randint(-25, 25))
+        self.color = tuple(newColor)
+
+
+
         pygame.draw.line(win, self.color, tower, enemy, 5)
 
 
