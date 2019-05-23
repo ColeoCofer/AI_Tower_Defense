@@ -77,6 +77,7 @@ class Game:
 
             self.spawnEnemies()
             self.handleEvents()
+            self.towersAttack()
             self.removeEnemies()
 
             if VISUAL_MODE:
@@ -84,6 +85,10 @@ class Game:
 
         pygame.quit()
 
+
+    def towersAttack(self):
+        for tower in self.towers:
+            self.enemies = tower.attack(self.enemies)
 
     def handleEvents(self):
         ''' Handle keyboard and mouse events '''
@@ -104,7 +109,7 @@ class Game:
         ''' Removes enemies that have walked off screen'''
         enemiesToDelete = []
         for enemy in self.enemies:
-            if enemy.x > WIN_WIDTH:
+            if enemy.x > WIN_WIDTH or enemy.health <= 0:
                 self.enemies.remove(enemy)
                 self.remainingEnemies -= 1
 

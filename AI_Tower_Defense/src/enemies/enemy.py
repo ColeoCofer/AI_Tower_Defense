@@ -1,6 +1,9 @@
 import pygame
 import math
 
+HEALTH_GREEN = (255, 0, 0)
+HEALTH_RED = (0,128,0)
+
 class Enemy:
     def __init__(self, yOffset):
         self.maxHealth = 5
@@ -58,11 +61,11 @@ class Enemy:
             healthBarX = self.x - (self.healthBarWidth / 2)
             healthBarY = self.y - self.height + self.healthBarYOffset
             if self.health == self.maxHealth:
-                pygame.draw.rect(win, (255,0,0), (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Outline of health bar
-                pygame.draw.rect(win, (0,128,0), (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Inside of health bar
+                pygame.draw.rect(win, HEALTH_GREEN, (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Outline of health bar
+                pygame.draw.rect(win, HEALTH_RED, (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Inside of health bar
             else:
-                pygame.draw.rect(win, (255,0,0), (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Outline health bar
-                pygame.draw.rect(win, (0,128,0), (healthBarX, healthBarY, (self.healthBarWidth / self.maxHealth) * self.health, self.healthBarHeight))
+                pygame.draw.rect(win, HEALTH_GREEN, (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Outline health bar
+                pygame.draw.rect(win, HEALTH_RED, (healthBarX, healthBarY, (self.healthBarWidth / self.maxHealth) * self.health, self.healthBarHeight))
 
 
     def collide(self, col_x, col_y):
@@ -129,8 +132,6 @@ class Enemy:
                         self.pathIndex += 1
 
 
-    def hit(self, damage=1):
+    def hit(self, damage):
         ''' Returns true if the enemy died and subtracts damage from its health '''
-        self.health -= damage
-        if self.health <= 0:
-            return True
+        self.health = self.health - damage
