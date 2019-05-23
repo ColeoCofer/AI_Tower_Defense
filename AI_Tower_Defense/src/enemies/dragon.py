@@ -2,6 +2,7 @@ import pygame
 import os
 import random
 from .enemy import Enemy
+from projectile.projectile import DamageType
 
 class Dragon(Enemy):
     numImages = 4
@@ -14,6 +15,7 @@ class Dragon(Enemy):
         self.velocity = random.randint(self.health, self.health + (self.health // 2))
         self.animationSpeed = 5
         self.healthBarYOffset = 30
+        self.weaknesses = [DamageType.lazer]
 
         #Load animation images
         for i in range(0, self.numImages):

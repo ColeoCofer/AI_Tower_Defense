@@ -1,4 +1,5 @@
 import pygame
+import random
 from .projectile import Projectile
 from .projectile import DamageType
 
@@ -7,21 +8,22 @@ class Lazer(Projectile):
         super().__init__()
         self.damage = 1
         self.damageType = DamageType.lazer
-        self.color = (255, 100, 50)
+        self.color = (200, 100, 50)
         self.reloadTime = 1000
         self.velocity = 5
 
     def draw(self, win, tower, enemy):
         newColor = []
-        for channel in color:
-            newColor.append(channel + random.randint(-25, 25))
-        self.color = tuple(newColor)
+        for channel in self.color:
+            newColor.append(channel + random.randint(-50, 50))
+        color = tuple(newColor)
 
-
-
-        pygame.draw.line(win, self.color, tower, enemy, 5)
+        pygame.draw.line(win, color, tower, enemy, 5)
 
 
     def fire(self, enemy):
-        #TODO: Check for weaknesses
-        enemy.hit(self.damage)
+        for weakness in enemy.weaknesses:
+            if self.damageType == weakness:
+                enemy.hit(self.damage)
+                break
+                
