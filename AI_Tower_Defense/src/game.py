@@ -11,7 +11,7 @@ TOWER_POSITIONS = [(30, 357), (99, 356), (95, 278), (85, 208), (97, 110), (230, 
 
 TRAINING_MODE = False  #If true will uncap framerates
 VISUAL_MODE = True     #Set false to stop rendering
-PLAY_BG_MUSIC = True      #Set false to turn music off
+PLAY_BG_MUSIC = False      #Set false to turn music off
 FPS = 60
 
 #Window Dimensions
@@ -54,7 +54,7 @@ class Game:
         self.width = WIN_WIDTH
         self.height = WIN_HEIGHT
         self.win = pygame.display.set_mode((self.width, self.height))
-        self.enemies = []
+        self.enemies = [Zombie(0), Robot(0), Dino(5)]
         self.towers = [SquareTower(TOWER_POSITIONS[4]), SquareTower(TOWER_POSITIONS[10]), SquareTower(TOWER_POSITIONS[1]), SquareTower(TOWER_POSITIONS[15]), SquareTower(TOWER_POSITIONS[8]), SquareTower(TOWER_POSITIONS[len(TOWER_POSITIONS) - 2])]
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = 0
@@ -91,7 +91,7 @@ class Game:
 
     def towersAttack(self):
         for tower in self.towers:
-            self.enemies = tower.attack(self.enemies)
+            self.enemies = tower.attack(self.enemies, self.win)
 
     def handleEvents(self):
         ''' Handle keyboard and mouse events '''
@@ -115,6 +115,9 @@ class Game:
             if enemy.x > WIN_WIDTH or enemy.health <= 0:
                 self.enemies.remove(enemy)
                 self.remainingEnemies -= 1
+
+                if enemy.x > WIN_WIDTH:
+                    self.lives -= 1
 
 
     def spawnEnemies(self):
