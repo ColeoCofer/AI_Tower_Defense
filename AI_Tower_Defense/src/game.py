@@ -64,10 +64,10 @@ class Game:
         self.lives = 10
         self.health = 100
         self.coins = Coin((self.width - 120, 30), 50)
-        self.bg = pygame.image.load(os.path.join("../assets", "bg.png"))
+        self.bg = pygame.image.load(os.path.join("../assets/map", "bg.png"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
         self.clicks = [] #Temp
-        self.spawnChance = 0.015
+        self.spawnChance = 0.005
 
         #Fonts
         self.uiFont = pygame.font.SysFont('lucidagrandettc', 24)

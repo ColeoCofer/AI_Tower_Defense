@@ -17,13 +17,14 @@ class Enemy:
 
         #List of coordinates that the enemy will follow
         self.pathIndex = 0
-        self.path = [(-10, 443), (11, 433), (193, 429), (200, 206), (439, 203), (440, 504), (757, 506), (764, 366), (1196, 361), (1250, 361)]
+        #self.path = [(-10, 443), (11, 433), (193, 429), (200, 206), (439, 203), (440, 504), (757, 506), (764, 366), (1196, 361), (1250, 361)]
+        self.path = [(-5, 364), (17, 364), (183, 356), (215, 216), (338, 216), (381, 456), (553, 452), (585, 284), (730, 281), (757, 396), (897, 396), (920, 247), (1190, 246)]
         self.x = self.path[0][0]
         self.y = self.path[0][1]
 
         #Slightly offset the y-axis
-        for i in range(len(self.path)):
-            self.path[i] = (self.path[i][0], self.path[i][1] + yOffset)
+        # for i in range(len(self.path)):
+        #     self.path[i] = (self.path[i][0], self.path[i][1] + yOffset)
 
         self.images = []          #Animation images
         self.width = 64           #Image width
