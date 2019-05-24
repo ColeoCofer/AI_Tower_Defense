@@ -60,12 +60,8 @@ class Game:
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = 0
         self.lives = 10
-<<<<<<< HEAD
         self.money = 100
         self.health = 100
-=======
-        self.coins = 100
->>>>>>> Added a coin class
         self.bg = pygame.image.load(os.path.join("../assets", "bg.png"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
         self.clicks = [] #Temp
