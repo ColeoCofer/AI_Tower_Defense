@@ -7,10 +7,6 @@ class Tower:
         self.y = position[1]
         self.attackRadius = 0  #Distance it can attach enemies from
         self.projectile = Lazer()
-
-        #self.damage = 0        #Amount of damage delt per attack
-        #self.coolDown = 1000   #Time between attacks in ms
-
         self.canAttackTime = 0 #Timestamp showing when tower can attack again
         self.attackAnimationDuration = 200
         self.attackAnimationTimeStamp = 0
