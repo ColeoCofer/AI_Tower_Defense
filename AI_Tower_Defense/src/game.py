@@ -62,12 +62,8 @@ class Game:
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = 0
         self.lives = 10
-<<<<<<< HEAD
-        self.money = 100
         self.health = 100
-=======
         self.coins = Coin((self.width - 120, 30), 50)
->>>>>>> 5992513c20ca6aafd22b446646990812e2aaaa81
         self.bg = pygame.image.load(os.path.join("../assets", "bg.png"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
         self.clicks = [] #Temp
@@ -176,12 +172,8 @@ class Game:
         for enemy in self.enemies:
             enemy.draw(self.win)
 
-<<<<<<< HEAD
-        self.displayMoney()
-=======
         #Render coin animation
         self.coins.draw(self.win)
->>>>>>> 5992513c20ca6aafd22b446646990812e2aaaa81
 
         #Render UI Text Elements
         self.displayTextUI(self.win, fps)
@@ -215,24 +207,6 @@ class Game:
         win.blit(fpsSurface, fpsPosition)
 
 
-<<<<<<< HEAD
-    def displayMoney(self):
-        ''' Draws an animated coin and amount of money that the player has '''
-        numImages = len(self.images)
-
-        #Set the image for # of frames ('//' means integer division)
-        self.image = self.images[self.animationCount // self.animationSpeed]
-
-        #Iterate to the next animation image
-        self.animationCount += 1
-
-        #Reset the animation count if we rendered the last image
-        if self.animationCount >= (numImages * self.animationSpeed):
-            self.animationCount = 0
-
-
-=======
->>>>>>> 5992513c20ca6aafd22b446646990812e2aaaa81
 def startBgMusic():
     if PLAY_BG_MUSIC:
         randSong = random.randint(0, len(BG_MUSIC) - 1)
