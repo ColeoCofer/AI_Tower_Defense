@@ -12,7 +12,7 @@ TOWER_POSITIONS = [(30, 357), (99, 356), (95, 278), (85, 208), (97, 110), (230, 
 
 TRAINING_MODE = False  #If true will uncap framerates
 VISUAL_MODE = True     #Set false to stop rendering
-PLAY_BG_MUSIC = False      #Set false to turn music off
+PLAY_BG_MUSIC = True      #Set false to turn music off
 FPS = 60
 
 #Window Dimensions
@@ -60,8 +60,12 @@ class Game:
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = 0
         self.lives = 10
+<<<<<<< HEAD
         self.money = 100
         self.health = 100
+=======
+        self.coins = 100
+>>>>>>> Added a coin class
         self.bg = pygame.image.load(os.path.join("../assets", "bg.png"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
         self.clicks = [] #Temp
@@ -170,6 +174,8 @@ class Game:
         for enemy in self.enemies:
             enemy.draw(self.win)
 
+        self.displayMoney()
+
         #Render UI Text Elements
         self.displayTextUI(self.win, fps)
 
@@ -200,6 +206,22 @@ class Game:
         fpsColor = (255, 255, 255)
         fpsSurface = self.uiFont.render(fpsText, False, fpsColor)
         win.blit(fpsSurface, fpsPosition)
+
+
+    def displayMoney(self):
+        ''' Draws an animated coin and amount of money that the player has '''
+        numImages = len(self.images)
+
+        #Set the image for # of frames ('//' means integer division)
+        self.image = self.images[self.animationCount // self.animationSpeed]
+
+        #Iterate to the next animation image
+        self.animationCount += 1
+
+        #Reset the animation count if we rendered the last image
+        if self.animationCount >= (numImages * self.animationSpeed):
+            self.animationCount = 0
+
 
 def startBgMusic():
     if PLAY_BG_MUSIC:
