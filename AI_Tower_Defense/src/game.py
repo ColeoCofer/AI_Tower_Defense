@@ -6,6 +6,7 @@ from enemies.dino import Dino
 from enemies.dragon import Dragon
 from enemies.robot import Robot
 from towers.squareTower import SquareTower
+from enemies.attackingEnemy import AttackingEnemy
 
 TOWER_POSITIONS = [(30, 357), (99, 356), (95, 278), (85, 208), (97, 110), (230, 107), (329, 104), (453, 107), (546, 114), (536, 197), (531, 295), (530, 377), (531, 431), (656, 431), (654, 326), (758, 269), (882, 269), (1009, 270), (1117, 272), (1120, 447), (1002, 447), (884, 444), (882, 567), (774, 636), (646, 632), (513, 632), (400, 630), (283, 281), (356, 282), (288, 369), (353, 372), (350, 458), (278, 461), (348, 548), (200, 526), (118, 526), (37, 525)]
 
@@ -82,6 +83,7 @@ class Game:
             self.handleEvents()
             self.towerHealthCheck()
             self.towersAttack()
+            self.enemiesAttack()
             self.removeEnemies()
 
             if VISUAL_MODE:
@@ -100,6 +102,11 @@ class Game:
     def towersAttack(self):
         for tower in self.towers:
             self.enemies = tower.attack(self.enemies, self.win)
+
+    def enemiesAttack(self):
+        for enemy in self.enemies:
+            if isinstance(enemy, AttackingEnemy):
+                self.towers = enemy.attack(self.towers, self.win)
 
     def handleEvents(self):
         ''' Handle keyboard and mouse events '''
