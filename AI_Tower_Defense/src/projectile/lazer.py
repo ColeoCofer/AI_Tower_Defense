@@ -15,9 +15,16 @@ class Lazer(Projectile):
     def draw(self, win, tower, enemy):
         newColor = []
         for channel in self.color:
-            newColor.append(channel + random.randint(-0, 50))
-        pygame.draw.line(win, newColor, tower, enemy, 5)
+            newColor.append(channel + random.randint(-50, 50))
+        
+        color = tuple(newColor)
+
+        pygame.draw.line(win, color, tower, enemy, 5)
+
 
     def fire(self, enemy):
-        #TODO: Check for weaknesses
-        enemy.hit(self.damage)
+        for weakness in enemy.weaknesses:
+            if self.damageType == weakness:
+                enemy.hit(self.damage)
+                break
+                

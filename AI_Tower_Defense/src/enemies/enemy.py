@@ -13,6 +13,7 @@ class Enemy:
         self.healthBarYOffset = 10   #Larger numbers will move the health bar closer to the enemies head
         self.velocity = 20           #Pixels per frame
         self.animationSpeed = 3      #Smaller numbers animate faster
+        self.weaknesses = []
 
         #List of coordinates that the enemy will follow
         self.pathIndex = 0
@@ -24,7 +25,7 @@ class Enemy:
         for i in range(len(self.path)):
             self.path[i] = (self.path[i][0], self.path[i][1] + yOffset)
 
-        images = []               #Animation images
+        self.images = []          #Animation images
         self.width = 64           #Image width
         self.height = 64          #Image height
         self.animationCount = 0   #Keep track of which animation to display
