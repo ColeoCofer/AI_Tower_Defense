@@ -6,6 +6,7 @@ from enemies.dino import Dino
 from enemies.dragon import Dragon
 from enemies.robot import Robot
 from towers.squareTower import SquareTower
+from ui.coin import Coin
 
 TOWER_POSITIONS = [(30, 357), (99, 356), (95, 278), (85, 208), (97, 110), (230, 107), (329, 104), (453, 107), (546, 114), (536, 197), (531, 295), (530, 377), (531, 431), (656, 431), (654, 326), (758, 269), (882, 269), (1009, 270), (1117, 272), (1120, 447), (1002, 447), (884, 444), (882, 567), (774, 636), (646, 632), (513, 632), (400, 630), (283, 281), (356, 282), (288, 369), (353, 372), (350, 458), (278, 461), (348, 548), (200, 526), (118, 526), (37, 525)]
 
@@ -59,7 +60,7 @@ class Game:
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = 0
         self.lives = 10
-        self.coins = 100
+        self.coins = Coin((self.width - 120, 30), 50)
         self.bg = pygame.image.load(os.path.join("../assets", "bg.png"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
         self.clicks = [] #Temp
@@ -154,7 +155,8 @@ class Game:
         for enemy in self.enemies:
             enemy.draw(self.win)
 
-        self.displayMoney()
+        #Render coin animation
+        self.coins.draw(self.win)
 
         #Render UI Text Elements
         self.displayTextUI(self.win, fps)
@@ -175,25 +177,10 @@ class Game:
 
         #Frames Per Second
         fpsText = "FPS: " + str(int(fps))
-        fpsPosition = (WIN_WIDTH-100, 30)
+        fpsPosition = (15, 20)
         fpsColor = (255, 255, 255)
         fpsSurface = self.uiFont.render(fpsText, False, fpsColor)
         win.blit(fpsSurface, fpsPosition)
-
-
-    def displayMoney(self):
-        ''' Draws an animated coin and amount of money that the player has '''
-        numImages = len(self.images)
-
-        #Set the image for # of frames ('//' means integer division)
-        self.image = self.images[self.animationCount // self.animationSpeed]
-
-        #Iterate to the next animation image
-        self.animationCount += 1
-
-        #Reset the animation count if we rendered the last image
-        if self.animationCount >= (numImages * self.animationSpeed):
-            self.animationCount = 0
 
 
 def startBgMusic():
