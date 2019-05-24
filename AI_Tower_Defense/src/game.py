@@ -60,6 +60,7 @@ class Game:
         self.remainingEnemies = 0
         self.lives = 10
         self.money = 100
+        self.health = 100
         self.bg = pygame.image.load(os.path.join("../assets", "bg.png"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
         self.clicks = [] #Temp
@@ -73,8 +74,7 @@ class Game:
         ''' Main game loop '''
         clock = pygame.time.Clock()
 
-        run = True
-        while run:
+        while self.health >= 0:
             if TRAINING_MODE:
                 clock.tick(FPS)
 
@@ -118,6 +118,7 @@ class Game:
 
                 if enemy.x > WIN_WIDTH:
                     self.lives -= 1
+                    self.health -= enemy.health
 
 
     def spawnEnemies(self):
@@ -170,6 +171,13 @@ class Game:
         numEnemiesColor = (255, 255, 255)
         numEnemiesSurface = self.uiFont.render(numEnemiesText, False, numEnemiesColor)
         win.blit(numEnemiesSurface, numEnemiesPosition)
+
+        #Health Remaining Surface UI
+        healthText = "Health: " + str(self.health)
+        healthPosition = (WIN_WIDTH-180, WIN_HEIGHT-30)
+        healthColor = (255, 255, 255)
+        healthSurface = self.uiFont.render(healthText, False, healthColor)
+        win.blit(healthSurface, healthPosition)
 
         #Frames Per Second
         fpsText = "FPS: " + str(int(fps))
