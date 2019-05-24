@@ -8,8 +8,7 @@ from enemies.robot import Robot
 from towers.squareTower import SquareTower
 from ui.coin import Coin
 
-TOWER_POSITIONS = [(30, 357), (99, 356), (95, 278), (85, 208), (97, 110), (230, 107), (329, 104), (453, 107), (546, 114), (536, 197), (531, 295), (530, 377), (531, 431), (656, 431), (654, 326), (758, 269), (882, 269), (1009, 270), (1117, 272), (1120, 447), (1002, 447), (884, 444), (882, 567), (774, 636), (646, 632), (513, 632), (400, 630), (283, 281), (356, 282), (288, 369), (353, 372), (350, 458), (278, 461), (348, 548), (200, 526), (118, 526), (37, 525)]
-
+TOWER_POSITIONS = [(28, 284), (72, 284), (126, 289), (121, 250), (124, 214), (126, 173), (128, 139), (172, 139), (224, 140), (269, 140), (311, 138), (360, 134), (433, 190), (431, 238), (430, 287), (428, 344), (427, 391), (467, 394), (505, 391), (504, 352), (463, 353), (463, 296), (503, 298), (503, 239), (506, 190), (554, 212), (601, 209), (647, 209), (692, 212), (727, 215), (770, 214), (816, 220), (803, 340), (841, 343), (800, 308), (839, 308), (798, 270), (844, 269), (845, 220), (867, 186), (923, 190), (968, 192), (1008, 188), (1039, 187), (1076, 186), (1110, 187), (1148, 187), (1175, 189), (14, 425), (57, 426), (99, 421), (138, 423), (178, 424), (223, 424), (270, 422), (261, 293), (297, 293), (296, 344), (258, 343), (259, 383), (291, 385), (290, 460), (293, 503), (361, 525), (408, 525), (455, 525), (494, 523), (556, 522), (595, 522), (642, 517), (638, 482), (636, 432), (631, 381), (632, 350), (680, 348), (678, 380), (676, 422), (735, 466), (689, 467), (781, 464), (931, 466), (982, 465), (979, 431), (975, 385), (975, 326), (1041, 328), (1081, 327), (1138, 326), (1175, 330)]
 TRAINING_MODE = False  #If true will uncap framerates
 VISUAL_MODE = True     #Set false to stop rendering
 PLAY_BG_MUSIC = True      #Set false to turn music off
@@ -20,8 +19,8 @@ WIN_WIDTH = 1200
 WIN_HEIGHT = 800
 
 #Enemies
-ENEMY_TYPES = [Zombie, Dino, Dragon, Robot]
-Y_MAX_OFFSET = 30      #yOffset along enemy walking path
+ENEMY_TYPES = [Zombie, Dino, Dragon]
+Y_MAX_OFFSET = 20      #yOffset along enemy walking path
 
 #Towers
 TOWER_TYPES = [SquareTower]
@@ -55,13 +54,13 @@ class Game:
         self.width = WIN_WIDTH
         self.height = WIN_HEIGHT
         self.win = pygame.display.set_mode((self.width, self.height))
-        self.enemies = [Zombie(0), Robot(0), Dino(5)]
-        self.towers = [SquareTower(TOWER_POSITIONS[4]), SquareTower(TOWER_POSITIONS[10]), SquareTower(TOWER_POSITIONS[1]), SquareTower(TOWER_POSITIONS[15]), SquareTower(TOWER_POSITIONS[8]), SquareTower(TOWER_POSITIONS[len(TOWER_POSITIONS) - 2])]
-        self.numEnemiesPerLevel = 10
+        self.enemies = [Dino(0), Zombie(0), Dino(0), Zombie(0), Dino(0), Zombie(0), Dino(0), Dragon(0), Dragon(0)]
+        self.towers = [SquareTower(TOWER_POSITIONS[15]), SquareTower(TOWER_POSITIONS[1]), SquareTower(TOWER_POSITIONS[13]), SquareTower(TOWER_POSITIONS[8]), SquareTower(TOWER_POSITIONS[len(TOWER_POSITIONS) - 2]), SquareTower(TOWER_POSITIONS[len(TOWER_POSITIONS) - 5])]
+        self.numEnemiesPerLevel = 1
         self.remainingEnemies = 0
         self.lives = 10
-        self.coins = Coin((self.width - 120, 30), 50)
-        self.bg = pygame.image.load(os.path.join("../assets", "bg.png"))
+        self.coins = Coin((self.width - 140, 50), 50)
+        self.bg = pygame.image.load(os.path.join("../assets/map", "bg.png"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
         self.clicks = [] #Temp
         self.spawnChance = 0.015
@@ -132,6 +131,7 @@ class Game:
             randVerticalOffset = random.randint(-Y_MAX_OFFSET, Y_MAX_OFFSET)
             randEnemyType = random.randint(0, len(ENEMY_TYPES) - 1)
             self.enemies.append(ENEMY_TYPES[randEnemyType](randVerticalOffset))
+            # self.enemies.append(ENEMY_TYPES[randEnemyType](0))
 
 
     def draw(self, fps):

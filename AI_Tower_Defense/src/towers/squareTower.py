@@ -3,6 +3,7 @@ import os
 import random
 from .tower import Tower
 
+''' You left off creating the wonderful wizard tower '''
 
 class SquareTower(Tower):
 

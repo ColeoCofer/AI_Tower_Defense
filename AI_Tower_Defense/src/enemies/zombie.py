@@ -18,4 +18,5 @@ class Zombie(Enemy):
         #Load animation images
         for i in range(self.numImages):
             image = pygame.image.load(os.path.join("../assets/enemy/zombie", "zombie_" + str(i) + ".png"))
-            self.images.append(image)
+            # self.images.append(image)
+            self.images.append(pygame.transform.scale(image, (64, 64)))

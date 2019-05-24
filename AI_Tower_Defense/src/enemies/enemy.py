@@ -16,13 +16,14 @@ class Enemy:
 
         #List of coordinates that the enemy will follow
         self.pathIndex = 0
-        self.path = [(-10, 443), (11, 433), (193, 429), (200, 206), (439, 203), (440, 504), (757, 506), (764, 366), (1196, 361), (1250, 361)]
+        # self.path = [(-10, 443), (11, 433), (193, 429), (200, 206), (439, 203), (440, 504), (757, 506), (764, 366), (1196, 361), (1250, 361)]
+        self.path = [(-5, 362), (4, 362), (197, 359), (199, 219), (357, 223), (358, 457), (563, 457), (565, 282), (741, 285), (745, 400), (905, 398), (905, 249), (1250, 249)]
         self.x = self.path[0][0]
         self.y = self.path[0][1]
 
-        #Slightly offset the y-axis
-        for i in range(len(self.path)):
-            self.path[i] = (self.path[i][0], self.path[i][1] + yOffset)
+        # Slightly offset the y-axis
+        # for i in range(len(self.path)):
+        #    self.path[i] = (self.path[i][0], self.path[i][1] + yOffset)
 
         images = []               #Animation images
         self.width = 64           #Image width
@@ -51,7 +52,7 @@ class Enemy:
 
         self.drawHealthBox(win, centerX, centerY)
 
-        win.blit(self.image, (centerX, centerY))
+        win.blit(self.image, (centerX - 20, centerY - 20))
         self.move()
 
 
@@ -81,7 +82,7 @@ class Enemy:
         Moves the enemy closer to the next path coordinate.
         Uses the slope between the current position and the next position.
         '''
-        x1, y1 = self.path[self.pathIndex]    #Current location of character
+        x1, y1 = self.path[self.pathIndex]    #Previous point on the path
         numPathPositions = len(self.path)
 
         #Final point the char will move too
@@ -119,15 +120,19 @@ class Enemy:
             if dy >= 0: #Moving down
                 if self.x >= x2 and self.y >= y2:
                     self.pathIndex += 1
-            else:
+            else: #Moving up
                 if self.x >= x2 and self.y <= y2:
                     self.pathIndex += 1
         else:
-            if dy >= 0: #Moving left
-                if dy <= 0: #Moving up
+            #Since the map doesn't ever move left, this shouldn't be called
+            #Moving left
+            if dx < 0:
+                if dy <= 0:
+                    #Moving up
                     if self.x <= x2 and self.y >= y2:
                         self.pathIndex += 1
                 else:
+                    #Moving down
                     if self.x <= x2 and self.y <= y2:
                         self.pathIndex += 1
 
