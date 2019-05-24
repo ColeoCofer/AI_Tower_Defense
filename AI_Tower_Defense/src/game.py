@@ -6,13 +6,15 @@ from enemies.dino import Dino
 from enemies.dragon import Dragon
 from enemies.robot import Robot
 from towers.squareTower import SquareTower
+from towers.wizardTower import WizardTower
+from ui.coin import Coin
 from enemies.attackingEnemy import AttackingEnemy
 
 TOWER_POSITIONS = [(30, 357), (99, 356), (95, 278), (85, 208), (97, 110), (230, 107), (329, 104), (453, 107), (546, 114), (536, 197), (531, 295), (530, 377), (531, 431), (656, 431), (654, 326), (758, 269), (882, 269), (1009, 270), (1117, 272), (1120, 447), (1002, 447), (884, 444), (882, 567), (774, 636), (646, 632), (513, 632), (400, 630), (283, 281), (356, 282), (288, 369), (353, 372), (350, 458), (278, 461), (348, 548), (200, 526), (118, 526), (37, 525)]
 
 TRAINING_MODE = False  #If true will uncap framerates
 VISUAL_MODE = True     #Set false to stop rendering
-PLAY_BG_MUSIC = False      #Set false to turn music off
+PLAY_BG_MUSIC = True      #Set false to turn music off
 FPS = 60
 
 #Window Dimensions
@@ -56,12 +58,16 @@ class Game:
         self.height = WIN_HEIGHT
         self.win = pygame.display.set_mode((self.width, self.height))
         self.enemies = [Zombie(0), Robot(0), Dino(5)]
-        self.towers = [SquareTower(TOWER_POSITIONS[4]), SquareTower(TOWER_POSITIONS[10]), SquareTower(TOWER_POSITIONS[1]), SquareTower(TOWER_POSITIONS[15]), SquareTower(TOWER_POSITIONS[8]), SquareTower(TOWER_POSITIONS[len(TOWER_POSITIONS) - 2])]
+        self.towers = [SquareTower(TOWER_POSITIONS[4]), WizardTower(TOWER_POSITIONS[10]), SquareTower(TOWER_POSITIONS[1]), SquareTower(TOWER_POSITIONS[15]), SquareTower(TOWER_POSITIONS[8]), SquareTower(TOWER_POSITIONS[len(TOWER_POSITIONS) - 2])]
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = 0
         self.lives = 10
+<<<<<<< HEAD
         self.money = 100
         self.health = 100
+=======
+        self.coins = Coin((self.width - 120, 30), 50)
+>>>>>>> 5992513c20ca6aafd22b446646990812e2aaaa81
         self.bg = pygame.image.load(os.path.join("../assets", "bg.png"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
         self.clicks = [] #Temp
@@ -170,6 +176,13 @@ class Game:
         for enemy in self.enemies:
             enemy.draw(self.win)
 
+<<<<<<< HEAD
+        self.displayMoney()
+=======
+        #Render coin animation
+        self.coins.draw(self.win)
+>>>>>>> 5992513c20ca6aafd22b446646990812e2aaaa81
+
         #Render UI Text Elements
         self.displayTextUI(self.win, fps)
 
@@ -196,11 +209,30 @@ class Game:
 
         #Frames Per Second
         fpsText = "FPS: " + str(int(fps))
-        fpsPosition = (WIN_WIDTH-100, 30)
+        fpsPosition = (15, 20)
         fpsColor = (255, 255, 255)
         fpsSurface = self.uiFont.render(fpsText, False, fpsColor)
         win.blit(fpsSurface, fpsPosition)
 
+
+<<<<<<< HEAD
+    def displayMoney(self):
+        ''' Draws an animated coin and amount of money that the player has '''
+        numImages = len(self.images)
+
+        #Set the image for # of frames ('//' means integer division)
+        self.image = self.images[self.animationCount // self.animationSpeed]
+
+        #Iterate to the next animation image
+        self.animationCount += 1
+
+        #Reset the animation count if we rendered the last image
+        if self.animationCount >= (numImages * self.animationSpeed):
+            self.animationCount = 0
+
+
+=======
+>>>>>>> 5992513c20ca6aafd22b446646990812e2aaaa81
 def startBgMusic():
     if PLAY_BG_MUSIC:
         randSong = random.randint(0, len(BG_MUSIC) - 1)
