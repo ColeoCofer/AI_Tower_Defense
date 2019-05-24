@@ -1,12 +1,20 @@
 import pygame
 from projectile.lazer import Lazer
 
+HEALTH_GREEN = (255, 0, 0)
+HEALTH_RED = (0,128,0)
+
 class Tower:
     def __init__(self, position):
         self.x = position[0]   #Position on map
         self.y = position[1]
         self.attackRadius = 0  #Distance it can attach enemies from
         self.projectile = Lazer()
+        self.maxHealth = 5
+        self.health = self.maxHealth
+        self.healthBarWidth = 20
+        self.healthBarHeight = 10
+        self.healthBarYOffset = 10   #Larger numbers will move the health bar closer to the enemies head
 
         #self.damage = 0        #Amount of damage delt per attack
         #self.coolDown = 1000   #Time between attacks in ms
@@ -30,6 +38,8 @@ class Tower:
         if ticks >= self.canAttackTime:
             attackableEnemies = []
             i = 0
+
+            # TODO this is where we would need to be selective about what we add to the attack queue
             for enemy in enemies:
                 dist = (enemy.x - self.x) ** 2 + (enemy.y - self.y) ** 2
                 #Use radius squared to avoid taking square roots of distance
@@ -48,6 +58,18 @@ class Tower:
 
         return enemies
 
+    def drawHealthBox(self, win, centerX, centerY):
+        ''' Draws a health box above each character '''
+        if self.health > 0:
+            healthBarX = self.x - (self.healthBarWidth / 2)
+            healthBarY = self.y - self.height + self.healthBarYOffset
+            if self.health == self.maxHealth:
+                pygame.draw.rect(win, HEALTH_GREEN, (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Outline of health bar
+                pygame.draw.rect(win, HEALTH_RED, (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Inside of health bar
+            else:
+                pygame.draw.rect(win, HEALTH_GREEN, (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Outline health bar
+                pygame.draw.rect(win, HEALTH_RED, (healthBarX, healthBarY, (self.healthBarWidth / self.maxHealth) * self.health, self.healthBarHeight))
+
 
     def draw(self, win):
         ''' Render the tower to the map '''
@@ -60,5 +82,7 @@ class Tower:
                 self.projectile.draw(win, (self.x, self.y), enemy)
         else:
             self.enemiesBeingAttacked = []
+
+        self.drawHealthBox(win, centerX, centerY)
 
         win.blit(self.image, (centerX, centerY))

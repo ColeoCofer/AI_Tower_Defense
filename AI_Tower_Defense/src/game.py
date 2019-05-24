@@ -80,6 +80,7 @@ class Game:
 
             self.spawnEnemies()
             self.handleEvents()
+            self.towerHealthCheck()
             self.towersAttack()
             self.removeEnemies()
 
@@ -88,6 +89,13 @@ class Game:
 
         pygame.quit()
 
+    def towerHealthCheck(self):
+        newTowers = []
+        for tower in self.towers:
+            if tower.health > 0:
+                newTowers.append(tower)
+
+        self.towers = newTowers
 
     def towersAttack(self):
         for tower in self.towers:
