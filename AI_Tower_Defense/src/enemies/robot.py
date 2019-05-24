@@ -1,9 +1,15 @@
-import pygame
 import os
 import random
-from .enemy import Enemy
 
-class Robot(Enemy):
+import pygame
+from projectile.projectile import DamageType
+from projectile.lazer import Lazer
+
+
+from .attackingEnemy import AttackingEnemy
+
+
+class Robot(AttackingEnemy):
     numImages = 5
 
     def __init__(self, yOffset):
@@ -13,6 +19,10 @@ class Robot(Enemy):
         self.images = []
         self.velocity = random.randint(self.health, self.health + (self.health // 2))
         self.animationSpeed = 8
+        self.weaknesses = [DamageType.fire]
+        self.projectile = Lazer()
+        self.projectile.color = (70, 70, 200)
+
 
         #Load images
         for i in range(1, self.numImages):
