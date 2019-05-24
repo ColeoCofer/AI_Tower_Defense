@@ -6,6 +6,7 @@ from enemies.dino import Dino
 from enemies.dragon import Dragon
 from enemies.robot import Robot
 from towers.squareTower import SquareTower
+from enemies.attackingEnemy import AttackingEnemy
 
 TOWER_POSITIONS = [(30, 357), (99, 356), (95, 278), (85, 208), (97, 110), (230, 107), (329, 104), (453, 107), (546, 114), (536, 197), (531, 295), (530, 377), (531, 431), (656, 431), (654, 326), (758, 269), (882, 269), (1009, 270), (1117, 272), (1120, 447), (1002, 447), (884, 444), (882, 567), (774, 636), (646, 632), (513, 632), (400, 630), (283, 281), (356, 282), (288, 369), (353, 372), (350, 458), (278, 461), (348, 548), (200, 526), (118, 526), (37, 525)]
 
@@ -60,6 +61,7 @@ class Game:
         self.remainingEnemies = 0
         self.lives = 10
         self.money = 100
+        self.health = 100
         self.bg = pygame.image.load(os.path.join("../assets", "bg.png"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
         self.clicks = [] #Temp
@@ -73,14 +75,15 @@ class Game:
         ''' Main game loop '''
         clock = pygame.time.Clock()
 
-        run = True
-        while run:
+        while self.health >= 0:
             if TRAINING_MODE:
                 clock.tick(FPS)
 
             self.spawnEnemies()
             self.handleEvents()
+            self.towerHealthCheck()
             self.towersAttack()
+            self.enemiesAttack()
             self.removeEnemies()
 
             if VISUAL_MODE:
@@ -88,10 +91,22 @@ class Game:
 
         pygame.quit()
 
+    def towerHealthCheck(self):
+        newTowers = []
+        for tower in self.towers:
+            if tower.health > 0:
+                newTowers.append(tower)
+
+        self.towers = newTowers
 
     def towersAttack(self):
         for tower in self.towers:
             self.enemies = tower.attack(self.enemies, self.win)
+
+    def enemiesAttack(self):
+        for enemy in self.enemies:
+            if isinstance(enemy, AttackingEnemy):
+                self.towers = enemy.attack(self.towers, self.win)
 
     def handleEvents(self):
         ''' Handle keyboard and mouse events '''
@@ -118,6 +133,7 @@ class Game:
 
                 if enemy.x > WIN_WIDTH:
                     self.lives -= 1
+                    self.health -= enemy.health
 
 
     def spawnEnemies(self):
@@ -170,6 +186,13 @@ class Game:
         numEnemiesColor = (255, 255, 255)
         numEnemiesSurface = self.uiFont.render(numEnemiesText, False, numEnemiesColor)
         win.blit(numEnemiesSurface, numEnemiesPosition)
+
+        #Health Remaining Surface UI
+        healthText = "Health: " + str(self.health)
+        healthPosition = (WIN_WIDTH-180, WIN_HEIGHT-30)
+        healthColor = (255, 255, 255)
+        healthSurface = self.uiFont.render(healthText, False, healthColor)
+        win.blit(healthSurface, healthPosition)
 
         #Frames Per Second
         fpsText = "FPS: " + str(int(fps))
