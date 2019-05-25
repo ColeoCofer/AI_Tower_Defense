@@ -1,4 +1,5 @@
 import pygame
+from pygame.locals import *
 import os
 import random
 
@@ -20,7 +21,6 @@ from towers.igloo import Igloo
 
 from ui.coin import Coin
 
-from pygame.locals import *
 
 #Fullscreen will make the game run waaaay better
 FULLSCREEN_MODE = True
