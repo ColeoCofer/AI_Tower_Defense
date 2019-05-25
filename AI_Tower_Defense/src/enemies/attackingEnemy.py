@@ -1,13 +1,9 @@
 import os
 import random
-
 import pygame
 from projectile.projectile import DamageType
 from projectile.projectile import Projectile
-
-
 from .enemy import Enemy
-
 
 class AttackingEnemy(Enemy):
     numImages = 5

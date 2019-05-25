@@ -7,6 +7,7 @@ from enemies.dino import Dino
 from enemies.dragon import Dragon
 from enemies.robot import Robot
 from enemies.wizard import Wizard
+from enemies.warrior import Warrior
 from enemies.attackingEnemy import AttackingEnemy
 
 from towers.squareTower import SquareTower
@@ -36,7 +37,7 @@ WIN_WIDTH = 1200
 WIN_HEIGHT = 800
 
 #Enemies
-ENEMY_TYPES = [Zombie, Dino, Dragon, Robot, Wizard]
+ENEMY_TYPES = [Zombie, Dino, Dragon, Robot, Wizard, Warrior]
 Y_MAX_OFFSET = 35  #yOffset along enemy walking path
 
 #Towers
@@ -70,10 +71,12 @@ class Game:
         ''' Initial window setup '''
         self.width = WIN_WIDTH
         self.height = WIN_HEIGHT
+
         if FULLSCREEN_MODE:
             self.win = pygame.display.set_mode((self.width, self.height), FULLSCREEN | DOUBLEBUF)
         else:
             self.win = pygame.display.set_mode((self.width, self.height))
+
         self.win.set_alpha(None)
         self.enemies = [Zombie(30), Robot(0), Dino(15), Wizard(-25)]
         self.towers = [Igloo(TOWER_POSITIONS[1]), BirdCastle(TOWER_POSITIONS[10]), SquareTower(TOWER_POSITIONS[0]), Pyramid(TOWER_POSITIONS[15]), Obelisk(TOWER_POSITIONS[8]), Igloo(TOWER_POSITIONS[9]), City((1180, 230))]
@@ -86,7 +89,7 @@ class Game:
         self.coins = Coin(self.coinPosition, 50)
         self.bg = pygame.image.load(os.path.join("../assets/map", "bg.png"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
-        self.clicks = [] #Temp
+        self.clicks = []
         self.spawnChance = 0.015
 
         #Fonts
