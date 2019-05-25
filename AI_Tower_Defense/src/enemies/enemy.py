@@ -15,23 +15,28 @@ class Enemy:
         self.animationSpeed = 3      #Smaller numbers animate faster
         self.weaknesses = []
 
-        #List of coordinates that the enemy will follow
-        self.pathIndex = 0
-        #self.path = [(-10, 443), (11, 433), (193, 429), (200, 206), (439, 203), (440, 504), (757, 506), (764, 366), (1196, 361), (1250, 361)]
-        self.path = [(-5, 364), (17, 364), (183, 356), (215, 216), (338, 216), (381, 456), (553, 452), (585, 284), (730, 281), (757, 396), (897, 396), (920, 247), (1190, 246)]
-        self.x = self.path[0][0]
-        self.y = self.path[0][1]
-
-        #Slightly offset the y-axis
-        # for i in range(len(self.path)):
-        #     self.path[i] = (self.path[i][0], self.path[i][1] + yOffset)
-
+        #Animation
         self.images = []          #Animation images
         self.width = 64           #Image width
         self.height = 64          #Image height
         self.animationCount = 0   #Keep track of which animation to display
         self.image = None         #Current image to render
 
+        #List of coordinates that the enemy will follow
+        self.pathIndex = 0
+        # self.path = [(-10, 443), (11, 433), (193, 429), (200, 206), (439, 203), (440, 504), (757, 506), (764, 366), (1196, 361), (1250, 361)]
+        #self.path = [(-5, 364), (17, 364), (183, 364), (215, 216), (338, 216), (381, 456), (553, 452), (585, 284), (730, 281), (757, 396), (897, 396), (920, 247), (1190, 246)]
+        #self.path = [(-5, 364), (27, 359), (199, 358), (198, 217), (355, 211), (361, 453), (565, 452), (569, 287), (743, 286), (749, 393), (907, 393), (910, 250), (1178, 249)]
+        self.path = [(-5, 362), (19, 362), (197, 362), (197, 217), (360, 217), (360, 456), (565, 456), (565, 280), (743, 280), (743, 397), (905, 397), (905, 244), (1250, 244)]
+
+        self.x = self.path[0][0]
+        self.y = self.path[0][1]
+
+        self.path.append((1250 + (self.width * 2), self.path[-1][1]))
+
+        #Slightly offset the y-axis
+        # for i in range(len(self.path)):
+        #     self.path[i] = (self.path[i][0], self.path[i][1] + yOffset)
 
     def draw(self, win):
         ''' Draws the enemy with given images '''
@@ -83,19 +88,10 @@ class Enemy:
         Moves the enemy closer to the next path coordinate.
         Uses the slope between the current position and the next position.
         '''
-        x1, y1 = self.path[self.pathIndex]    #Current location of character
-        numPathPositions = len(self.path)
+        x1, y1 = self.path[self.pathIndex]      #Current location of character
 
-        #Final point the char will move too
-        finalX = self.path[numPathPositions-1][0]
-        finalY = self.path[numPathPositions-1][1]
-
-        #Check if we are at the end of the map
-        if self.pathIndex + 1 >= numPathPositions:
-            x2 = finalX + (self.width * 2) #Offset enough so they walk off the screen
-            y2 = finalY
-        else:
-            x2, y2 = self.path[self.pathIndex + 1]
+        if self.pathIndex < len(self.path):
+            x2, y2 = self.path[self.pathIndex + 1]  #Destination location
 
         #Distance between current location and destination point
         distance = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
@@ -118,13 +114,18 @@ class Enemy:
         Note: pyGame axis starts from the top left corner
         '''
         if dx >= 0: #Moving right
-            if dy >= 0: #Moving down
+            if dy > 0: #Moving down
                 if self.x >= x2 and self.y >= y2:
                     self.pathIndex += 1
-            else:
+            elif dy < 0:
                 if self.x >= x2 and self.y <= y2:
                     self.pathIndex += 1
+            else:
+                #Not moving on y-axis
+                if self.x >= x2:
+                    self.pathIndex += 1
         else:
+            #This shouldn't be ran for our map
             if dy >= 0: #Moving left
                 if dy <= 0: #Moving up
                     if self.x <= x2 and self.y >= y2:
