@@ -14,7 +14,7 @@ class DamageType(Enum):
 class Projectile:
     def __init__(self):
         self.damage = 1
-        self.damageType = DamageType.fakeNews
+        self.damageType = None
         self.color = (255, 100, 50)
         self.reloadTime = 1000
         self.velocity = 5
@@ -22,6 +22,8 @@ class Projectile:
     def fire(self, enemy):
         for weakness in enemy.weaknesses:
             if self.damageType == weakness:
+                if self.damageType == DamageType.ice and enemy.frozen:
+                    continue
                 enemy.hit(self.damage, self.damageType)
                 break
 
