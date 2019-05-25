@@ -51,6 +51,9 @@ def main():
     startBgMusic()
     pygame.display.set_caption("AI Tower Defense")
 
+    #For efficieny, only allow specific key presses
+    pygame.event.set_allowed([pygame.QUIT, pygame.MOUSEBUTTONDOWN])
+
     #Kick off main game loop
     g = Game()
     g.run()
@@ -67,8 +70,9 @@ class Game:
         self.width = WIN_WIDTH
         self.height = WIN_HEIGHT
         self.win = pygame.display.set_mode((self.width, self.height))
+        self.win.set_alpha(None)
         self.enemies = [Zombie(30), Robot(0), Dino(15), Wizard(-25)]
-        self.towers = [Obelisk(TOWER_POSITIONS[4]), BirdCastle(TOWER_POSITIONS[10]), SquareTower(TOWER_POSITIONS[1]), Pyramid(TOWER_POSITIONS[15]), SquareTower(TOWER_POSITIONS[8]), Igloo(TOWER_POSITIONS[9]), City((1180, 230))]
+        self.towers = [Igloo(TOWER_POSITIONS[1]), BirdCastle(TOWER_POSITIONS[10]), SquareTower(TOWER_POSITIONS[0]), Pyramid(TOWER_POSITIONS[15]), Obelisk(TOWER_POSITIONS[8]), Igloo(TOWER_POSITIONS[9]), City((1180, 230))]
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = 0
         self.score = 0
