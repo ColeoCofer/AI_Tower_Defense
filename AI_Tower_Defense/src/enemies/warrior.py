@@ -18,7 +18,7 @@ class Warrior(AttackingEnemy):
         self.velocity = random.randint(self.health, self.health + (self.health // 2))
         self.animationSpeed = 2
         self.weaknesses = [DamageType.fire]
-        self.projectile = Punch()
+        self.projectile = Punch((self.x, self.y))
         self.projectile.color = (70, 70, 200)
 
 

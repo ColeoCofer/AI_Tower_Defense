@@ -15,7 +15,7 @@ class Enemy:
         self.healthBarYOffset = 10   #Larger numbers will move the health bar closer to the enemies head
         self.velocity = 20           #Pixels per frame
         self.animationSpeed = 3      #Smaller numbers animate faster
-        self.weaknesses = [DamageType.ice]
+        self.weaknesses = [DamageType.ice, DamageType.exploding]
         self.frozen = False
         self.frozenDuration = 0
 
@@ -41,7 +41,7 @@ class Enemy:
             self.path[i] = (self.path[i][0], self.path[i][1] + yOffset)
 
     def draw(self, win):
-        
+
         if self.frozen:
             self.image = self.snowman
         else:

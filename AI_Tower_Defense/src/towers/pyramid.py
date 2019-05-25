@@ -20,4 +20,4 @@ class Pyramid(Tower):
         self.image = pygame.image.load(os.path.join("../assets/towers/pyramid/", "pyramid.png"))
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.weaknesses = [DamageType.lazer, DamageType.fire]
-        self.projectile = Lazer()
+        self.projectile = Lazer(position)

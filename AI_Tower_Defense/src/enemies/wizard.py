@@ -2,6 +2,7 @@ import os
 import random
 import pygame
 from projectile.projectile import DamageType
+from projectile.lightningBolt import LightningBolt
 from .attackingEnemy import AttackingEnemy
 
 class Wizard(AttackingEnemy):
@@ -16,6 +17,7 @@ class Wizard(AttackingEnemy):
         self.animationSpeed = 1
         self.healthBarYOffset = 15
         self.weaknesses.append(DamageType.lazer)
+        self.projectile = LightningBolt((self.x, self.y))
 
         #Load images
         for i in range(1, self.numImages):
