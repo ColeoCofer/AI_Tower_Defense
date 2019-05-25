@@ -6,6 +6,7 @@ from enemies.zombie import Zombie
 from enemies.dino import Dino
 from enemies.dragon import Dragon
 from enemies.robot import Robot
+from enemies.wizard import Wizard
 from enemies.attackingEnemy import AttackingEnemy
 
 from towers.squareTower import SquareTower
@@ -14,6 +15,7 @@ from towers.birdCastle import BirdCastle
 from towers.obelisk import Obelisk
 from towers.pyramid import Pyramid
 from towers.city import City
+from towers.igloo import Igloo
 
 from ui.coin import Coin
 
@@ -22,7 +24,7 @@ TOWER_POSITIONS = [(35, 294), (131, 289), (128, 181), (189, 151), (354, 150), (4
 
 TRAINING_MODE = False  #If true will uncap framerates
 VISUAL_MODE = True     #Set false to stop rendering
-PLAY_BG_MUSIC = False      #Set false to turn music off
+PLAY_BG_MUSIC = True      #Set false to turn music off
 FPS = 60
 
 #Window Dimensions
@@ -30,8 +32,8 @@ WIN_WIDTH = 1200
 WIN_HEIGHT = 800
 
 #Enemies
-ENEMY_TYPES = [Zombie, Dino, Dragon, Robot]
-Y_MAX_OFFSET = 30      #yOffset along enemy walking path
+ENEMY_TYPES = [Zombie, Dino, Dragon, Robot, Wizard]
+Y_MAX_OFFSET = 35      #yOffset along enemy walking path
 
 #Towers
 TOWER_TYPES = [SquareTower]
@@ -65,13 +67,15 @@ class Game:
         self.width = WIN_WIDTH
         self.height = WIN_HEIGHT
         self.win = pygame.display.set_mode((self.width, self.height))
-        self.enemies = [Zombie(0), Robot(0), Dino(5)]
-        self.towers = [Obelisk(TOWER_POSITIONS[4]), BirdCastle(TOWER_POSITIONS[10]), SquareTower(TOWER_POSITIONS[1]), Pyramid(TOWER_POSITIONS[15]), SquareTower(TOWER_POSITIONS[8]), SquareTower(TOWER_POSITIONS[len(TOWER_POSITIONS) - 2]), City((1180, 249))]
+        self.enemies = [Zombie(30), Robot(0), Dino(15), Wizard(-25)]
+        self.towers = [Obelisk(TOWER_POSITIONS[4]), BirdCastle(TOWER_POSITIONS[10]), SquareTower(TOWER_POSITIONS[1]), Pyramid(TOWER_POSITIONS[15]), SquareTower(TOWER_POSITIONS[8]), Igloo(TOWER_POSITIONS[9]), City((1180, 230))]
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = 0
+        self.score = 0
         self.lives = 10
         self.health = 100
-        self.coins = Coin((self.width - 150, 30), 50)
+        self.coinPosition = ((self.width - 150, 45))
+        self.coins = Coin(self.coinPosition, 50)
         self.bg = pygame.image.load(os.path.join("../assets/map", "bg.png"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
         self.clicks = [] #Temp
@@ -145,6 +149,9 @@ class Game:
                     self.lives -= 1
                     self.health -= enemy.health
 
+                if enemy.health <= 0:
+                    self.score += enemy.maxHealth
+
 
     def spawnEnemies(self):
         '''
@@ -168,7 +175,7 @@ class Game:
         #Render the background
         self.win.blit(self.bg, (0, 0))
 
-        #Uncomment to see clicked dots for path finding
+        #Uncomment to see clicked dots for path findings
         for p in self.clicks:
             pygame.draw.circle(self.win, (255, 0, 0), (p[0], p[1]), 5, 0)
 
@@ -213,6 +220,13 @@ class Game:
         fpsColor = (255, 255, 255)
         fpsSurface = self.uiFont.render(fpsText, False, fpsColor)
         win.blit(fpsSurface, fpsPosition)
+
+        #Score
+        scoreText = "Score: " + str(self.score)
+        scorePosition = (self.coinPosition[0], self.coinPosition[1] + 30)
+        scoreColor = (250, 241, 95)
+        scoreSurface = self.uiFont.render(scoreText, False, scoreColor)
+        win.blit(scoreSurface, scorePosition)
 
 
 def startBgMusic():
