@@ -22,32 +22,33 @@ class AttackingEnemy(Enemy):
         self.projectile = Projectile()
 
     def attack(self, enemies, win):
-        '''
-        Looks for enemies within it's attack radius
-        Will find the closest one and attack it
-        '''
-        #Check if the tower is ready to attack again
-        ticks = pygame.time.get_ticks()
-        if ticks >= self.canAttackTime:
-            attackableEnemies = []
-            i = 0
+        if self.frozen == False:
+            '''
+            Looks for enemies within it's attack radius
+            Will find the closest one and attack it
+            '''
+            #Check if the tower is ready to attack again
+            ticks = pygame.time.get_ticks()
+            if ticks >= self.canAttackTime:
+                attackableEnemies = []
+                i = 0
 
-            # TODO this is where we would need to be selective about what we add to the attack queue
-            for enemy in enemies:
-                dist = (enemy.x - self.x) ** 2 + (enemy.y - self.y) ** 2
-                #Use radius squared to avoid taking square roots of distance
-                if dist <= self.attackRadius ** 2:
-                    attackableEnemies.append((i, dist))
-                i += 1
+                # TODO this is where we would need to be selective about what we add to the attack queue
+                for enemy in enemies:
+                    dist = (enemy.x - self.x) ** 2 + (enemy.y - self.y) ** 2
+                    #Use radius squared to avoid taking square roots of distance
+                    if dist <= self.attackRadius ** 2:
+                        attackableEnemies.append((i, dist))
+                    i += 1
 
-            if len(attackableEnemies) > 0:
-                closestEnemyIndex = (min(attackableEnemies, key = lambda enemy: enemy[1]))[0]
-                self.attackAnimationTimeStamp = ticks + self.attackAnimationDuration
+                if len(attackableEnemies) > 0:
+                    closestEnemyIndex = (min(attackableEnemies, key = lambda enemy: enemy[1]))[0]
+                    self.attackAnimationTimeStamp = ticks + self.attackAnimationDuration
 
-                enemyX, enemyY = enemies[closestEnemyIndex].x, enemies[closestEnemyIndex].y
-                self.enemiesBeingAttacked.append((enemyX, enemyY))
-                self.projectile.fire(enemies[closestEnemyIndex])
-                self.canAttackTime = ticks + self.projectile.reloadTime
+                    enemyX, enemyY = enemies[closestEnemyIndex].x, enemies[closestEnemyIndex].y
+                    self.enemiesBeingAttacked.append((enemyX, enemyY))
+                    self.projectile.fire(enemies[closestEnemyIndex])
+                    self.canAttackTime = ticks + self.projectile.reloadTime
 
         return enemies
 

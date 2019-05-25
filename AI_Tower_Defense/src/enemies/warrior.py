@@ -2,13 +2,13 @@ import os
 import random
 import pygame
 from projectile.projectile import DamageType
-from projectile.lazer import Lazer
+from projectile.punch import Punch
 
 
 from .attackingEnemy import AttackingEnemy
 
 
-class Robot(AttackingEnemy):
+class Warrior(AttackingEnemy):
     numImages = 3
 
     def __init__(self, yOffset):
@@ -20,8 +20,8 @@ class Robot(AttackingEnemy):
         self.images = []
         self.velocity = random.randint(self.health, self.health + (self.health // 2))
         self.animationSpeed = 5
-        self.weaknesses = [DamageType.fire, DamageType.ice]
-        self.projectile = Lazer()
+        self.weaknesses = [DamageType.fire]
+        self.projectile = Punch()
         self.projectile.color = (70, 70, 200)
 
 

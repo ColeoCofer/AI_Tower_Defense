@@ -3,19 +3,22 @@ import random
 import pygame
 from projectile.projectile import DamageType
 from .attackingEnemy import AttackingEnemy
+from projectile.fakeTanSpray import FakeTanSpray
 
-class Wizard(AttackingEnemy):
+
+class Trump(AttackingEnemy):
     numImages = 20
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        self.maxHealth = 6
+        self.maxHealth = 50
         self.health = self.maxHealth
         self.images = []
         self.velocity = random.randint(self.health, self.health + (self.health // 2))
         self.animationSpeed = 1
         self.healthBarYOffset = 15
-        self.weaknesses = [DamageType.lazer]
+        self.weaknesses = [DamageType.lazer, DamageType.fire, DamageType.exploding, DamageType.ice, DamageType.lightning]
+        self.projectile = FakeTanSpray()
 
         #Load images
         for i in range(1, self.numImages):

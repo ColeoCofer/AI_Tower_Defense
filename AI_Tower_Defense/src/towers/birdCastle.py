@@ -3,6 +3,8 @@ import os
 import random
 from .tower import Tower
 from projectile.projectile import DamageType
+from projectile.lazer import Lazer
+
 
 class BirdCastle(Tower):
 
@@ -16,3 +18,4 @@ class BirdCastle(Tower):
         self.image = pygame.image.load(os.path.join("../assets/towers/bird_castle/", "birdCastle.png"))
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.weaknesses = [DamageType.lazer, DamageType.fire]
+        self.projectile = Lazer()
