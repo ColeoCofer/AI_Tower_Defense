@@ -12,14 +12,10 @@ class Tower:
         self.projectile = Lazer()
         self.maxHealth = 5
         self.health = self.maxHealth
-        self.healthBarWidth = 20
+        self.healthBarWidth = 50
         self.healthBarHeight = 10
         self.healthBarYOffset = 10   #Larger numbers will move the health bar closer to the enemies head
         self.weaknesses = []
-
-        #self.damage = 0        #Amount of damage delt per attack
-        #self.coolDown = 1000   #Time between attacks in ms
-
         self.canAttackTime = 0 #Timestamp showing when tower can attack again
         self.attackAnimationDuration = 200
         self.attackAnimationTimeStamp = 0
@@ -60,7 +56,7 @@ class Tower:
         return enemies
 
     def drawHealthBox(self, win, centerX, centerY):
-        ''' Draws a health box above each character '''
+        ''' Draws a health box above each tower '''
         if self.health > 0:
             healthBarX = self.x - (self.healthBarWidth / 2)
             healthBarY = self.y - self.height + self.healthBarYOffset
