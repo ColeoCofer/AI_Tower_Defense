@@ -20,4 +20,4 @@ class Dragon(Enemy):
         #Load animation images
         for i in range(0, self.numImages):
             image = pygame.image.load(os.path.join("../assets/enemy/dragon", "dragon_" + str(i) + ".png"))
-            self.images.append(pygame.transform.scale(image, (64, 64)))
+            self.images.append(pygame.transform.scale(image, (self.width, self.height)))

@@ -24,4 +24,4 @@ class Dino(Enemy):
         #Load images
         for i in range(1, self.numImages):
             image = pygame.image.load(os.path.join("../assets/enemy/dino", "Walk (" + str(i) + ").png"))
-            self.images.append(pygame.transform.scale(image, (64, 64)))
+            self.images.append(pygame.transform.scale(image, (self.width, self.height)))

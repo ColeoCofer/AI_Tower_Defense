@@ -1,14 +1,22 @@
 import pygame
 import os
 import random
+
 from enemies.zombie import Zombie
 from enemies.dino import Dino
 from enemies.dragon import Dragon
 from enemies.robot import Robot
+from enemies.attackingEnemy import AttackingEnemy
+
 from towers.squareTower import SquareTower
 from towers.wizardTower import WizardTower
+from towers.birdCastle import BirdCastle
+from towers.obelisk import Obelisk
+from towers.pyramid import Pyramid
+from towers.city import City
+
 from ui.coin import Coin
-from enemies.attackingEnemy import AttackingEnemy
+
 
 TOWER_POSITIONS = [(35, 294), (131, 289), (128, 181), (189, 151), (354, 150), (428, 387), (492, 383), (493, 261), (423, 264), (559, 211), (732, 207), (279, 302), (277, 380), (44, 427), (193, 430), (355, 519), (468, 517), (591, 516), (657, 351), (679, 412), (637, 416), (822, 341), (817, 285), (904, 182), (1152, 180), (1034, 180), (1160, 321), (1072, 320), (990, 321), (972, 422), (282, 458), (272, 149), (645, 209), (425, 200), (127, 233), (747, 458), (899, 455)]
 
@@ -58,7 +66,7 @@ class Game:
         self.height = WIN_HEIGHT
         self.win = pygame.display.set_mode((self.width, self.height))
         self.enemies = [Zombie(0), Robot(0), Dino(5)]
-        self.towers = [SquareTower(TOWER_POSITIONS[4]), WizardTower(TOWER_POSITIONS[10]), SquareTower(TOWER_POSITIONS[1]), SquareTower(TOWER_POSITIONS[15]), SquareTower(TOWER_POSITIONS[8]), SquareTower(TOWER_POSITIONS[len(TOWER_POSITIONS) - 2])]
+        self.towers = [Obelisk(TOWER_POSITIONS[4]), BirdCastle(TOWER_POSITIONS[10]), SquareTower(TOWER_POSITIONS[1]), Pyramid(TOWER_POSITIONS[15]), SquareTower(TOWER_POSITIONS[8]), SquareTower(TOWER_POSITIONS[len(TOWER_POSITIONS) - 2]), City((1180, 249))]
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = 0
         self.lives = 10
