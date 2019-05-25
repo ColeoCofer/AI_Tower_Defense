@@ -24,19 +24,15 @@ class Enemy:
 
         #List of coordinates that the enemy will follow
         self.pathIndex = 0
-        # self.path = [(-10, 443), (11, 433), (193, 429), (200, 206), (439, 203), (440, 504), (757, 506), (764, 366), (1196, 361), (1250, 361)]
-        #self.path = [(-5, 364), (17, 364), (183, 364), (215, 216), (338, 216), (381, 456), (553, 452), (585, 284), (730, 281), (757, 396), (897, 396), (920, 247), (1190, 246)]
-        #self.path = [(-5, 364), (27, 359), (199, 358), (198, 217), (355, 211), (361, 453), (565, 452), (569, 287), (743, 286), (749, 393), (907, 393), (910, 250), (1178, 249)]
         self.path = [(-5, 362), (19, 362), (197, 362), (197, 217), (360, 217), (360, 456), (565, 456), (565, 280), (743, 280), (743, 397), (905, 397), (905, 244), (1250, 244)]
-
         self.x = self.path[0][0]
         self.y = self.path[0][1]
 
         self.path.append((1250 + (self.width * 2), self.path[-1][1]))
 
         #Slightly offset the y-axis
-        # for i in range(len(self.path)):
-        #     self.path[i] = (self.path[i][0], self.path[i][1] + yOffset)
+        for i in range(len(self.path)):
+            self.path[i] = (self.path[i][0], self.path[i][1] + yOffset)
 
     def draw(self, win):
         ''' Draws the enemy with given images '''

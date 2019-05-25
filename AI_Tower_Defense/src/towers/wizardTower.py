@@ -8,7 +8,8 @@ class WizardTower(Tower):
 
     def __init__(self, position):
         super().__init__(position)
-        self.health = 45
+        self.maxHealth = 40
+        self.health = self.maxHealth
         self.attackRadius = 100
         self.coolDown = 3500
         self.damage = 4
