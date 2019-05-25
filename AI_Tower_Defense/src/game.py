@@ -15,6 +15,7 @@ from towers.birdCastle import BirdCastle
 from towers.obelisk import Obelisk
 from towers.pyramid import Pyramid
 from towers.city import City
+from towers.igloo import Igloo
 
 from ui.coin import Coin
 
@@ -23,7 +24,7 @@ TOWER_POSITIONS = [(35, 294), (131, 289), (128, 181), (189, 151), (354, 150), (4
 
 TRAINING_MODE = False  #If true will uncap framerates
 VISUAL_MODE = True     #Set false to stop rendering
-PLAY_BG_MUSIC = False      #Set false to turn music off
+PLAY_BG_MUSIC = True      #Set false to turn music off
 FPS = 60
 
 #Window Dimensions
@@ -67,7 +68,7 @@ class Game:
         self.height = WIN_HEIGHT
         self.win = pygame.display.set_mode((self.width, self.height))
         self.enemies = [Zombie(30), Robot(0), Dino(15), Wizard(-25)]
-        self.towers = [Obelisk(TOWER_POSITIONS[4]), BirdCastle(TOWER_POSITIONS[10]), SquareTower(TOWER_POSITIONS[1]), Pyramid(TOWER_POSITIONS[15]), SquareTower(TOWER_POSITIONS[8]), SquareTower(TOWER_POSITIONS[len(TOWER_POSITIONS) - 2]), City((1180, 230))]
+        self.towers = [Obelisk(TOWER_POSITIONS[4]), BirdCastle(TOWER_POSITIONS[10]), SquareTower(TOWER_POSITIONS[1]), Pyramid(TOWER_POSITIONS[15]), SquareTower(TOWER_POSITIONS[8]), Igloo(TOWER_POSITIONS[9]), City((1180, 230))]
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = 0
         self.score = 0
