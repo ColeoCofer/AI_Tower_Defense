@@ -8,7 +8,7 @@ class IceBeam(Projectile):
         super().__init__()
         self.damage = 0
         self.damageType = DamageType.ice
-        self.color = (200, 100, 50)
+        self.color = (50, 50, 200)
         self.reloadTime = 500
         self.velocity = 5
 

@@ -84,6 +84,6 @@ class Tower:
 
         win.blit(self.image, (centerX, centerY))
 
-    def hit(self, damage):
+    def hit(self, damage, damageType):
         ''' Returns true if the enemy died and subtracts damage from its health '''
         self.health = self.health - damage

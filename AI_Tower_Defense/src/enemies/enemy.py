@@ -1,5 +1,6 @@
 import pygame
 import math
+from projectile.projectile import DamageType
 
 HEALTH_GREEN = (255, 0, 0)
 HEALTH_RED = (0,128,0)
@@ -13,7 +14,9 @@ class Enemy:
         self.healthBarYOffset = 10   #Larger numbers will move the health bar closer to the enemies head
         self.velocity = 20           #Pixels per frame
         self.animationSpeed = 3      #Smaller numbers animate faster
-        self.weaknesses = []
+        self.weaknesses = [DamageType.ice]
+        self.frozen = False
+        self.frozenDuration = 0
 
         #Animation
         self.images = []          #Animation images
@@ -80,26 +83,30 @@ class Enemy:
 
 
     def move(self):
-        '''
-        Moves the enemy closer to the next path coordinate.
-        Uses the slope between the current position and the next position.
-        '''
-        x1, y1 = self.path[self.pathIndex]      #Current location of character
+        if self.frozen:
+            if self.frozenDuration < pygame.time.get_ticks():
+                self.frozen = False
+        else:
+            '''
+            Moves the enemy closer to the next path coordinate.
+            Uses the slope between the current position and the next position.
+            '''
+            x1, y1 = self.path[self.pathIndex]      #Current location of character
 
-        if self.pathIndex < len(self.path):
-            x2, y2 = self.path[self.pathIndex + 1]  #Destination location
+            if self.pathIndex < len(self.path):
+                x2, y2 = self.path[self.pathIndex + 1]  #Destination location
 
-        #Distance between current location and destination point
-        distance = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+            #Distance between current location and destination point
+            distance = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
 
-        #Normalize the component vectors & add 20% of velocity
-        dx = ((x2 - x1) / distance) * (self.velocity * 0.2)
-        dy = ((y2 - y1) / distance) * (self.velocity * 0.2)
+            #Normalize the component vectors & add 20% of velocity
+            dx = ((x2 - x1) / distance) * (self.velocity * 0.2)
+            dy = ((y2 - y1) / distance) * (self.velocity * 0.2)
 
-        self.x = self.x + dx
-        self.y = self.y + dy
+            self.x = self.x + dx
+            self.y = self.y + dy
 
-        self.didPassPoint(x2, y2, dx, dy)
+            self.didPassPoint(x2, y2, dx, dy)
 
 
     def didPassPoint(self, x2, y2, dx, dy):
@@ -131,6 +138,9 @@ class Enemy:
                         self.pathIndex += 1
 
 
-    def hit(self, damage):
+    def hit(self, damage, damageType):
         ''' Returns true if the enemy died and subtracts damage from its health '''
         self.health = self.health - damage
+        if damageType == DamageType.ice:
+            self.frozen = True
+            self.frozenDuration = pygame.time.get_ticks() + 3000
