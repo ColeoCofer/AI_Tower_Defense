@@ -1,10 +1,7 @@
 import os
 import random
-
 import pygame
-
 from projectile.projectile import DamageType
-
 from .enemy import Enemy
 
 

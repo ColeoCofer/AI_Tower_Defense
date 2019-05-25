@@ -8,8 +8,8 @@ class City(Tower):
 
     def __init__(self, position):
         super().__init__(position)
-        self.width = 100
-        self.height = 100
+        self.width = 150
+        self.height = 150
         self.maxHealth = 10
         self.health = self.maxHealth
         self.attackRadius = 100
