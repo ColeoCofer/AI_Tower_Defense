@@ -10,7 +10,7 @@ class Pyramid(Tower):
 
     def __init__(self, position):
         super().__init__(position)
-        self.maxHealth = 10
+        self.maxHealth = 150
         self.width = 80
         self.height = 80
         self.health = self.maxHealth

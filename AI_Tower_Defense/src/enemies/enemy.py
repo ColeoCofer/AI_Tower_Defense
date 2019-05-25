@@ -1,5 +1,6 @@
 import pygame
 import math
+import os
 from projectile.projectile import DamageType
 
 HEALTH_GREEN = (255, 0, 0)
@@ -25,6 +26,8 @@ class Enemy:
         self.animationCount = 0   #Keep track of which animation to display
         self.image = None         #Current image to render
 
+        self.snowman = pygame.transform.scale(pygame.image.load(os.path.join("../assets/enemy/snowman", "snowman.png")), (self.width, self.height))
+
         #List of coordinates that the enemy will follow
         self.pathIndex = 0
         self.path = [(-5, 362), (19, 362), (197, 362), (197, 217), (360, 217), (360, 456), (565, 456), (565, 280), (743, 280), (743, 397), (905, 397), (905, 244), (1250, 244)]
@@ -38,18 +41,21 @@ class Enemy:
             self.path[i] = (self.path[i][0], self.path[i][1] + yOffset)
 
     def draw(self, win):
-        ''' Draws the enemy with given images '''
-        numImages = len(self.images)
+        
+        if self.frozen:
+            self.image = self.snowman
+        else:
+            ''' Draws the enemy with given images '''
+            numImages = len(self.images)
+            #Set the image for # of frames ('//' means integer division)
+            self.image = self.images[self.animationCount // self.animationSpeed]
 
-        #Set the image for # of frames ('//' means integer division)
-        self.image = self.images[self.animationCount // self.animationSpeed]
+            #Iterate to the next animation image
+            self.animationCount += 1
 
-        #Iterate to the next animation image
-        self.animationCount += 1
-
-        #Reset the animation count if we rendered the last image
-        if self.animationCount >= (numImages * self.animationSpeed):
-            self.animationCount = 0
+            #Reset the animation count if we rendered the last image
+            if self.animationCount >= (numImages * self.animationSpeed):
+                self.animationCount = 0
 
         #Display from center of character
         centerX = self.x - (self.width / 2)

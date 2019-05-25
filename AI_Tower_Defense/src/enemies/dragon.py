@@ -15,7 +15,7 @@ class Dragon(Enemy):
         self.velocity = random.randint(self.health, self.health + (self.health // 2))
         self.animationSpeed = 5
         self.healthBarYOffset = 30
-        self.weaknesses = [DamageType.lazer]
+        self.weaknesses.append(DamageType.lazer)
 
         #Load animation images
         for i in range(0, self.numImages):

@@ -12,10 +12,10 @@ class Igloo(Tower):
         super().__init__(position)
         self.width = 60
         self.height = 60
-        self.maxHealth = 10
+        self.maxHealth = 90
         self.health = self.maxHealth
         self.attackRadius = 250
-        self.coolDown = 500
+        self.coolDown = 1000
         self.damage = 0
         self.image = pygame.image.load(os.path.join("../assets/towers/igloo/", "igloo.png"))
         self.image = pygame.transform.scale(self.image, (self.width, self.height))

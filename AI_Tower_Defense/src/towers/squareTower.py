@@ -9,7 +9,7 @@ class SquareTower(Tower):
 
     def __init__(self, position):
         super().__init__(position)
-        self.maxHealth = 10
+        self.maxHealth = 50
         self.health = self.maxHealth
         self.attackRadius = 150
         self.coolDown = 1000

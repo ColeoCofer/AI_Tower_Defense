@@ -17,7 +17,7 @@ class Trump(AttackingEnemy):
         self.velocity = random.randint(self.health, self.health + (self.health // 2))
         self.animationSpeed = 1
         self.healthBarYOffset = 15
-        self.weaknesses = [DamageType.lazer, DamageType.fire, DamageType.exploding, DamageType.ice, DamageType.lightning]
+        self.weaknesses.append(DamageType.lazer, DamageType.fire, DamageType.exploding, DamageType.lightning)
         self.projectile = FakeTanSpray()
 
         #Load images

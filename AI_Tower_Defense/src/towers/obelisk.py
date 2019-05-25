@@ -10,7 +10,7 @@ class Obelisk(Tower):
 
     def __init__(self, position):
         super().__init__(position)
-        self.maxHealth = 10
+        self.maxHealth = 30
         self.health = self.maxHealth
         self.attackRadius = 100
         self.coolDown = 1000

@@ -15,7 +15,7 @@ class Wizard(AttackingEnemy):
         self.velocity = random.randint(self.health, self.health + (self.health // 2))
         self.animationSpeed = 1
         self.healthBarYOffset = 15
-        self.weaknesses = [DamageType.lazer]
+        self.weaknesses.append(DamageType.lazer)
 
         #Load images
         for i in range(1, self.numImages):
