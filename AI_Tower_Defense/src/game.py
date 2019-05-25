@@ -32,7 +32,7 @@ WIN_HEIGHT = 800
 
 #Enemies
 ENEMY_TYPES = [Zombie, Dino, Dragon, Robot, Wizard]
-Y_MAX_OFFSET = 30      #yOffset along enemy walking path
+Y_MAX_OFFSET = 35      #yOffset along enemy walking path
 
 #Towers
 TOWER_TYPES = [SquareTower]
@@ -66,7 +66,7 @@ class Game:
         self.width = WIN_WIDTH
         self.height = WIN_HEIGHT
         self.win = pygame.display.set_mode((self.width, self.height))
-        self.enemies = [Zombie(0), Robot(0), Dino(5), Wizard(-5)]
+        self.enemies = [Zombie(30), Robot(0), Dino(15), Wizard(-25)]
         self.towers = [Obelisk(TOWER_POSITIONS[4]), BirdCastle(TOWER_POSITIONS[10]), SquareTower(TOWER_POSITIONS[1]), Pyramid(TOWER_POSITIONS[15]), SquareTower(TOWER_POSITIONS[8]), SquareTower(TOWER_POSITIONS[len(TOWER_POSITIONS) - 2]), City((1180, 230))]
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = 0
