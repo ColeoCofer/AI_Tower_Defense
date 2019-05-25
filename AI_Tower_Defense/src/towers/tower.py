@@ -9,7 +9,7 @@ class Tower:
         self.x = position[0]   #Position on map
         self.y = position[1]
         self.attackRadius = 0  #Distance it can attach enemies from
-        self.projectile = Projectile()
+        self.projectile = None
         self.maxHealth = 5
         self.health = self.maxHealth
         self.healthBarWidth = 50
@@ -18,7 +18,7 @@ class Tower:
         self.weaknesses = []
         self.canAttackTime = 0 #Timestamp showing when tower can attack again
         self.attackAnimationDuration = 200
-        self.attackAnimationTimeStamp = 0
+        self.attackAnimationStopTime = 0
         self.enemiesBeingAttacked = []
         self.image = None      #Current image being displayed
         self.width = 64        #Width of animation images
@@ -46,7 +46,7 @@ class Tower:
 
             if len(attackableEnemies) > 0:
                 closestEnemyIndex = (min(attackableEnemies, key = lambda enemy: enemy[1]))[0]
-                self.attackAnimationTimeStamp = ticks + self.attackAnimationDuration
+                self.attackAnimationStopTime= ticks + self.attackAnimationDuration
 
                 enemyX, enemyY = enemies[closestEnemyIndex].x, enemies[closestEnemyIndex].y
                 self.enemiesBeingAttacked.append((enemyX, enemyY))
@@ -74,11 +74,13 @@ class Tower:
         centerY = self.y - (self.height / 2)
 
         #Check if we should display the attack animation
-        if pygame.time.get_ticks() <= self.attackAnimationTimeStamp:
-            for enemy in self.enemiesBeingAttacked:
-                self.projectile.draw(win, (self.x, self.y), enemy)
-        else:
-            self.enemiesBeingAttacked = []
+        # if pygame.time.get_ticks() <= self.attackAnimationStopTime:
+
+        for i in range(len(self.enemiesBeingAttacked)):
+            if self.projectile.draw(win, (self.x, self.y), self.enemiesBeingAttacked[i]) == True:
+                self.enemiesBeingAttacked = []
+                # del self.enemiesBeingAttacked[i]
+
 
         self.drawHealthBox(win, centerX, centerY)
 

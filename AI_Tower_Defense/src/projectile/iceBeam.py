@@ -4,8 +4,8 @@ from .projectile import Projectile
 from .projectile import DamageType
 
 class IceBeam(Projectile):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, position):
+        super().__init__(position)
         self.damage = 0
         self.damageType = DamageType.ice
         self.color = (8, 146, 208)

@@ -1,13 +1,9 @@
 import os
 import random
-
 import pygame
 from projectile.projectile import DamageType
 from projectile.projectile import Projectile
-
-
 from .enemy import Enemy
-
 
 class AttackingEnemy(Enemy):
     numImages = 5
@@ -19,7 +15,7 @@ class AttackingEnemy(Enemy):
         self.attackAnimationDuration = 200
         self.attackAnimationTimeStamp = 0
         self.enemiesBeingAttacked = []
-        self.projectile = Projectile()
+        self.projectile = None
 
     def attack(self, enemies, win):
         if self.frozen == False:
@@ -54,7 +50,7 @@ class AttackingEnemy(Enemy):
 
 
     def draw(self, win):
-        
+
         if self.frozen:
             self.image = self.snowman
         else:
