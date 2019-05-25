@@ -1,5 +1,5 @@
 import pygame
-from projectile.lazer import Lazer
+from projectile.projectile import Projectile
 
 HEALTH_GREEN = (255, 0, 0)
 HEALTH_RED = (0,128,0)
@@ -9,7 +9,7 @@ class Tower:
         self.x = position[0]   #Position on map
         self.y = position[1]
         self.attackRadius = 0  #Distance it can attach enemies from
-        self.projectile = Lazer()
+        self.projectile = Projectile()
         self.maxHealth = 5
         self.health = self.maxHealth
         self.healthBarWidth = 50

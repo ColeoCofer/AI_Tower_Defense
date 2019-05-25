@@ -20,11 +20,3 @@ class Lazer(Projectile):
         color = tuple(newColor)
 
         pygame.draw.line(win, color, tower, enemy, 5)
-
-
-    def fire(self, enemy):
-        for weakness in enemy.weaknesses:
-            if self.damageType == weakness:
-                enemy.hit(self.damage)
-                break
-                

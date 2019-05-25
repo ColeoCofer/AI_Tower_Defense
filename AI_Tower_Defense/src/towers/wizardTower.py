@@ -2,6 +2,7 @@ import pygame
 import os
 import random
 from .tower import Tower
+from projectile.lazer import Lazer
 
 
 class WizardTower(Tower):
@@ -15,3 +16,5 @@ class WizardTower(Tower):
         self.damage = 4
         self.image = pygame.image.load(os.path.join("../assets/towers/wizard_tower/", "wizardTower.png"))
         self.image = pygame.transform.scale(self.image, (80, 80))
+        self.projectile = Lazer()
+
