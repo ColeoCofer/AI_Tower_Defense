@@ -88,7 +88,7 @@ class Game:
         self.remainingEnemies = 0
         self.score = 0
         self.lives = 10
-        self.health = 1
+        self.health = 100
         self.coinPosition = ((self.width - 150, 45))
         self.coins = Coin(self.coinPosition, 50)
         self.bg = pygame.image.load(os.path.join("../assets/map", "bg.png"))
@@ -119,7 +119,7 @@ class Game:
             self.towersAttack()
             self.enemiesAttack()
             self.removeEnemies()
-            run = self.stillAlive()
+            run = self.isAlive()
 
             if VISUAL_MODE:
                 self.draw(clock.get_fps())
@@ -269,7 +269,7 @@ class Game:
         scoreSurface = self.uiFont.render(scoreText, False, scoreColor)
         win.blit(scoreSurface, scorePosition)
 
-    def stillAlive(self):
+    def isAlive(self):
         return self.health > 0
 
     def gameover(self):
