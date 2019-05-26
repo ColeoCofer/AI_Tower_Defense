@@ -6,9 +6,9 @@ from .projectile import Projectile
 from .projectile import DamageType
 
 class Cannonball(Projectile):
-    def __init__(self, position):
-        super().__init__(position)
-        self.damage = 2
+    def __init__(self, towerPosition, enemy):
+        super().__init__(towerPosition, enemy)
+        self.damage = 1
         self.damageType = DamageType.exploding
         self.reloadTime = 3000
         self.velocity = 100
@@ -23,7 +23,7 @@ class Cannonball(Projectile):
         self.image = self.images[0]
 
 
-    def draw(self, win, tower, enemyPosition):
+    def draw(self, win):
         ''' Draws the enemy with given images '''
         # numImages = len(self.images)
         # self.image = self.images[self.animationCount // self.animationSpeed]
@@ -40,12 +40,12 @@ class Cannonball(Projectile):
         centerY = self.y - (self.height / 2)
 
         win.blit(self.image, (centerX, centerY))
-        return self.move(tower, enemyPosition)
+        return self.move()
 
 
-    def move(self, tower, enemyPosition):
-        x1, y1 = tower[0], tower[1]
-        x2, y2 = enemyPosition[0], enemyPosition[1]
+    def move(self):
+        x1, y1 = self.towerPosition[0], self.towerPosition[1]
+        x2, y2 = self.enemyStartingPosition[0], self.enemyStartingPosition[1]
         targetX, targetY = self.targetEnemy.x, self.targetEnemy.y
 
         ballEnemyDistance = math.sqrt((targetX - self.x)**2 + (targetY - self.y)**2)
@@ -64,8 +64,8 @@ class Cannonball(Projectile):
 
 
     def didHitEnemy(self, distance):
-        print(f"Distance {distance}")
-        if distance < 20:
+        # print(f"Distance {distance}")
+        if distance < 30:
             self.resetCannonball()
             return True
 

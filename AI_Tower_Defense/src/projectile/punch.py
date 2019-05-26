@@ -4,8 +4,8 @@ from .projectile import Projectile
 from .projectile import DamageType
 
 class Punch(Projectile):
-    def __init__(self, position):
-        super().__init__(position)
+    def __init__(self, towerPosition, enemy):
+        super().__init__(towerPosition, enemy)
         self.damage = 10
         self.damageType = DamageType.melee
         self.color = (200, 100, 50)

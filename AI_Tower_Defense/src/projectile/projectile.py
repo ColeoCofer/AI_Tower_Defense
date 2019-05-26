@@ -12,8 +12,13 @@ class DamageType(Enum):
     melee = 6
 
 class Projectile:
-    def __init__(self, towerPosition):
+    def __init__(self, towerPosition, enemy):
         self.towerPosition = towerPosition
+        self.enemyStartingPosition = (enemy.x, enemy.y)
+        self.targetEnemy = enemy
+        self.x = towerPosition[0]
+        self.y = towerPosition[1]
+
         self.damage = 1
         self.damageType = None
         self.color = (255, 100, 50)
@@ -23,20 +28,15 @@ class Projectile:
         self.image = None
         self.animationSpeed = 3
         self.animationCount = 0
-        self.x = towerPosition[0]
-        self.y = towerPosition[1]
-        self.targetEnemy = None
 
-    def fire(self, enemy):
-        self.targetEnemy = enemy
-        for weakness in enemy.weaknesses:
+    def fire(self):
+        for weakness in self.targetEnemy.weaknesses:
             if self.damageType == weakness:
-                if self.damageType == DamageType.ice and enemy.frozen:
+                if self.damageType == DamageType.ice and self.targetEnemy.frozen:
                     continue
-                # enemy.hit(self.damage, self.damageType)
                 break
 
-    def draw(self, win, tower, enemy):
+    def draw(self, win):
             newColor = []
             for channel in self.color:
                 newColor.append(channel + random.randint(-50, 50))

@@ -4,6 +4,7 @@ import pygame
 from projectile.projectile import DamageType
 from projectile.punch import Punch
 from .attackingEnemy import AttackingEnemy
+from .enemy import Enemy
 
 class Warrior(AttackingEnemy):
     numImages = 20
@@ -18,7 +19,7 @@ class Warrior(AttackingEnemy):
         self.velocity = random.randint(self.health, self.health + (self.health // 2))
         self.animationSpeed = 2
         self.weaknesses = [DamageType.fire]
-        self.projectile = Punch((self.x, self.y))
+        self.projectile = Punch((self.x, self.y), Enemy(0))
         self.projectile.color = (70, 70, 200)
 
 

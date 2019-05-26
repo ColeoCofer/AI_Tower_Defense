@@ -3,6 +3,7 @@ import random
 import pygame
 from projectile.projectile import DamageType
 from .attackingEnemy import AttackingEnemy
+from .enemy import Enemy
 from projectile.fakeTanSpray import FakeTanSpray
 
 
@@ -18,7 +19,7 @@ class Trump(AttackingEnemy):
         self.animationSpeed = 1
         self.healthBarYOffset = 15
         self.weaknesses.append(DamageType.lazer, DamageType.fire, DamageType.exploding, DamageType.lightning)
-        self.projectile = FakeTanSpray()
+        self.projectile = FakeTanSpray((0,0), Enemy(0))
 
         #Load images
         for i in range(1, self.numImages):

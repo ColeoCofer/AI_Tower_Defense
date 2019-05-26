@@ -4,19 +4,19 @@ from .projectile import Projectile
 from .projectile import DamageType
 
 class Lazer(Projectile):
-    def __init__(self, position):
-        super().__init__(position)
+    def __init__(self, towerPosition, enemy):
+        super().__init__(towerPosition, enemy)
         self.damage = 1
         self.damageType = DamageType.lazer
         self.color = (200, 100, 50)
         self.reloadTime = 1000
         self.velocity = 5
 
-    def draw(self, win, tower, enemy):
+    def draw(self, win):
         newColor = []
         for channel in self.color:
             newColor.append(channel + random.randint(-50, 50))
 
         color = tuple(newColor)
 
-        pygame.draw.line(win, color, tower, enemy, 5)
+        pygame.draw.line(win, color, self.towerPosition, (self.targetEnemy.x, self.targetEnemy.y), 5)

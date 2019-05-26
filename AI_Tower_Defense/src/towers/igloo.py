@@ -20,4 +20,7 @@ class Igloo(Tower):
         self.image = pygame.image.load(os.path.join("../assets/towers/igloo/", "igloo.png"))
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.weaknesses = [DamageType.lazer, DamageType.fire]
-        self.projectile = IceBeam(position)
+        # self.projectile = IceBeam(position)
+
+    def loadProjectile(self, enemy):
+        return IceBeam(self.position, enemy)

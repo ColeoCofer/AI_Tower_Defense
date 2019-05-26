@@ -4,8 +4,8 @@ from .projectile import Projectile
 from .projectile import DamageType
 
 class LightningBolt(Projectile):
-    def __init__(self, position):
-        super().__init__(position)
+    def __init__(self, towerPosition, enemy):
+        super().__init__(towerPosition, enemy)
         self.damage = 7
         self.damageType = DamageType.lightning
         self.color = (200, 100, 50)

@@ -14,8 +14,8 @@ class AttackingEnemy(Enemy):
         self.canAttackTime = 0 #Timestamp showing when tower can attack again
         self.attackAnimationDuration = 200
         self.attackAnimationTimeStamp = 0
-        self.enemiesBeingAttacked = []
-        self.projectile = None
+        self.projectilesFired = []
+        # self.projectile = None
 
     def attack(self, enemies, win):
         if self.frozen == False:
@@ -39,12 +39,12 @@ class AttackingEnemy(Enemy):
 
                 if len(attackableEnemies) > 0:
                     closestEnemyIndex = (min(attackableEnemies, key = lambda enemy: enemy[1]))[0]
-                    self.attackAnimationTimeStamp = ticks + self.attackAnimationDuration
+                    self.attackAnimationStopTime = ticks + self.attackAnimationDuration
 
-                    enemyX, enemyY = enemies[closestEnemyIndex].x, enemies[closestEnemyIndex].y
-                    self.enemiesBeingAttacked.append((enemyX, enemyY))
-                    self.projectile.fire(enemies[closestEnemyIndex])
-                    self.canAttackTime = ticks + self.projectile.reloadTime
+                    projectileToFire = self.loadProjectile(enemies[closestEnemyIndex])
+                    self.canAttackTime = ticks + projectileToFire.reloadTime
+                    projectileToFire.fire()
+                    self.projectilesFired.append(projectileToFire)  
 
         return enemies
 
@@ -71,13 +71,21 @@ class AttackingEnemy(Enemy):
         centerY = self.y - (self.height / 2)
 
         #Check if we should display the attack animation
-        if pygame.time.get_ticks() <= self.attackAnimationTimeStamp:
-            for enemy in self.enemiesBeingAttacked:
-                self.projectile.draw(win, (self.x, self.y), enemy)
-        else:
-            self.enemiesBeingAttacked = []
+        # if pygame.time.get_ticks() <= self.attackAnimationTimeStamp:
+        #     for enemy in self.enemiesBeingAttacked:
+        #         self.projectile.draw(win, (self.x, self.y), enemy)
+        # else:
+        #     self.enemiesBeingAttacked = []
+
+        for i in range(len(self.projectilesFired)):
+            if self.projectilesFired[i].draw(win) == True:
+                # self.enemiesBeingAttacked = []
+                del self.projectilesFired[i]
 
         self.drawHealthBox(win, centerX, centerY)
 
         win.blit(self.image, (centerX, centerY))
         self.move()
+
+    def loadProjectile(self, enemy):
+        return Projectile((self.x, self.y), enemy)

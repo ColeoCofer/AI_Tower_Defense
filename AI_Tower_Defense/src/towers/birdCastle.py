@@ -18,4 +18,7 @@ class BirdCastle(Tower):
         self.image = pygame.image.load(os.path.join("../assets/towers/bird_castle/", "birdCastle.png"))
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.weaknesses = [DamageType.lazer, DamageType.fire]
-        self.projectile = Lazer(position)
+        # self.projectile = Lazer(position)
+
+    def loadProjectile(self, enemy):
+        return Lazer(self.position, enemy)

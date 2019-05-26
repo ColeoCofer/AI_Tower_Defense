@@ -6,10 +6,11 @@ HEALTH_RED = (0,128,0)
 
 class Tower:
     def __init__(self, position):
+        self.position = position
         self.x = position[0]   #Position on map
         self.y = position[1]
         self.attackRadius = 0  #Distance it can attach enemies from
-        self.projectile = None
+        # self.projectile = None
         self.maxHealth = 5
         self.health = self.maxHealth
         self.healthBarWidth = 50
@@ -19,7 +20,10 @@ class Tower:
         self.canAttackTime = 0 #Timestamp showing when tower can attack again
         self.attackAnimationDuration = 200
         self.attackAnimationStopTime = 0
-        self.enemiesBeingAttacked = []
+
+        # self.enemiesBeingAttacked = []
+        self.projectilesFired = []
+
         self.image = None      #Current image being displayed
         self.width = 64        #Width of animation images
         self.height = 64       #Height of animation images
@@ -46,12 +50,12 @@ class Tower:
 
             if len(attackableEnemies) > 0:
                 closestEnemyIndex = (min(attackableEnemies, key = lambda enemy: enemy[1]))[0]
-                self.attackAnimationStopTime= ticks + self.attackAnimationDuration
+                self.attackAnimationStopTime = ticks + self.attackAnimationDuration
 
-                enemyX, enemyY = enemies[closestEnemyIndex].x, enemies[closestEnemyIndex].y
-                self.enemiesBeingAttacked.append((enemyX, enemyY))
-                self.projectile.fire(enemies[closestEnemyIndex])
-                self.canAttackTime = ticks + self.projectile.reloadTime
+                projectileToFire = self.loadProjectile(enemies[closestEnemyIndex])
+                self.canAttackTime = ticks + projectileToFire.reloadTime
+                projectileToFire.fire()
+                self.projectilesFired.append(projectileToFire)                
 
         return enemies
 
@@ -76,10 +80,10 @@ class Tower:
         #Check if we should display the attack animation
         # if pygame.time.get_ticks() <= self.attackAnimationStopTime:
 
-        for i in range(len(self.enemiesBeingAttacked)):
-            if self.projectile.draw(win, (self.x, self.y), self.enemiesBeingAttacked[i]) == True:
-                self.enemiesBeingAttacked = []
-                # del self.enemiesBeingAttacked[i]
+        for i in range(len(self.projectilesFired)):
+            if self.projectilesFired[i].draw(win) == True:
+                # self.enemiesBeingAttacked = []
+                del self.projectilesFired[i]
 
 
         self.drawHealthBox(win, centerX, centerY)
@@ -89,3 +93,6 @@ class Tower:
     def hit(self, damage, damageType):
         ''' Returns true if the enemy died and subtracts damage from its health '''
         self.health = self.health - damage
+
+    def loadProjectile(self, enemy):
+        return Projectile(self.position, enemy)
