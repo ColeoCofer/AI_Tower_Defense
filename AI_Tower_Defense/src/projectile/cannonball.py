@@ -12,7 +12,7 @@ class Cannonball(RangeProjectile):
         self.damageType = DamageType.exploding
         self.reloadTime = 3000
         self.velocity = 100
-        self.numImages = 1
+        self.numImages = 5
         self.width = 30
         self.height = 30
         self.attackAnimationDuration = 10000

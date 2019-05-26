@@ -11,6 +11,7 @@ class Fireball(Projectile):
         self.color = (200, 100, 50)
         self.reloadTime = 750
         self.velocity = 5
+        self.numImages = 8
 
     def draw(self, win):
         newColor = []
@@ -18,5 +19,11 @@ class Fireball(Projectile):
             newColor.append(channel + random.randint(-50, 50))
 
         color = tuple(newColor)
+
+        #Load images
+        for i in range(0, self.numImages):
+            image = pygame.image.load(os.path.join("../assets/projectiles/fireBall", "fireBall" + str(i) + ".png"))
+            self.images.append(pygame.transform.scale(image, (self.width, self.height)))
+        self.image = self.images[0]
 
         # need to add how projectiles are rendered
