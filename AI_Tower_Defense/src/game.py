@@ -23,7 +23,7 @@ from ui.coin import Coin
 
 
 #Fullscreen will make the game run waaaay better
-FULLSCREEN_MODE = False
+FULLSCREEN_MODE = True
 PLAY_BG_MUSIC = True      #Set false to turn music off
 
 TOWER_POSITIONS = [(35, 294), (131, 289), (128, 181), (189, 151), (354, 150), (428, 387), (492, 383), (493, 261), (423, 264), (559, 211), (732, 207), (279, 302), (277, 380), (44, 427), (193, 430), (355, 519), (468, 517), (591, 516), (657, 351), (679, 412), (637, 416), (822, 341), (817, 285), (904, 182), (1152, 180), (1034, 180), (1160, 321), (1072, 320), (990, 321), (972, 422), (282, 458), (272, 149), (645, 209), (425, 200), (127, 233), (747, 458), (899, 455)]
@@ -84,7 +84,7 @@ class Game:
         self.remainingEnemies = 0
         self.score = 0
         self.lives = 10
-        self.health = 100
+        self.health = 1
         self.coinPosition = ((self.width - 150, 45))
         self.coins = Coin(self.coinPosition, 50)
         self.bg = pygame.image.load(os.path.join("../assets/map", "bg.png"))
@@ -100,21 +100,24 @@ class Game:
         ''' Main game loop '''
         clock = pygame.time.Clock()
         run = True
+        playerHasQuit = False
 
-        while self.health >= 0 and run == True:
+        while run == True and playerHasQuit == False:
             if TRAINING_MODE:
                 clock.tick(FPS)
 
             self.spawnEnemies()
-            run = self.handleEvents()
+            playerHasQuit = self.handleEvents()
             self.towerHealthCheck()
             self.towersAttack()
             self.enemiesAttack()
             self.removeEnemies()
+            run = self.stillAlive()
 
             if VISUAL_MODE:
                 self.draw(clock.get_fps())
 
+        pygame.time.delay(3000)
         pygame.quit()
 
     def towerHealthCheck(self):
@@ -135,17 +138,20 @@ class Game:
                 self.towers = enemy.attack(self.towers, self.win)
 
     def handleEvents(self):
-        ''' Handle keyboard and mouse events '''
+        '''
+        Handle keyboard and mouse events
+        Returns True if the user quits the game
+        '''
 
         #Check for active pygame events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return False
+                return True
 
             #Quit the game if the user hits the 'Q' key
             if event.type == pygame.KEYDOWN:
                 if event.unicode == 'q':
-                    return False
+                    return True
 
             #Store mouse clicks to determine path for enemies
             mousePosition = pygame.mouse.get_pos()
@@ -153,23 +159,23 @@ class Game:
                 self.clicks.append(mousePosition)
                 print(self.clicks)
 
-        return True
+        return False
 
 
     def removeEnemies(self):
         ''' Removes enemies that have walked off screen'''
         enemiesToDelete = []
         for enemy in self.enemies:
+            if enemy.x > WIN_WIDTH:
+                self.lives -= 1
+                self.health -= enemy.health
+
+            if enemy.health <= 0:
+                self.score += enemy.maxHealth
+
             if enemy.x > WIN_WIDTH or enemy.health <= 0:
                 self.enemies.remove(enemy)
                 self.remainingEnemies -= 1
-
-                if enemy.x > WIN_WIDTH:
-                    self.lives -= 1
-                    self.health -= enemy.health
-
-                if enemy.health <= 0:
-                    self.score += enemy.maxHealth
 
 
     def spawnEnemies(self):
@@ -212,6 +218,11 @@ class Game:
         #Render UI Text Elements
         self.displayTextUI(self.win, fps)
 
+        if self.stillAlive == False:
+            gameoverImage = pygame.image.load(os.path.join("../assets/other", "gameover.jpg"))
+            gameoverImage = pygame.transform.scale(gameoverImage, (self.width, self.height))
+            self.win.blit(gameoverImage, (0, 0))
+
         #Update the window
         pygame.display.update()
 
@@ -246,6 +257,15 @@ class Game:
         scoreColor = (250, 241, 95)
         scoreSurface = self.uiFont.render(scoreText, False, scoreColor)
         win.blit(scoreSurface, scorePosition)
+
+    def stillAlive(self):
+        return self.health > 0
+
+    def displayGameover(self):
+        gameoverImage = pygame.image.load(os.path.join("../assets/other", "gameover.jpg"))
+        gameoverImage = pygame.transform.scale(gameoverImage, (self.width, self.height))
+        self.win.blit(gameoverImage, (0, 0))
+        pygame.display.flip()
 
 
 def startBgMusic():
