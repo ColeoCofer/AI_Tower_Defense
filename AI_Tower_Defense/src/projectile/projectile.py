@@ -24,7 +24,7 @@ class Projectile:
         self.damageType = None
         self.color = (100, 100, 100)
         self.reloadTime = 1000
-        self.velocity = 5
+        self.velocity = 0
         self.images = []
         self.image = None
         
@@ -38,10 +38,9 @@ class Projectile:
     def fire(self):
         for weakness in self.targetEnemy.weaknesses:
             if self.damageType == DamageType.ice and self.targetEnemy.frozen:
-                    continue
+                continue
             if self.damageType == weakness:
                 self.targetEnemy.hit(self.damage, self.damageType)
                 
-
     def draw(self, win):
         return
