@@ -19,4 +19,4 @@ class SquareTower(Tower):
         self.weaknesses = [DamageType.lazer, DamageType.fire]
 
     def loadProjectile(self, enemy):
-        return Cannonball(self.position, enemy)
+        return Cannonball(self.position, enemy, self.closeEnemies)

@@ -20,4 +20,4 @@ class Obelisk(Tower):
         self.weaknesses = [DamageType.lazer, DamageType.fire]
 
     def loadProjectile(self, enemy):
-        return Lazer(self.position, enemy)
+        return Lazer(self.position, enemy, self.closeEnemies)

@@ -1,5 +1,5 @@
 import pygame
-from projectile.projectile import Projectile
+from projectile.projectile import Projectile, DamageType
 
 HEALTH_GREEN = (255, 0, 0)
 HEALTH_RED = (0,128,0)
@@ -10,6 +10,7 @@ class Tower:
         self.x = position[0]   #Position on map
         self.y = position[1]
         self.attackRadius = 0  #Distance it can attach enemies from
+        self.closeEnemies = []
 
         self.maxHealth = 5
         self.health = self.maxHealth
@@ -33,6 +34,8 @@ class Tower:
         Looks for enemies within it's attack radius
         Will find the closest one and attack it
         '''
+        self.closeEnemies = enemies
+
         #Check if the tower is ready to attack again
         ticks = pygame.time.get_ticks()
         if ticks >= self.canAttackTime:
@@ -50,6 +53,7 @@ class Tower:
             if len(attackableEnemies) > 0:
                 closestEnemyIndex = (min(attackableEnemies, key = lambda enemy: enemy[1]))[0]
                 projectileToFire = self.loadProjectile(enemies[closestEnemyIndex])
+                projectileToFire.enemies = enemies
                 self.canAttackTime = ticks + projectileToFire.reloadTime
                 projectileToFire.attackAnimationStopTime = ticks + projectileToFire.attackAnimationDuration
                 projectileToFire.color = self.projectileColor
@@ -80,7 +84,7 @@ class Tower:
             if self.projectilesFired[i].attackAnimationStopTime < pygame.time.get_ticks():
                 del self.projectilesFired[i]
                 continue
-            if self.projectilesFired[i].draw(win) == True:
+            if self.projectilesFired[i].draw(win) == True:    
                 del self.projectilesFired[i]
 
         self.drawHealthBox(win, centerX, centerY)

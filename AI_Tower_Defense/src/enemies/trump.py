@@ -25,3 +25,6 @@ class Trump(AttackingEnemy):
         for i in range(1, self.numImages):
             image = pygame.image.load(os.path.join("../assets/enemy/wizard", "2_enemies_1_walk_" + str(i) + ".png"))
             self.images.append(pygame.transform.scale(image, (self.width, self.height)))
+
+    def loadProjectile(self, enemy):
+        return FakeTanSpray((self.x, self.y), enemy, self.closeEnemies)

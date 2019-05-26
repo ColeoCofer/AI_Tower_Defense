@@ -12,16 +12,17 @@ class DamageType(Enum):
     melee = 6
 
 class Projectile:
-    def __init__(self, towerPosition, enemy):
+    def __init__(self, towerPosition, enemy, enemies):
         self.towerPosition = towerPosition
         self.enemyStartingPosition = (enemy.x, enemy.y)
         self.targetEnemy = enemy
+        self.enemies = enemies
         self.x = towerPosition[0]
         self.y = towerPosition[1]
 
         self.damage = 1
         self.damageType = None
-        self.color = (255, 100, 50)
+        self.color = (100, 100, 100)
         self.reloadTime = 1000
         self.velocity = 5
         self.images = []

@@ -2,12 +2,13 @@ import os
 import pygame
 import random
 import math
+import enum
 from .projectile import Projectile
 from .projectile import DamageType
 
 class RangeProjectile(Projectile):
-    def __init__(self, towerPosition, enemy):
-        super().__init__(towerPosition, enemy)
+    def __init__(self, towerPosition, enemy, enemies):
+        super().__init__(towerPosition, enemy, enemies)
         self.animationCount = 0
         
     def fire(self):
@@ -57,6 +58,7 @@ class RangeProjectile(Projectile):
 
     def didHitEnemy(self, distance):
         if distance < 30:
+            self.explosiveDamage()
             self.resetRangeProjectile()
             return True
 
@@ -65,3 +67,6 @@ class RangeProjectile(Projectile):
         self.targetEnemy.hit(self.damage, self.damageType)
         self.x = self.towerPosition[0]
         self.y = self.towerPosition[1]
+
+    def explosiveDamage(self):
+        return
