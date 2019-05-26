@@ -21,31 +21,7 @@ from towers.igloo import Igloo
 
 from ui.coin import Coin
 
-
-#Fullscreen will make the game run waaaay better
-FULLSCREEN_MODE = False
-PLAY_BG_MUSIC = True      #Set false to turn music off
-
-TOWER_POSITIONS = [(35, 294), (131, 289), (128, 181), (189, 151), (354, 150), (428, 387), (492, 383), (493, 261), (423, 264), (559, 211), (732, 207), (279, 302), (277, 380), (44, 427), (193, 430), (355, 519), (468, 517), (591, 516), (657, 351), (679, 412), (637, 416), (822, 341), (817, 285), (904, 182), (1152, 180), (1034, 180), (1160, 321), (1072, 320), (990, 321), (972, 422), (282, 458), (272, 149), (645, 209), (425, 200), (127, 233), (747, 458), (899, 455)]
-
-TRAINING_MODE = False  #If true will uncap framerates
-VISUAL_MODE = True     #Set false to stop rendering
-FPS = 60
-
-#Window Dimensions
-WIN_WIDTH = 1200
-WIN_HEIGHT = 800
-
-#Enemies
-ENEMY_TYPES = [Zombie, Dino, Dragon, Robot, Wizard, Warrior]
-Y_MAX_OFFSET = 35  #yOffset along enemy walking path
-
-#Towers
-TOWER_TYPES = [SquareTower]
-
-#Sounds
-BG_MUSIC = ["old_town.mp3"]
-
+from constants.gameConstants import *
 
 def main():
     ''' Entry point for game '''
@@ -117,6 +93,8 @@ class Game:
 
         pygame.quit()
 
+
+    # goes through and removes dead towers from the list
     def towerHealthCheck(self):
         newTowers = []
         for tower in self.towers:
@@ -125,17 +103,22 @@ class Game:
 
         self.towers = newTowers
 
+
+    # cycles through all towers attack phase
     def towersAttack(self):
         for tower in self.towers:
             self.enemies = tower.attack(self.enemies, self.win)
 
+
+    # cycles through any attacking enemies attack phase
     def enemiesAttack(self):
         for enemy in self.enemies:
             if isinstance(enemy, AttackingEnemy):
                 self.towers = enemy.attack(self.towers, self.win)
 
+
+    ''' Handle keyboard and mouse events '''
     def handleEvents(self):
-        ''' Handle keyboard and mouse events '''
 
         #Check for active pygame events
         for event in pygame.event.get():
@@ -156,8 +139,8 @@ class Game:
         return True
 
 
+    ''' Removes enemies that have walked off screen'''
     def removeEnemies(self):
-        ''' Removes enemies that have walked off screen'''
         enemiesToDelete = []
         for enemy in self.enemies:
             if enemy.x > WIN_WIDTH or enemy.health <= 0:
@@ -248,6 +231,7 @@ class Game:
         win.blit(scoreSurface, scorePosition)
 
 
+# plays our awesome RenFair music
 def startBgMusic():
     if PLAY_BG_MUSIC:
         randSong = random.randint(0, len(BG_MUSIC) - 1)

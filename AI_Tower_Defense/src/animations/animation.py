@@ -5,13 +5,14 @@ import math
 
 
 class Animation():
+
     def __init__(self, position):
-        self.numImages = 0
-        self.width = 100
-        self.height = 100
-        self.attackAnimationDuration = 1000
+        self.numImages = 0                  # all will get overridden except self.x and self.y
+        self.width = 0
+        self.height = 0
+        self.attackAnimationDuration = 0
         self.attackAnimationStopTime = 0
-        self.animationSpeed = 3
+        self.animationSpeed = 0
         self.animationCount = 0
         self.velocity = 0
         self.images = []
@@ -20,6 +21,7 @@ class Animation():
         self.y = position[1]
 
 
+    # draws an animation by frames
     def draw(self, win):
         ''' Draws the enemy with given images '''
         self.numImages = len(self.images)

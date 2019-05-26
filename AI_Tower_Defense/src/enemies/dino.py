@@ -6,17 +6,20 @@ from .enemy import Enemy
 
 
 class Dino(Enemy):
-    numImages = 10
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        self.maxHealth = 10
+        self.maxHealth = 20                   # Dino's are tough
         self.health = self.maxHealth
-        self.images = []
-        self.velocity = random.randint(self.health, self.health + (self.health // 2))
+        self.velocity = random.randint(3, 5)  # Dino's are slow
+        self.weaknesses.append(DamageType.lazer)
+        self.weaknesses.append(DamageType.fire)
+        self.weaknesses.append(DamageType.lightning)    # Dino's are weak to everything
+        
+        self.numImages = 10
         self.animationSpeed = 7
         self.healthBarYOffset = 15
-        self.weaknesses.append(DamageType.lazer)
+        self.images = []
 
         #Load images
         for i in range(1, self.numImages):

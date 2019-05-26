@@ -1,9 +1,8 @@
 import pygame
 from projectile.projectile import Projectile, DamageType
 from animations.animation import Animation
+from constants.animationConstants import *
 
-HEALTH_GREEN = (255, 0, 0)
-HEALTH_RED = (0,128,0)
 
 class Tower:
     def __init__(self, position):
@@ -23,8 +22,8 @@ class Tower:
         self.attackAnimationStopTime = 0
         self.projectileColor = (255, 255, 255)
 
-        self.projectilesFired = []
-        self.animations = []
+        self.projectilesFired = []   # projectile magazine
+        self.animations = []         # animations to render
 
         self.image = None      #Current image being displayed
         self.width = 64        #Width of animation images
@@ -53,6 +52,7 @@ class Tower:
                 i += 1
 
             if len(attackableEnemies) > 0:
+                # taget the closest enemy and load projectile into the magazine
                 closestEnemyIndex = (min(attackableEnemies, key = lambda enemy: enemy[1]))[0]
                 projectileToFire = self.loadProjectile(enemies[closestEnemyIndex])
                 projectileToFire.enemies = enemies
@@ -65,8 +65,8 @@ class Tower:
         return enemies
 
 
+    ''' Draws a health box above each tower '''
     def drawHealthBox(self, win, centerX, centerY):
-        ''' Draws a health box above each tower '''
         if self.health > 0:
             healthBarX = self.x - (self.healthBarWidth / 2)
             healthBarY = self.y - self.height + self.healthBarYOffset
@@ -78,40 +78,49 @@ class Tower:
                 pygame.draw.rect(win, HEALTH_RED, (healthBarX, healthBarY, (self.healthBarWidth / self.maxHealth) * self.health, self.healthBarHeight))
 
 
+    # draw the tower and any of its projectiles/animations
     def draw(self, win):
         ''' Render the tower to the map '''
         centerX = self.x - (self.width / 2)
         centerY = self.y - (self.height / 2)
 
         i = 0
+        # cycle through the prpjectiles in our magazine
         while i < len(self.projectilesFired):
+            # check and make sure animation time hasn't lapsed
             if self.projectilesFired[i].attackAnimationStopTime < pygame.time.get_ticks():
                 del self.projectilesFired[i]
-                continue
-            if self.projectilesFired[i].draw(win) == True:    
+            # TODO I think we may want to think about this. It currently is saying that a projectile has hit it's target
+            elif self.projectilesFired[i].draw(win) == True: 
+                # replace the projectile with its final animation in the same postion   
                 self.addAnimationToQueue(self.projectilesFired[i])
                 del self.projectilesFired[i]
             i += 1
 
+        # cycle through our animations for drawing, i.e. explosions
         for j in range(len(self.animations)):
             self.animations[j].draw(win)  
+            # remove any animations that have exceeded their durations
             if self.animations[j].attackAnimationStopTime < pygame.time.get_ticks():
                 del self.animations[j]
                 continue
-              
+
+        # draw health bar and render sprite     
         self.drawHealthBox(win, centerX, centerY)
         win.blit(self.image, (centerX, centerY))
 
 
+    # this is called when an enemy has hit a tower to reduce the towers health
     def hit(self, damage, damageType):
-        ''' Returns true if the enemy died and subtracts damage from its health '''
         self.health = self.health - damage
 
 
+    # parent stub for loading projectiles
     def loadProjectile(self, enemy):
-        return Projectile(self.position, enemy)
+        return Projectile((self.x, self.y), enemy, self.closeEnemies)
 
 
+    # adds an animation for a projectile that has reached its target to the queue
     def addAnimationToQueue(self, projectile):
         animation = projectile.finalAnimation(projectile.enemyStartingPosition)
         animation.attackAnimationStopTime = pygame.time.get_ticks() + animation.attackAnimationDuration

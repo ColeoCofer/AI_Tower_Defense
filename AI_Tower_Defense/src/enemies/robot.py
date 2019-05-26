@@ -4,8 +4,6 @@ import pygame
 from projectile.projectile import DamageType
 from projectile.lazer import Lazer
 from .enemy import Enemy
-
-
 from .attackingEnemy import AttackingEnemy
 
 

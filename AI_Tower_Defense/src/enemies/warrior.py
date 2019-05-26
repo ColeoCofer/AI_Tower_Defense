@@ -7,7 +7,6 @@ from .attackingEnemy import AttackingEnemy
 from .enemy import Enemy
 
 class Warrior(AttackingEnemy):
-    numImages = 20
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
@@ -15,6 +14,8 @@ class Warrior(AttackingEnemy):
         self.height = 54
         self.maxHealth = 10
         self.health = self.maxHealth
+        
+        self.numImages = 20
         self.images = []
         self.velocity = random.randint(self.health, self.health + (self.health // 2))
         self.animationSpeed = 2
