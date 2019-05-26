@@ -12,6 +12,7 @@ class Enemy:
         self.health = self.maxHealth
         self.velocity = 0           
         self.weaknesses = [DamageType.ice, DamageType.exploding]      # all creatures are weak to ice and explosions
+        self.superWeakness = None   # will cause an enemy to lose 2x damage when projectile damage is the same
         self.frozen = False
         self.frozenDuration = 0
 
@@ -147,6 +148,8 @@ class Enemy:
 
     def hit(self, damage, damageType):
         ''' Returns true if the enemy died and subtracts damage from its health '''
+        if damageType == self.superWeakness:
+            damage *= 2
         self.health = self.health - damage
         if damageType == DamageType.ice:
             self.frozen = True

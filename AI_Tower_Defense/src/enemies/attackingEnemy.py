@@ -10,9 +10,9 @@ class AttackingEnemy(Enemy):
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        self.attackRadius = 150           # Distance it can attack enemies from
-        self.canAttackTime = 0          # Timestamp showing when tower can attack again
-        self.projectilesFired = []      # enemies projectile magazine
+        self.attackRadius = 150             # Distance it can attack enemies from
+        self.canAttackTime = 0              # Timestamp showing when tower can attack again
+        self.projectilesFired = []          # enemies projectile magazine
         self.projectileColor = (155, 155, 155)
         self.closeEnemies = []
 
@@ -84,9 +84,8 @@ class AttackingEnemy(Enemy):
             # check and make sure animation time hasn't lapsed
             if self.projectilesFired[i].attackAnimationStopTime < pygame.time.get_ticks():
                 del self.projectilesFired[i]
-                continue
             # TODO I think we may want to think about this. It currently is saying that a projectile has hit it's target
-            if self.projectilesFired[i].draw(win) == True:
+            elif self.projectilesFired[i].draw(win) == True:
                 del self.projectilesFired[i]
             
         # draw health box, render sprite, and move sprite for next iteration

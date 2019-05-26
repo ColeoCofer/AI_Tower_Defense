@@ -11,17 +11,20 @@ class Robot(AttackingEnemy):
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
+        
+        self.maxHealth = 25                             # robots are tough
+        self.health = self.maxHealth
+        self.velocity = random.randint(5, 8)            # robots are slow
+        self.weaknesses.append(DamageType.fire)
+        self.weaknesses.append(DamageType.lightning)    # robots are not weak to lasers
+        self.superWeakness = DamageType.lightning       # they are super weak to lightning
+        
+        self.images = []
+        self.projectileColor = (120, 70, 170)
         self.width = 54
         self.height = 54
-        self.maxHealth = 12
-        self.health = self.maxHealth
-        self.images = []
-        self.velocity = random.randint(self.health, self.health + (self.health // 2))
-        self.animationSpeed = 5
-        self.weaknesses.append(DamageType.fire)
-        self.projectileColor = (120, 70, 170)
         self.numImages = 3
-
+        self.animationSpeed = 5
 
         #Load images
         for i in range(0, self.numImages):
@@ -29,5 +32,7 @@ class Robot(AttackingEnemy):
             image = pygame.transform.flip(image, True, False)
             self.images.append(pygame.transform.scale(image, (self.width, self.height)))
 
+
+    # overrides base classes version
     def loadProjectile(self, enemy):
         return Lazer((self.x, self.y), enemy, self.closeEnemies)

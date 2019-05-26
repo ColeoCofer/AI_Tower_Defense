@@ -9,13 +9,16 @@ class Zombie(Enemy):
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        self.maxHealth = 14
+        self.maxHealth = 40                         # zombies are tough to kill
         self.health = self.maxHealth
+        self.velocity = random.randint(2, 5)        # zombies are slow as hell
+        self.weaknesses.append(DamageType.fire)     # zombies are only weak to fire, exploding, ice, and super weak to fire
+        self.weaknesses.append(DamageType.lazer)     
+        self.superWeakness = DamageType.fire        
+        
         self.images = []
         self.numImages = 4
-        self.velocity = 6
         self.healthBarYOffset = 30
-        self.weaknesses.append(DamageType.fire)
 
         #Load animation images
         for i in range(self.numImages):

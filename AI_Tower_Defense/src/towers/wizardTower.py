@@ -9,15 +9,17 @@ class WizardTower(Tower):
 
     def __init__(self, position):
         super().__init__(position)
-        self.maxHealth = 100
+        self.maxHealth = 350                # tough and long range
         self.health = self.maxHealth
-        self.attackRadius = 100
-        self.coolDown = 3500
-        self.damage = 4
-        self.image = pygame.image.load(os.path.join("../assets/towers/wizard_tower/", "wizardTower.png"))
-        self.image = pygame.transform.scale(self.image, (80, 80))
-        self.projectileColor = (10, 200, 200)
+        self.attackRadius = 350
+        
+        self.projectileColor = (150, 150, 150)
 
+        self.image = pygame.image.load(os.path.join("../assets/towers/wizard_tower/", "wizardTower.png"))
+        self.image = pygame.transform.scale(self.image, (120, 120))
+
+
+    # overrides base class version
     def loadProjectile(self, enemy):
         laser = Lazer(self.position, enemy, self.closeEnemies)
         laser.color = self.projectileColor

@@ -10,19 +10,24 @@ class Igloo(Tower):
 
     def __init__(self, position):
         super().__init__(position)
-        self.width = 60
-        self.height = 60
-        self.maxHealth = 90
+        
+        self.maxHealth = 120
         self.health = self.maxHealth
-        self.attackRadius = 250
+        self.attackRadius = 250                             # does 0 damage but freezes enemies
         self.coolDown = 1000
         self.damage = 0
+        self.weaknesses.append(DamageType.lazer)
+        self.weaknesses.append(DamageType.fire)             # not weak to lightning
+        
+        self.projectileColor = (9, 146, 208)
+        self.width = 60 
+        self.height = 60
+
         self.image = pygame.image.load(os.path.join("../assets/towers/igloo/", "igloo.png"))
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
-        self.weaknesses = [DamageType.lazer, DamageType.fire]
-        self.projectileColor = (9, 146, 208)
-
-
+    
+    
+    # overrides base class version
     def loadProjectile(self, enemy):
         iceBeam =  IceBeam(self.position, enemy, self.closeEnemies)
         iceBeam.color = self.projectileColor

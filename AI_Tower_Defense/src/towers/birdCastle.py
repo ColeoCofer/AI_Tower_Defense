@@ -10,16 +10,21 @@ class BirdCastle(Tower):
 
     def __init__(self, position):
         super().__init__(position)
-        self.maxHealth = 150
+        self.maxHealth = 250                            # pretty tough
         self.health = self.maxHealth
         self.attackRadius = 100
-        self.coolDown = 1000
-        self.damage = 1
+        self.weaknesses.append(DamageType.lazer)
+        self.weaknesses.append(DamageType.lightning)    # not weak to fire 
+
+        self.projectileColor = (100, 100, 100)
+        self.width = 75
+        self.height = 75
+        
         self.image = pygame.image.load(os.path.join("../assets/towers/bird_castle/", "birdCastle.png"))
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
-        self.weaknesses = [DamageType.lazer, DamageType.fire]
-        self.projectileColor = (100, 100, 100)
 
+
+    # overrides base class version
     def loadProjectile(self, enemy):
         laser = Lazer(self.position, enemy, self.closeEnemies)
         laser.color = self.projectileColor

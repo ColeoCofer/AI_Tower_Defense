@@ -4,15 +4,17 @@ import random
 from .enemy import Enemy
 from projectile.projectile import DamageType
 
+
 class Dragon(Enemy):
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        self.maxHealth = 14                     # dragons have medium health
+        self.maxHealth = 14                               # dragons have medium health
         self.health = self.maxHealth
-        self.velocity = random.randint(6, 10)   # dragons are pretty fast
+        self.velocity = random.randint(8, 12)             # dragons are pretty fast
         self.weaknesses.append(DamageType.lazer)
         self.weaknesses.append(DamageType.lightning)      # dragons are not weak to fire
+        self.superWeakness = DamageType.lightning         # dragons are super weak to lightning
 
         self.numImages = 4
         self.animationSpeed = 5

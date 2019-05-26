@@ -3,26 +3,32 @@ import random
 import pygame
 from projectile.projectile import DamageType
 from projectile.lightningBolt import LightningBolt
-from .attackingEnemy import AttackingEnemy
 from .enemy import Enemy
+from .attackingEnemy import AttackingEnemy
+
 
 class Wizard(AttackingEnemy):
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        self.maxHealth = 8
+        self.maxHealth = 12                         # wizards are kind of squishy
         self.health = self.maxHealth
+        self.velocity = random.randint(9, 13)       # wizards are fast as hell
+        self.weaknesses.append(DamageType.lazer)
+        self.weaknesses.append(DamageType.fire)     # wizards are not weak to lightning
+        self.superWeakness = DamageType.exploding   # and super weak to exploding shells
+        
         self.images = []
-        self.velocity = random.randint(self.health, self.health + (self.health // 2))
         self.animationSpeed = 1
         self.numImages = 20
         self.healthBarYOffset = 15
-        self.weaknesses.append(DamageType.lazer)
 
         #Load images
         for i in range(0, self.numImages):
             image = pygame.image.load(os.path.join("../assets/enemy/wizard", "2_enemies_1_walk_" + str(i) + ".png"))
             self.images.append(pygame.transform.scale(image, (self.width, self.height)))
 
+
+    # overrides base class version
     def loadProjectile(self, enemy):
         return LightningBolt((self.x, self.y), enemy, self.closeEnemies)

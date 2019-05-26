@@ -7,16 +7,24 @@ from .projectile import Projectile
 from .projectile import DamageType
 from animations.animation import Animation
 
+
+# base class for ranged projectiles
 class RangeProjectile(Projectile):
+    
     def __init__(self, towerPosition, enemy, enemies):
         super().__init__(towerPosition, enemy, enemies)
         self.animationCount = 0
+        self.detonationRange = 0
         
+
+    # only checks for weaknesses, ranges weapons only explode on contact so that is handled elsewhere   
     def fire(self):
         for weakness in self.targetEnemy.weaknesses:
             if self.damageType == weakness:
                 break
 
+
+    # draw a ranged weapon
     def draw(self, win):
         ''' Draws the enemy with given images '''
         numImages = len(self.images)
@@ -37,6 +45,7 @@ class RangeProjectile(Projectile):
         return self.move()
 
 
+    # moves animation along
     def move(self):
         x1, y1 = self.towerPosition[0], self.towerPosition[1]
         x2, y2 = self.enemyStartingPosition[0], self.enemyStartingPosition[1]
@@ -57,22 +66,27 @@ class RangeProjectile(Projectile):
         return self.didHitEnemy(ballEnemyDistance)
 
 
+    # checks if we are close to enemy to do damage
     def didHitEnemy(self, distance):
-        if distance < 30:
+        if distance < self.detonationRange:
             self.explosiveDamage()
             self.resetRangeProjectile()
+            # TODO I think we should be returning something for informative
             return True
 
 
+    # reset the center to the source tower if we hit the enemy
     def resetRangeProjectile(self):
         self.targetEnemy.hit(self.damage, self.damageType)
         self.x = self.towerPosition[0]
         self.y = self.towerPosition[1]
 
 
+    # base class stub
     def explosiveDamage(self):
         return
 
-    
+
+    # base class stub
     def finalAnimation(self, position):
         return 

@@ -4,32 +4,35 @@ from animations.animation import Animation
 from constants.animationConstants import *
 
 
+# Tower base class
 class Tower:
+
     def __init__(self, position):
         self.position = position
-        self.x = position[0]   #Position on map
+        self.x = position[0]   # Position on map
         self.y = position[1]
-        self.attackRadius = 0  #Distance it can attach enemies from
+        self.attackRadius = 0  # Distance it can attach enemies from
         self.closeEnemies = []
-
         self.maxHealth = 5
         self.health = self.maxHealth
+        self.weaknesses = [DamageType.melee]    # All towers are weak to the punches
+        self.attackCooldownTime = 0             # Timestamp showing when tower can attack again
+
         self.healthBarWidth = 50
         self.healthBarHeight = 10
-        self.healthBarYOffset = 10   #Larger numbers will move the health bar closer to the enemies head
-        self.weaknesses = []
-        self.canAttackTime = 0 #Timestamp showing when tower can attack again
+        self.healthBarYOffset = 10          # Larger numbers will move the health bar closer to the enemies head
         self.attackAnimationStopTime = 0
-        self.projectileColor = (255, 255, 255)
+        self.projectileColor = (155, 155, 155)
+        self.width = 64        # Width of animation images
+        self.height = 64       # Height of animation images
+        self.image = None      # Current image being displayed
 
         self.projectilesFired = []   # projectile magazine
         self.animations = []         # animations to render
 
-        self.image = None      #Current image being displayed
-        self.width = 64        #Width of animation images
-        self.height = 64       #Height of animation images
 
 
+    # launches a tower attacking round
     def attack(self, enemies, win):
         '''
         Looks for enemies within it's attack radius
@@ -39,7 +42,7 @@ class Tower:
 
         #Check if the tower is ready to attack again
         ticks = pygame.time.get_ticks()
-        if ticks >= self.canAttackTime:
+        if ticks >= self.attackCooldownTime:
             attackableEnemies = []
             i = 0
 
@@ -56,7 +59,7 @@ class Tower:
                 closestEnemyIndex = (min(attackableEnemies, key = lambda enemy: enemy[1]))[0]
                 projectileToFire = self.loadProjectile(enemies[closestEnemyIndex])
                 projectileToFire.enemies = enemies
-                self.canAttackTime = ticks + projectileToFire.reloadTime
+                self.attackCooldownTime = ticks + projectileToFire.reloadTime
                 projectileToFire.attackAnimationStopTime = ticks + projectileToFire.attackAnimationDuration
                 projectileToFire.color = self.projectileColor
                 projectileToFire.fire()
