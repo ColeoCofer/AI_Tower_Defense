@@ -4,8 +4,8 @@ from .projectile import Projectile
 from .projectile import DamageType
 
 class Lazer(Projectile):
-    def __init__(self, towerPosition, enemy):
-        super().__init__(towerPosition, enemy)
+    def __init__(self, towerPosition, enemy, enemies):
+        super().__init__(towerPosition, enemy, enemies)
         self.damage = 1
         self.damageType = DamageType.lazer
         self.color = (200, 100, 50)

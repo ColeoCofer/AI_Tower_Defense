@@ -10,7 +10,7 @@ class Zombie(Enemy):
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        self.maxHealth = 4
+        self.maxHealth = 14
         self.health = self.maxHealth
         self.images = []
         self.velocity = random.randint(self.health, self.health + (self.health // 2))

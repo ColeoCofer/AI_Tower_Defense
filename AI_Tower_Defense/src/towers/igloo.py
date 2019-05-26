@@ -22,4 +22,4 @@ class Igloo(Tower):
         self.weaknesses = [DamageType.lazer, DamageType.fire]
 
     def loadProjectile(self, enemy):
-        return IceBeam(self.position, enemy)
+        return IceBeam(self.position, enemy, self.closeEnemies)

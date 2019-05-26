@@ -16,7 +16,7 @@ class Robot(AttackingEnemy):
         super().__init__(yOffset)
         self.width = 54
         self.height = 54
-        self.maxHealth = 6
+        self.maxHealth = 12
         self.health = self.maxHealth
         self.images = []
         self.velocity = random.randint(self.health, self.health + (self.health // 2))
@@ -32,4 +32,4 @@ class Robot(AttackingEnemy):
             self.images.append(pygame.transform.scale(image, (self.width, self.height)))
 
     def loadProjectile(self, enemy):
-        return Lazer((self.x, self.y), enemy)
+        return Lazer((self.x, self.y), enemy, self.closeEnemies)

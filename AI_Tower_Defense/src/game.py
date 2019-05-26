@@ -79,7 +79,7 @@ class Game:
 
         self.win.set_alpha(None)
         self.enemies = [Zombie(30), Robot(0), Dino(15), Wizard(-25)]
-        self.towers = [SquareTower(TOWER_POSITIONS[10]), SquareTower(TOWER_POSITIONS[15]), SquareTower(TOWER_POSITIONS[8]), City((1180, 230))]
+        self.towers = [SquareTower(TOWER_POSITIONS[10]), Igloo(TOWER_POSITIONS[15]), SquareTower(TOWER_POSITIONS[8]), City((1180, 230))]
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = 0
         self.score = 0

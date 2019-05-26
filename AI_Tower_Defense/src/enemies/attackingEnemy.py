@@ -17,7 +17,11 @@ class AttackingEnemy(Enemy):
         self.projectilesFired = []
         self.projectileColor = (255, 255, 255)
 
+        self.closeEnemies = []
+
     def attack(self, enemies, win):
+        self.closeEnemies = enemies
+        
         if self.frozen == False:
             '''
             Looks for enemies within it's attack radius
@@ -40,6 +44,7 @@ class AttackingEnemy(Enemy):
                 if len(attackableEnemies) > 0:
                     closestEnemyIndex = (min(attackableEnemies, key = lambda enemy: enemy[1]))[0]
                     projectileToFire = self.loadProjectile(enemies[closestEnemyIndex])
+                    projectileToFire.enemies = enemies
                     self.canAttackTime = ticks + projectileToFire.reloadTime
                     projectileToFire.attackAnimationStopTime = ticks + projectileToFire.attackAnimationDuration
                     projectileToFire.color = self.projectileColor

@@ -18,4 +18,4 @@ class WizardTower(Tower):
         self.image = pygame.transform.scale(self.image, (80, 80))
 
     def loadProjectile(self, enemy):
-        return Lazer(self.position, enemy)
+        return Lazer(self.position, enemy, self.closeEnemies)
