@@ -18,4 +18,6 @@ class Obelisk(Tower):
         self.image = pygame.image.load(os.path.join("../assets/towers/obelisk/", "obelisk.png"))
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.weaknesses = [DamageType.lazer, DamageType.fire]
-        self.projectile = Lazer()
+
+    def loadProjectile(self, enemy):
+        return Lazer(self.position, enemy)

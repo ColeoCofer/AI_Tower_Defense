@@ -3,6 +3,7 @@ import random
 import pygame
 from projectile.projectile import DamageType
 from projectile.lazer import Lazer
+from .enemy import Enemy
 
 
 from .attackingEnemy import AttackingEnemy
@@ -21,8 +22,7 @@ class Robot(AttackingEnemy):
         self.velocity = random.randint(self.health, self.health + (self.health // 2))
         self.animationSpeed = 5
         self.weaknesses.append(DamageType.fire)
-        self.projectile = Lazer((self.x, self.y))
-        self.projectile.color = (120, 70, 170)
+        self.projectileColor = (120, 70, 170)
 
 
         #Load images
@@ -30,3 +30,6 @@ class Robot(AttackingEnemy):
             image = pygame.image.load(os.path.join("../assets/enemy/robot", "robot" + str(i) + ".png"))
             image = pygame.transform.flip(image, True, False)
             self.images.append(pygame.transform.scale(image, (self.width, self.height)))
+
+    def loadProjectile(self, enemy):
+        return Lazer((self.x, self.y), enemy)

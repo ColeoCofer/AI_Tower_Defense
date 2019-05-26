@@ -16,5 +16,6 @@ class WizardTower(Tower):
         self.damage = 4
         self.image = pygame.image.load(os.path.join("../assets/towers/wizard_tower/", "wizardTower.png"))
         self.image = pygame.transform.scale(self.image, (80, 80))
-        self.projectile = Lazer()
 
+    def loadProjectile(self, enemy):
+        return Lazer(self.position, enemy)
