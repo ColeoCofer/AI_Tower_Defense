@@ -26,8 +26,8 @@ from constants.gameConstants import *
 =======
 
 #Fullscreen will make the game run waaaay better
-FULLSCREEN_MODE = True
-PLAY_BG_MUSIC = True      #Set false to turn music off
+FULLSCREEN_MODE = False
+PLAY_BG_MUSIC = False      #Set false to turn music off
 
 TOWER_POSITIONS = [(35, 294), (131, 289), (128, 181), (189, 151), (354, 150), (428, 387), (492, 383), (493, 261), (423, 264), (559, 211), (732, 207), (279, 302), (277, 380), (44, 427), (193, 430), (355, 519), (468, 517), (591, 516), (657, 351), (679, 412), (637, 416), (822, 341), (817, 285), (904, 182), (1152, 180), (1034, 180), (1160, 321), (1072, 320), (990, 321), (972, 422), (282, 458), (272, 149), (645, 209), (425, 200), (127, 233), (747, 458), (899, 455)]
 
@@ -93,11 +93,14 @@ class Game:
         self.coins = Coin(self.coinPosition, 50)
         self.bg = pygame.image.load(os.path.join("../assets/map", "bg.png"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
+        self.gameoverImage = pygame.image.load(os.path.join("../assets/other", "gameover.png"))
+        self.gameoverImage = pygame.transform.scale(self.bg, (self.width, self.height))
         self.clicks = []
         self.spawnChance = 0.015
 
         #Fonts
         self.uiFont = pygame.font.SysFont('lucidagrandettc', 24)
+        self.gameoverFont = pygame.font.SysFont('lucidagrandettc', 50)
 
 
     def run(self):
@@ -121,7 +124,7 @@ class Game:
             if VISUAL_MODE:
                 self.draw(clock.get_fps())
 
-        pygame.time.delay(3000)
+        self.gameover()
         pygame.quit()
 
 
@@ -209,6 +212,7 @@ class Game:
         Objects will be rendered sequentially,
         meaning the code at the end will be rendered above all.
         '''
+
         #Render the background
         self.win.blit(self.bg, (0, 0))
 
@@ -229,11 +233,6 @@ class Game:
 
         #Render UI Text Elements
         self.displayTextUI(self.win, fps)
-
-        if self.stillAlive == False:
-            gameoverImage = pygame.image.load(os.path.join("../assets/other", "gameover.jpg"))
-            gameoverImage = pygame.transform.scale(gameoverImage, (self.width, self.height))
-            self.win.blit(gameoverImage, (0, 0))
 
         #Update the window
         pygame.display.update()
@@ -273,11 +272,10 @@ class Game:
     def stillAlive(self):
         return self.health > 0
 
-    def displayGameover(self):
-        gameoverImage = pygame.image.load(os.path.join("../assets/other", "gameover.jpg"))
-        gameoverImage = pygame.transform.scale(gameoverImage, (self.width, self.height))
-        self.win.blit(gameoverImage, (0, 0))
-        pygame.display.flip()
+    def gameover(self):
+        ''' I can't for the life of me get this to be displayed'''
+        self.win.blit(self.gameoverImage, (0, 0))
+        pygame.display.update()
 
 
 # plays our awesome RenFair music
