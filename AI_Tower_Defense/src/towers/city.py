@@ -23,4 +23,6 @@ class City(Tower):
         self.projectileColor = (200, 200, 200)
 
     def loadProjectile(self, enemy):
-        return Lazer(self.position, enemy, self.closeEnemies)
+        laser = Lazer(self.position, enemy, self.closeEnemies)
+        laser.color = self.projectileColor
+        return laser

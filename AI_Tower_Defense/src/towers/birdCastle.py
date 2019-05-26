@@ -21,4 +21,6 @@ class BirdCastle(Tower):
         self.projectileColor = (100, 100, 100)
 
     def loadProjectile(self, enemy):
-        return Lazer(self.position, enemy, self.closeEnemies)
+        laser = Lazer(self.position, enemy, self.closeEnemies)
+        laser.color = self.projectileColor
+        return laser

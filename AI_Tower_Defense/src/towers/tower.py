@@ -1,5 +1,6 @@
 import pygame
 from projectile.projectile import Projectile, DamageType
+from projectile.explosion import Explosion
 
 HEALTH_GREEN = (255, 0, 0)
 HEALTH_RED = (0,128,0)
@@ -23,6 +24,7 @@ class Tower:
         self.projectileColor = (255, 255, 255)
 
         self.projectilesFired = []
+        self.explosions = []
 
         self.image = None      #Current image being displayed
         self.width = 64        #Width of animation images
@@ -85,7 +87,15 @@ class Tower:
                 del self.projectilesFired[i]
                 continue
             if self.projectilesFired[i].draw(win) == True:    
+                self.explodingAnimation(self.projectilesFired[i])
                 del self.projectilesFired[i]
+
+        for j in range(len(self.explosions)):
+            self.explosions[j].draw(win)  
+            if self.explosions[j].attackAnimationStopTime < pygame.time.get_ticks():
+                del self.explosions[j]
+                continue
+              
 
         self.drawHealthBox(win, centerX, centerY)
 
@@ -97,3 +107,9 @@ class Tower:
 
     def loadProjectile(self, enemy):
         return Projectile(self.position, enemy)
+
+    def explodingAnimation(self, projectile):
+        explosion = Explosion(projectile.enemyStartingPosition)
+        explosion.attackAnimationStopTime = pygame.time.get_ticks() + explosion.attackAnimationDuration
+        self.explosions.append(explosion)
+        # print(str(len(self.projectilesFired)))

@@ -13,6 +13,5 @@ class IceBeam(Projectile):
         self.velocity = 5
 
     def draw(self, win):
-        self.color = (9, 146, 208)
         color = tuple((self.color[0] + random.randint(-8, 45), self.color[1] + random.randint(-8,45), self.color[2] + random.randint(-8, 45)))
         pygame.draw.line(win, color, self.towerPosition, self.enemyStartingPosition, 5)
