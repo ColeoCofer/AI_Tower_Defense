@@ -2,67 +2,69 @@ import pygame
 import math
 import os
 from projectile.projectile import DamageType
+from constants.animationConstants import *
 
-HEALTH_GREEN = (255, 0, 0)
-HEALTH_RED = (0,128,0)
-
+# enemy base class
 class Enemy:
+
     def __init__(self, yOffset):
-        self.maxHealth = 5
+        self.maxHealth = 0
         self.health = self.maxHealth
-        self.healthBarWidth = 50
-        self.healthBarHeight = 10
-        self.healthBarYOffset = 10   #Larger numbers will move the health bar closer to the enemies head
-        self.velocity = 20           #Pixels per frame
-        self.animationSpeed = 3      #Smaller numbers animate faster
-        self.weaknesses = [DamageType.ice, DamageType.exploding]
+        self.velocity = 0           
+        self.weaknesses = [DamageType.ice, DamageType.exploding]      # all creatures are weak to ice and explosions
+        self.superWeakness = None   # will cause an enemy to lose 2x damage when projectile damage is the same
         self.frozen = False
         self.frozenDuration = 0
 
-        #Animation
-        self.images = []          #Animation images
-        self.width = 64           #Image width
-        self.height = 64          #Image height
-        self.animationCount = 0   #Keep track of which animation to display
-        self.image = None         #Current image to render
+        # Animation
+        self.animationSpeed = 3      # Smaller numbers animate faster
+        self.images = []             # Animation images
+        self.width = 64              # Base Image width
+        self.height = 64             # Base Image height
+        self.animationCount = 0      # Keep track of which animation to display
+        self.image = None            # Current image to render
+        self.healthBarWidth = 50
+        self.healthBarHeight = 10
+        self.healthBarYOffset = 10    #Larger numbers will move the health bar closer to the enemies head
+        self.numImages = 0
 
+        # default snowman animation
         self.snowman = pygame.transform.scale(pygame.image.load(os.path.join("../assets/enemy/snowman", "snowman.png")), (self.width, self.height))
 
-        #List of coordinates that the enemy will follow
+        # List of coordinates that the enemy will follow
         self.pathIndex = 0
         self.path = [(-5, 362), (19, 362), (197, 362), (197, 217), (360, 217), (360, 456), (565, 456), (565, 280), (743, 280), (743, 397), (905, 397), (905, 244), (1250, 244)]
         self.x = self.path[0][0]
         self.y = self.path[0][1]
-
         self.path.append((1250 + (self.width * 2), self.path[-1][1]))
 
-        #Slightly offset the y-axis
+        # Slightly offset the y-axis
         for i in range(len(self.path)):
             self.path[i] = (self.path[i][0], self.path[i][1] + yOffset)
 
     def draw(self, win):
-
+        # if the enemy is frozen display snowman
         if self.frozen:
             self.image = self.snowman
         else:
             ''' Draws the enemy with given images '''
             numImages = len(self.images)
-            #Set the image for # of frames ('//' means integer division)
+            # Set the image for # of frames ('//' means integer division)
             self.image = self.images[self.animationCount // self.animationSpeed]
 
-            #Iterate to the next animation image
+            # Iterate to the next animation image
             self.animationCount += 1
 
-            #Reset the animation count if we rendered the last image
+            # Reset the animation count if we rendered the last image
             if self.animationCount >= (numImages * self.animationSpeed):
                 self.animationCount = 0
 
-        #Display from center of character
+        # Display from center of character
         centerX = self.x - (self.width / 2)
         centerY = self.y - (self.height / 2)
 
+        # draw health box, render sprite, and move
         self.drawHealthBox(win, centerX, centerY)
-
         win.blit(self.image, (centerX, centerY))
         self.move()
 
@@ -146,6 +148,8 @@ class Enemy:
 
     def hit(self, damage, damageType):
         ''' Returns true if the enemy died and subtracts damage from its health '''
+        if damageType == self.superWeakness:
+            damage *= 2
         self.health = self.health - damage
         if damageType == DamageType.ice:
             self.frozen = True

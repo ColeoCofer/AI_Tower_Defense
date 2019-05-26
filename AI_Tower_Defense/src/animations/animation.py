@@ -2,17 +2,17 @@ import os
 import pygame
 import random
 import math
-from .projectile import Projectile
-from .projectile import DamageType
 
-class Explosion():
+
+class Animation():
+
     def __init__(self, position):
-        self.numImages = 8
-        self.width = 100
-        self.height = 100
-        self.attackAnimationDuration = 1200
+        self.numImages = 0                  # all will get overridden except self.x and self.y
+        self.width = 0
+        self.height = 0
+        self.attackAnimationDuration = 0
         self.attackAnimationStopTime = 0
-        self.animationSpeed = 3
+        self.animationSpeed = 0
         self.animationCount = 0
         self.velocity = 0
         self.images = []
@@ -20,12 +20,8 @@ class Explosion():
         self.x = position[0]
         self.y = position[1]
 
-        #Load images
-        for i in range(0, self.numImages):
-            image = pygame.image.load(os.path.join("../assets/projectiles/explosion", "explosion" + str(i) + ".png"))
-            self.images.append(pygame.transform.scale(image, (self.width, self.height)))
-        self.image = self.images[0]
 
+    # draws an animation by frames
     def draw(self, win):
         ''' Draws the enemy with given images '''
         self.numImages = len(self.images)
