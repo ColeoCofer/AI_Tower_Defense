@@ -17,7 +17,6 @@ class SquareTower(Tower):
         self.image = pygame.image.load(os.path.join("../assets/towers/basic_castle/", "tower_square.png"))
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.weaknesses = [DamageType.lazer, DamageType.fire]
-        # self.projectile = Cannonball()
 
     def loadProjectile(self, enemy):
         return Cannonball(self.position, enemy)

@@ -15,7 +15,7 @@ class AttackingEnemy(Enemy):
         self.attackAnimationDuration = 200
         self.attackAnimationTimeStamp = 0
         self.projectilesFired = []
-        # self.projectile = None
+        self.projectileColor = (255, 255, 255)
 
     def attack(self, enemies, win):
         if self.frozen == False:
@@ -39,10 +39,10 @@ class AttackingEnemy(Enemy):
 
                 if len(attackableEnemies) > 0:
                     closestEnemyIndex = (min(attackableEnemies, key = lambda enemy: enemy[1]))[0]
-                    self.attackAnimationStopTime = ticks + self.attackAnimationDuration
-
                     projectileToFire = self.loadProjectile(enemies[closestEnemyIndex])
                     self.canAttackTime = ticks + projectileToFire.reloadTime
+                    projectileToFire.attackAnimationStopTime = ticks + projectileToFire.attackAnimationDuration
+                    projectileToFire.color = self.projectileColor
                     projectileToFire.fire()
                     self.projectilesFired.append(projectileToFire)  
 
@@ -70,22 +70,21 @@ class AttackingEnemy(Enemy):
         centerX = self.x - (self.width / 2)
         centerY = self.y - (self.height / 2)
 
-        #Check if we should display the attack animation
-        # if pygame.time.get_ticks() <= self.attackAnimationTimeStamp:
-        #     for enemy in self.enemiesBeingAttacked:
-        #         self.projectile.draw(win, (self.x, self.y), enemy)
-        # else:
-        #     self.enemiesBeingAttacked = []
-
         for i in range(len(self.projectilesFired)):
-            if self.projectilesFired[i].draw(win) == True:
-                # self.enemiesBeingAttacked = []
+            if self.projectilesFired[i].attackAnimationStopTime < pygame.time.get_ticks():
                 del self.projectilesFired[i]
-
+                continue
+            if self.projectilesFired[i].draw(win) == True:
+                del self.projectilesFired[i]
+            
+                
+            
+        
         self.drawHealthBox(win, centerX, centerY)
 
         win.blit(self.image, (centerX, centerY))
         self.move()
+
 
     def loadProjectile(self, enemy):
         return Projectile((self.x, self.y), enemy)

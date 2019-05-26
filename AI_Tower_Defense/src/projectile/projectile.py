@@ -26,18 +26,21 @@ class Projectile:
         self.velocity = 5
         self.images = []
         self.image = None
+        
         self.animationSpeed = 3
         self.animationCount = 0
+        
+        self.attackAnimationStopTime = 0
+        self.attackAnimationDuration = 200
+
 
     def fire(self):
         for weakness in self.targetEnemy.weaknesses:
-            if self.damageType == weakness:
-                if self.damageType == DamageType.ice and self.targetEnemy.frozen:
+            if self.damageType == DamageType.ice and self.targetEnemy.frozen:
                     continue
-                break
+            if self.damageType == weakness:
+                self.targetEnemy.hit(self.damage, self.damageType)
+                
 
     def draw(self, win):
-            newColor = []
-            for channel in self.color:
-                newColor.append(channel + random.randint(-50, 50))
-            color = tuple(newColor)
+        return

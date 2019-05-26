@@ -22,8 +22,7 @@ class Robot(AttackingEnemy):
         self.velocity = random.randint(self.health, self.health + (self.health // 2))
         self.animationSpeed = 5
         self.weaknesses.append(DamageType.fire)
-        self.projectile = Lazer((self.x, self.y), Enemy(0))
-        self.projectile.color = (120, 70, 170)
+        self.projectileColor = (120, 70, 170)
 
 
         #Load images

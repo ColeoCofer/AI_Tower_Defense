@@ -19,4 +19,3 @@ class Punch(Projectile):
 
         color = tuple(newColor)
 
-        # need to add how projectiles are rendered

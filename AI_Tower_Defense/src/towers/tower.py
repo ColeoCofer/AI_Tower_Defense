@@ -10,7 +10,7 @@ class Tower:
         self.x = position[0]   #Position on map
         self.y = position[1]
         self.attackRadius = 0  #Distance it can attach enemies from
-        # self.projectile = None
+
         self.maxHealth = 5
         self.health = self.maxHealth
         self.healthBarWidth = 50
@@ -18,10 +18,9 @@ class Tower:
         self.healthBarYOffset = 10   #Larger numbers will move the health bar closer to the enemies head
         self.weaknesses = []
         self.canAttackTime = 0 #Timestamp showing when tower can attack again
-        self.attackAnimationDuration = 200
         self.attackAnimationStopTime = 0
+        self.projectileColor = (255, 255, 255)
 
-        # self.enemiesBeingAttacked = []
         self.projectilesFired = []
 
         self.image = None      #Current image being displayed
@@ -50,10 +49,10 @@ class Tower:
 
             if len(attackableEnemies) > 0:
                 closestEnemyIndex = (min(attackableEnemies, key = lambda enemy: enemy[1]))[0]
-                self.attackAnimationStopTime = ticks + self.attackAnimationDuration
-
                 projectileToFire = self.loadProjectile(enemies[closestEnemyIndex])
                 self.canAttackTime = ticks + projectileToFire.reloadTime
+                projectileToFire.attackAnimationStopTime = ticks + projectileToFire.attackAnimationDuration
+                projectileToFire.color = self.projectileColor
                 projectileToFire.fire()
                 self.projectilesFired.append(projectileToFire)                
 
@@ -77,14 +76,12 @@ class Tower:
         centerX = self.x - (self.width / 2)
         centerY = self.y - (self.height / 2)
 
-        #Check if we should display the attack animation
-        # if pygame.time.get_ticks() <= self.attackAnimationStopTime:
-
         for i in range(len(self.projectilesFired)):
-            if self.projectilesFired[i].draw(win) == True:
-                # self.enemiesBeingAttacked = []
+            if self.projectilesFired[i].attackAnimationStopTime < pygame.time.get_ticks():
                 del self.projectilesFired[i]
-
+                continue
+            if self.projectilesFired[i].draw(win) == True:
+                del self.projectilesFired[i]
 
         self.drawHealthBox(win, centerX, centerY)
 

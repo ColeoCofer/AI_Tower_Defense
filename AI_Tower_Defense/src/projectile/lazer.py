@@ -12,6 +12,7 @@ class Lazer(Projectile):
         self.reloadTime = 1000
         self.velocity = 5
 
+
     def draw(self, win):
         newColor = []
         for channel in self.color:
@@ -20,3 +21,5 @@ class Lazer(Projectile):
         color = tuple(newColor)
 
         pygame.draw.line(win, color, self.towerPosition, (self.targetEnemy.x, self.targetEnemy.y), 5)
+        
+
