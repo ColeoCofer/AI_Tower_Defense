@@ -18,8 +18,8 @@ class Lazer(Projectile):
         for channel in self.color:
             newColor.append(channel + random.randint(-50, 50))
 
-        color = tuple(newColor)
+        newColor = tuple(newColor)
+        print(f"baseColor {self.color}")
+        print(f"color: {newColor}")
 
-        pygame.draw.line(win, color, self.towerPosition, (self.targetEnemy.x, self.targetEnemy.y), 5)
-        
-
+        pygame.draw.line(win, newColor, self.towerPosition, (self.targetEnemy.x, self.targetEnemy.y), 5)

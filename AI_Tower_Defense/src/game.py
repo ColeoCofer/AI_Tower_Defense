@@ -23,7 +23,7 @@ from ui.coin import Coin
 
 
 #Fullscreen will make the game run waaaay better
-FULLSCREEN_MODE = False
+FULLSCREEN_MODE = True
 PLAY_BG_MUSIC = True      #Set false to turn music off
 
 TOWER_POSITIONS = [(35, 294), (131, 289), (128, 181), (189, 151), (354, 150), (428, 387), (492, 383), (493, 261), (423, 264), (559, 211), (732, 207), (279, 302), (277, 380), (44, 427), (193, 430), (355, 519), (468, 517), (591, 516), (657, 351), (679, 412), (637, 416), (822, 341), (817, 285), (904, 182), (1152, 180), (1034, 180), (1160, 321), (1072, 320), (990, 321), (972, 422), (282, 458), (272, 149), (645, 209), (425, 200), (127, 233), (747, 458), (899, 455)]
@@ -90,7 +90,7 @@ class Game:
         self.bg = pygame.image.load(os.path.join("../assets/map", "bg.png"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
         self.clicks = []
-        self.spawnChance = 0.015
+        self.spawnChance = 0.15
 
         #Fonts
         self.uiFont = pygame.font.SysFont('lucidagrandettc', 24)
@@ -115,6 +115,7 @@ class Game:
             if VISUAL_MODE:
                 self.draw(clock.get_fps())
 
+        self.gameover()
         pygame.quit()
 
     def towerHealthCheck(self):
@@ -160,16 +161,16 @@ class Game:
         ''' Removes enemies that have walked off screen'''
         enemiesToDelete = []
         for enemy in self.enemies:
+            if enemy.x > WIN_WIDTH:
+                self.lives -= 1
+                self.health -= enemy.health
+
+            if enemy.health <= 0:
+                self.score += enemy.maxHealth
+
             if enemy.x > WIN_WIDTH or enemy.health <= 0:
                 self.enemies.remove(enemy)
                 self.remainingEnemies -= 1
-
-                if enemy.x > WIN_WIDTH:
-                    self.lives -= 1
-                    self.health -= enemy.health
-
-                if enemy.health <= 0:
-                    self.score += enemy.maxHealth
 
 
     def spawnEnemies(self):
@@ -253,6 +254,12 @@ def startBgMusic():
         randSong = random.randint(0, len(BG_MUSIC) - 1)
         pygame.mixer.music.load("../assets/music/background/" + BG_MUSIC[randSong])
         pygame.mixer.music.play(-1)
+
+def gameover(self):
+    gameoverImage = pygame.image.load(os.path.join("../assets/other", "gameover.png"))
+    gameoverImage = pygame.transform.scale(gameoverImage, (self.width, self.height))
+    self.win.blit(gameoverImage, (0, 0))
+    pygame.time.delay(3000)
 
 
 if __name__ == "__main__":
