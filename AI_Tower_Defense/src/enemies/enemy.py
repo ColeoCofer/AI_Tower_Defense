@@ -16,15 +16,16 @@ class Enemy:
         self.frozenDuration = 0
 
         # Animation
-        self.animationSpeed = 1      #Smaller numbers animate faster
-        self.images = []             #Animation images
-        self.width = 0               #Image width
-        self.height = 0              #Image height
-        self.animationCount = 0      #Keep track of which animation to display
-        self.image = None            #Current image to render
-        self.healthBarWidth = 0
-        self.healthBarHeight = 0
-        self.healthBarYOffset = 0    #Larger numbers will move the health bar closer to the enemies head
+        self.animationSpeed = 3      # Smaller numbers animate faster
+        self.images = []             # Animation images
+        self.width = 64              # Base Image width
+        self.height = 64             # Base Image height
+        self.animationCount = 0      # Keep track of which animation to display
+        self.image = None            # Current image to render
+        self.healthBarWidth = 50
+        self.healthBarHeight = 10
+        self.healthBarYOffset = 10    #Larger numbers will move the health bar closer to the enemies head
+        self.numImages = 0
 
         # default snowman animation
         self.snowman = pygame.transform.scale(pygame.image.load(os.path.join("../assets/enemy/snowman", "snowman.png")), (self.width, self.height))

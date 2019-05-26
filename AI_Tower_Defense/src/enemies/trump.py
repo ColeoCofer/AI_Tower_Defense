@@ -8,13 +8,13 @@ from projectile.fakeTanSpray import FakeTanSpray
 
 
 class Trump(AttackingEnemy):
-    numImages = 20
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
         self.maxHealth = 50
         self.health = self.maxHealth
         self.images = []
+        self.numImages = 20
         self.velocity = random.randint(self.health, self.health + (self.health // 2))
         self.animationSpeed = 1
         self.healthBarYOffset = 15

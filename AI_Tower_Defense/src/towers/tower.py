@@ -90,8 +90,9 @@ class Tower:
             # check and make sure animation time hasn't lapsed
             if self.projectilesFired[i].attackAnimationStopTime < pygame.time.get_ticks():
                 del self.projectilesFired[i]
+                continue
             # TODO I think we may want to think about this. It currently is saying that a projectile has hit it's target
-            elif self.projectilesFired[i].draw(win) == True: 
+            if self.projectilesFired[i].draw(win) == True: 
                 # replace the projectile with its final animation in the same postion   
                 self.addAnimationToQueue(self.projectilesFired[i])
                 del self.projectilesFired[i]

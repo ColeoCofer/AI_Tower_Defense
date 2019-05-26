@@ -6,13 +6,13 @@ from projectile.projectile import DamageType
 
 
 class Zombie(Enemy):
-    numImages = 4
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
         self.maxHealth = 14
         self.health = self.maxHealth
         self.images = []
+        self.numImages = 4
         self.velocity = 6
         self.healthBarYOffset = 30
         self.weaknesses.append(DamageType.fire)

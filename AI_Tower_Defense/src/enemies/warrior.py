@@ -24,7 +24,7 @@ class Warrior(AttackingEnemy):
 
 
         #Load images
-        for i in range(1, self.numImages):
+        for i in range(0, self.numImages):
             image = pygame.image.load(os.path.join("../assets/enemy/warrior", "3_enemies_1_walk_" + str(i) + ".png"))
             self.images.append(pygame.transform.scale(image, (self.width, self.height)))
 

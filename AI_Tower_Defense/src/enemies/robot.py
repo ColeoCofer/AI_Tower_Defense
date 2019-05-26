@@ -8,7 +8,6 @@ from .attackingEnemy import AttackingEnemy
 
 
 class Robot(AttackingEnemy):
-    numImages = 3
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
@@ -21,10 +20,11 @@ class Robot(AttackingEnemy):
         self.animationSpeed = 5
         self.weaknesses.append(DamageType.fire)
         self.projectileColor = (120, 70, 170)
+        self.numImages = 3
 
 
         #Load images
-        for i in range(1, self.numImages):
+        for i in range(0, self.numImages):
             image = pygame.image.load(os.path.join("../assets/enemy/robot", "robot" + str(i) + ".png"))
             image = pygame.transform.flip(image, True, False)
             self.images.append(pygame.transform.scale(image, (self.width, self.height)))
