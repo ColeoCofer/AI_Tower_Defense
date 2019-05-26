@@ -1,6 +1,6 @@
 import pygame
 from projectile.projectile import Projectile, DamageType
-from projectile.explosion import Explosion
+from animations.animation import Animation
 
 HEALTH_GREEN = (255, 0, 0)
 HEALTH_RED = (0,128,0)
@@ -24,7 +24,7 @@ class Tower:
         self.projectileColor = (255, 255, 255)
 
         self.projectilesFired = []
-        self.explosions = []
+        self.animations = []
 
         self.image = None      #Current image being displayed
         self.width = 64        #Width of animation images
@@ -64,6 +64,7 @@ class Tower:
 
         return enemies
 
+
     def drawHealthBox(self, win, centerX, centerY):
         ''' Draws a health box above each tower '''
         if self.health > 0:
@@ -82,34 +83,36 @@ class Tower:
         centerX = self.x - (self.width / 2)
         centerY = self.y - (self.height / 2)
 
-        for i in range(len(self.projectilesFired)):
+        i = 0
+        while i < len(self.projectilesFired):
             if self.projectilesFired[i].attackAnimationStopTime < pygame.time.get_ticks():
                 del self.projectilesFired[i]
                 continue
             if self.projectilesFired[i].draw(win) == True:    
-                self.explodingAnimation(self.projectilesFired[i])
+                self.addAnimationToQueue(self.projectilesFired[i])
                 del self.projectilesFired[i]
+            i += 1
 
-        for j in range(len(self.explosions)):
-            self.explosions[j].draw(win)  
-            if self.explosions[j].attackAnimationStopTime < pygame.time.get_ticks():
-                del self.explosions[j]
+        for j in range(len(self.animations)):
+            self.animations[j].draw(win)  
+            if self.animations[j].attackAnimationStopTime < pygame.time.get_ticks():
+                del self.animations[j]
                 continue
               
-
         self.drawHealthBox(win, centerX, centerY)
-
         win.blit(self.image, (centerX, centerY))
+
 
     def hit(self, damage, damageType):
         ''' Returns true if the enemy died and subtracts damage from its health '''
         self.health = self.health - damage
 
+
     def loadProjectile(self, enemy):
         return Projectile(self.position, enemy)
 
-    def explodingAnimation(self, projectile):
-        explosion = Explosion(projectile.enemyStartingPosition)
-        explosion.attackAnimationStopTime = pygame.time.get_ticks() + explosion.attackAnimationDuration
-        self.explosions.append(explosion)
-        # print(str(len(self.projectilesFired)))
+
+    def addAnimationToQueue(self, projectile):
+        animation = projectile.finalAnimation(projectile.enemyStartingPosition)
+        animation.attackAnimationStopTime = pygame.time.get_ticks() + animation.attackAnimationDuration
+        self.animations.append(animation)

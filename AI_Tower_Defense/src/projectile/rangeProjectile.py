@@ -5,6 +5,7 @@ import math
 import enum
 from .projectile import Projectile
 from .projectile import DamageType
+from animations.animation import Animation
 
 class RangeProjectile(Projectile):
     def __init__(self, towerPosition, enemy, enemies):
@@ -68,5 +69,10 @@ class RangeProjectile(Projectile):
         self.x = self.towerPosition[0]
         self.y = self.towerPosition[1]
 
+
     def explosiveDamage(self):
         return
+
+    
+    def finalAnimation(self, position):
+        return 

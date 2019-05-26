@@ -13,7 +13,7 @@ class Zombie(Enemy):
         self.maxHealth = 14
         self.health = self.maxHealth
         self.images = []
-        self.velocity = random.randint(self.health, self.health + (self.health // 2))
+        self.velocity = 6
         self.healthBarYOffset = 30
         self.weaknesses.append(DamageType.fire)
 

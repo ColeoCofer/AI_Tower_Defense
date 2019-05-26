@@ -4,6 +4,7 @@ import random
 import math
 from .rangeProjectile import RangeProjectile
 from .projectile import DamageType
+from animations.explosion import Explosion
 
 class Cannonball(RangeProjectile):
     def __init__(self, towerPosition, enemy, enemies):
@@ -15,7 +16,7 @@ class Cannonball(RangeProjectile):
         self.numImages = 1
         self.width = 30
         self.height = 30
-        self.attackAnimationDuration = 10000
+        self.attackAnimationDuration = 5000
         self.attackRadius = 30
 
         #Load images
@@ -24,9 +25,14 @@ class Cannonball(RangeProjectile):
             self.images.append(pygame.transform.scale(image, (self.width, self.height)))
         self.image = self.images[0]
 
+
     def explosiveDamage(self):
         for enemy in self.enemies:
             dist = (enemy.x - self.x) ** 2 + (enemy.y - self.y) ** 2
             #Use radius squared to avoid taking square roots of distance
             if dist <= self.attackRadius ** 2:
                 enemy.hit((self.damage / 2), self.damageType)
+
+
+    def finalAnimation(self, position):
+        return Explosion(position)
