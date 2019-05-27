@@ -19,6 +19,8 @@ class Fireball(RangeProjectile):
         self.width = 30
         self.height = 30
         self.attackAnimationDuration = 5000
+        self.attackSound = pygame.mixer.Sound("../assets/sounds/fire.wav")
+        self.attackSound.set_volume(0.15)
 
         #Load images
         for i in range(0, self.numImages):
@@ -26,5 +28,17 @@ class Fireball(RangeProjectile):
             self.images.append(pygame.transform.scale(image, (self.width, self.height)))
         self.image = self.images[0]
 
+
     def finalAnimation(self, position):
         return Explosion(position)
+
+    # fires a projectile
+    def fire(self):
+        for weakness in self.targetEnemy.weaknesses:
+            # skip if frozen
+            if self.damageType == DamageType.ice and self.targetEnemy.frozen:
+                continue
+            # deal damage to enemy
+            if self.damageType == weakness:
+                self.attackSound.play()
+                self.targetEnemy.hit(self.damage, self.damageType)
