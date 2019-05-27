@@ -9,6 +9,7 @@ from enemies.dragon import Dragon
 from enemies.robot import Robot
 from enemies.wizard import Wizard
 from enemies.warrior import Warrior
+from enemies.trump import Trump
 from enemies.attackingEnemy import AttackingEnemy
 
 from towers.squareTower import SquareTower
@@ -22,6 +23,7 @@ from towers.igloo import Igloo
 from ui.coin import Coin
 
 from constants.gameConstants import *
+
 
 def main():
     ''' Entry point for game '''
@@ -54,7 +56,7 @@ class Game:
             self.win = pygame.display.set_mode((self.width, self.height))
 
         self.win.set_alpha(None)
-        self.enemies = [Zombie(30), Robot(0), Dino(15), Wizard(-25)]
+        self.enemies = [Trump(-10), Warrior(0), Zombie(30), Robot(0), Dino(15), Wizard(-25)]
         self.towers = [Obelisk(TOWER_POSITIONS[2]),  SquareTower(TOWER_POSITIONS[3]), Pyramid(TOWER_POSITIONS[5]), BirdCastle(TOWER_POSITIONS[7]), SquareTower(TOWER_POSITIONS[10]), Igloo(TOWER_POSITIONS[15]), WizardTower(TOWER_POSITIONS[8]), City((1180, 230))]
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = 0
@@ -65,32 +67,38 @@ class Game:
         self.coins = Coin(self.coinPosition, 50)
         self.bg = pygame.image.load(os.path.join("../assets/map", "bg.png"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
+        self.gameoverImage = pygame.image.load(os.path.join("../assets/other", "gameover.png"))
+        self.gameoverImage = pygame.transform.scale(self.bg, (self.width, self.height))
         self.clicks = []
         self.spawnChance = 0.015
 
         #Fonts
         self.uiFont = pygame.font.SysFont('lucidagrandettc', 24)
+        self.gameoverFont = pygame.font.SysFont('lucidagrandettc', 50)
 
 
     def run(self):
         ''' Main game loop '''
         clock = pygame.time.Clock()
         run = True
+        playerHasQuit = False
 
-        while self.health >= 0 and run == True:
+        while run == True and playerHasQuit == False:
             if TRAINING_MODE:
                 clock.tick(FPS)
 
             self.spawnEnemies()
-            run = self.handleEvents()
+            playerHasQuit = self.handleEvents()
             self.towerHealthCheck()
             self.towersAttack()
             self.enemiesAttack()
             self.removeEnemies()
+            run = self.isAlive()
 
             if VISUAL_MODE:
                 self.draw(clock.get_fps())
 
+        self.gameover()
         pygame.quit()
 
 
@@ -119,16 +127,20 @@ class Game:
 
     ''' Handle keyboard and mouse events '''
     def handleEvents(self):
+        '''
+        Handle keyboard and mouse events
+        Returns True if the user quits the game
+        '''
 
         #Check for active pygame events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return False
+                return True
 
             #Quit the game if the user hits the 'Q' key
             if event.type == pygame.KEYDOWN:
                 if event.unicode == 'q':
-                    return False
+                    return True
 
             #Store mouse clicks to determine path for enemies
             mousePosition = pygame.mouse.get_pos()
@@ -136,23 +148,23 @@ class Game:
                 self.clicks.append(mousePosition)
                 print(self.clicks)
 
-        return True
+        return False
 
 
     ''' Removes enemies that have walked off screen'''
     def removeEnemies(self):
         enemiesToDelete = []
         for enemy in self.enemies:
+            if enemy.x > WIN_WIDTH:
+                self.lives -= 1
+                self.health -= enemy.health
+
+            if enemy.health <= 0:
+                self.score += enemy.maxHealth
+
             if enemy.x > WIN_WIDTH or enemy.health <= 0:
                 self.enemies.remove(enemy)
                 self.remainingEnemies -= 1
-
-                if enemy.x > WIN_WIDTH:
-                    self.lives -= 1
-                    self.health -= enemy.health
-
-                if enemy.health <= 0:
-                    self.score += enemy.maxHealth
 
 
     def spawnEnemies(self):
@@ -174,6 +186,7 @@ class Game:
         Objects will be rendered sequentially,
         meaning the code at the end will be rendered above all.
         '''
+
         #Render the background
         self.win.blit(self.bg, (0, 0))
 
@@ -229,6 +242,14 @@ class Game:
         scoreColor = (250, 241, 95)
         scoreSurface = self.uiFont.render(scoreText, False, scoreColor)
         win.blit(scoreSurface, scorePosition)
+
+    def isAlive(self):
+        return self.health > 0
+
+    def gameover(self):
+        ''' I can't for the life of me get this to be displayed'''
+        self.win.blit(self.gameoverImage, (0, 0))
+        pygame.display.update()
 
 
 # plays our awesome RenFair music

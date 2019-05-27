@@ -10,15 +10,14 @@ from .attackingEnemy import AttackingEnemy
 class Robot(AttackingEnemy):
 
     def __init__(self, yOffset):
-        super().__init__(yOffset)
-        
+        super().__init__(yOffset)        
         self.maxHealth = 25                             # robots are tough
         self.health = self.maxHealth
         self.velocity = random.randint(5, 8)            # robots are slow
         self.weaknesses.append(DamageType.fire)
         self.weaknesses.append(DamageType.lightning)    # robots are not weak to lasers
         self.superWeakness = DamageType.lightning       # they are super weak to lightning
-        
+
         self.images = []
         self.projectileColor = (120, 70, 170)
         self.width = 54

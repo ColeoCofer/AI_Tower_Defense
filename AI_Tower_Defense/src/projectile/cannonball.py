@@ -8,7 +8,7 @@ from animations.explosion import Explosion
 
 
 class Cannonball(RangeProjectile):
-    
+
     def __init__(self, towerPosition, enemy, enemies):
         super().__init__(towerPosition, enemy, enemies)
         self.damage = 4                         # cannonballs also do half this damage to the surroundings
@@ -17,8 +17,7 @@ class Cannonball(RangeProjectile):
         self.velocity = 100                     # cannonballs are fast
         self.attackRadius = 40                  # radius to take secondary damage on
         self.detonationRange = 30
-
-        self.numImages = 1
+        self.numImages = 4
         self.width = 30
         self.height = 30
         self.attackAnimationDuration = 5000

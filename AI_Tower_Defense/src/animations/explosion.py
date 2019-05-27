@@ -19,8 +19,3 @@ class Explosion(Animation):
             image = pygame.image.load(os.path.join("../assets/projectiles/explosion", "explosion" + str(i) + ".png"))
             self.images.append(pygame.transform.scale(image, (self.width, self.height)))
         self.image = self.images[0]
-
-    
-    # returns a dynamic animation
-    def finalAnimation(self, position):
-        return Explosion(position)

@@ -1,24 +1,30 @@
 import pygame
 import random
-from .projectile import Projectile
+import os
+from .rangeProjectile import RangeProjectile
 from .projectile import DamageType
+from animations.fireExplosion import FireExplosion
 
+class Fireball(RangeProjectile):
 
-class Fireball(Projectile):
-    
     def __init__(self, towerPosition, enemy, enemies):
         super().__init__(towerPosition, enemy, enemies)
-        self.damage = 5                     # fire doesn't do a lot of damage
-        self.damageType = DamageType.fire   
-        self.color = (200, 100, 50)
-        self.reloadTime = 750               # fire can be flung quickly    
-        self.velocity = 7       
+        self.damage = 0                   # fire doesn't do a lot of damage
+        self.damageType = DamageType.fire
+        self.reloadTime = 750
+        self.velocity = 100
+        self.attackRadius = 40
+        self.detonationRange = 30
+        self.numImages = 8
+        self.width = 30
+        self.height = 30
+        self.attackAnimationDuration = 5000
 
+        #Load images
+        for i in range(0, self.numImages):
+            image = pygame.image.load(os.path.join("../assets/projectiles/fireBall", "fireBall" + str(i) + ".png"))
+            self.images.append(pygame.transform.scale(image, (self.width, self.height)))
+        self.image = self.images[0]
 
-    # TODO placeholder
-    def draw(self, win):
-        newColor = []
-        for channel in self.color:
-            newColor.append(channel + random.randint(-50, 50))
-
-        color = tuple(newColor)
+    def finalAnimation(self, position):
+        return FireExplosion(position)

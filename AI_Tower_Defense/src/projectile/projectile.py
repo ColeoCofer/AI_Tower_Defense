@@ -29,9 +29,11 @@ class Projectile:
         self.color = (100, 100, 100)
         self.reloadTime = 1000
         self.velocity = 0
-        
+
         self.images = []
         self.image = None
+        self.width = 30
+        self.height = 30
         self.animationSpeed = 3
         self.animationCount = 0
         self.attackAnimationStopTime = 0
@@ -47,8 +49,8 @@ class Projectile:
             # deal damage to enemy
             if self.damageType == weakness:
                 self.targetEnemy.hit(self.damage, self.damageType)
-                
 
-    # draw base class stub            
+
+    # draw base class stub
     def draw(self, win):
         return

@@ -15,7 +15,7 @@ class Tower:
         self.closeEnemies = []
         self.maxHealth = 5
         self.health = self.maxHealth
-        self.weaknesses = [DamageType.melee]    # All towers are weak to the punches
+        self.weaknesses = [DamageType.melee, DamageType.fakeNews]    # All towers are weak to the punches
         self.attackCooldownTime = 0             # Timestamp showing when tower can attack again
 
         self.healthBarWidth = 50
@@ -63,7 +63,7 @@ class Tower:
                 projectileToFire.attackAnimationStopTime = ticks + projectileToFire.attackAnimationDuration
                 projectileToFire.color = self.projectileColor
                 projectileToFire.fire()
-                self.projectilesFired.append(projectileToFire)                
+                self.projectilesFired.append(projectileToFire)
 
         return enemies
 
@@ -95,21 +95,24 @@ class Tower:
                 del self.projectilesFired[i]
                 continue
             # TODO I think we may want to think about this. It currently is saying that a projectile has hit it's target
-            if self.projectilesFired[i].draw(win) == True: 
-                # replace the projectile with its final animation in the same postion   
+            if self.projectilesFired[i].draw(win) == True:
+                # replace the projectile with its final animation in the same postion
                 self.addAnimationToQueue(self.projectilesFired[i])
                 del self.projectilesFired[i]
             i += 1
 
         # cycle through our animations for drawing, i.e. explosions
-        for j in range(len(self.animations)):
-            self.animations[j].draw(win)  
+        # for j in range(len(self.animations)):
+        j = 0
+        while j < len(self.animations):
+            self.animations[j].draw(win)
             # remove any animations that have exceeded their durations
             if self.animations[j].attackAnimationStopTime < pygame.time.get_ticks():
                 del self.animations[j]
-                continue
+            j += 1
+                # continue
 
-        # draw health bar and render sprite     
+        # draw health bar and render sprite
         self.drawHealthBox(win, centerX, centerY)
         win.blit(self.image, (centerX, centerY))
 
