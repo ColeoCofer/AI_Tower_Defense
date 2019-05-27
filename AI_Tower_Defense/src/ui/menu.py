@@ -1,7 +1,7 @@
 import pygame
 from .towerButton import TowerButton
 
-GAP_PX = 10
+GAP_PX = 2
 IMG_SIZE = (60, 60)
 
 class Menu:
@@ -13,16 +13,20 @@ class Menu:
         #Create a button for every tower
         lastImgX = 0
         totalSizeX = 0
-        for tower in towers:
-            buttonPosition = position + GAP + lastImgX
+        i = 0
+        for i in range(len(towers)):
+            buttonPosition = position[0] + GAP_PX + lastImgX
+            tower = towers[i]((0, 0))
             resizedTowerImage = pygame.transform.scale(tower.image, IMG_SIZE)
-            self.buttons.append(Tower(buttonPosition, IMG_SIZE, resizedTowerImage, tower.name, tower.cost))
+            self.buttons.append(TowerButton((buttonPosition, self.position[1]), IMG_SIZE, resizedTowerImage, tower.name, tower.cost))
             lastImgX = buttonPosition
             totalSizeX += buttonPosition
 
         self.width = totalSizeX
         self.height = IMG_SIZE[1] + GAP_PX
-        self.bgRect = pygame.Rect(position, (self.width, self.width))
+        # self.bgRect = pygame.Rect(position, (self.width, self.width))
+        self.bgRect = pygame.Surface((self.width, self.width))
+        self.bgRect.fill((0, 0, 0))
 
 
     def draw(self, win):
@@ -32,5 +36,5 @@ class Menu:
         win.blit(self.bgRect, self.position)
 
         #Render the buttons over the background
-        for button in buttons:
-            button.draw()
+        for button in self.buttons:
+            button.draw(win)
