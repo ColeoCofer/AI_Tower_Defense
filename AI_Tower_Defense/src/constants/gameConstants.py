@@ -34,7 +34,7 @@ ENEMY_TYPES = [Zombie, Dino, Dragon, Robot, Wizard, Warrior, Trump]
 Y_MAX_OFFSET = 35  #yOffset along enemy walking path
 
 #Towers
-TOWER_TYPES = [SquareTower]
+TOWER_TYPES = [SquareTower, BirdCastle, Igloo, WizardTower, Pyramid, Igloo]
 
 #Sounds
 BG_MUSIC = ["old_town.mp3"]
