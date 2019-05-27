@@ -24,6 +24,7 @@ from ui.wallet import Wallet
 from ui.menu import Menu
 
 from constants.gameConstants import *
+from constants.animationConstants import *
 
 
 def main():
@@ -78,7 +79,9 @@ class Game:
         self.uiFont = pygame.font.SysFont('lucidagrandettc', 24)
         self.gameoverFont = pygame.font.SysFont('lucidagrandettc', 50)
 
-        self.pathBounds = self.calcPathBounds()
+        #Path
+        self.pathBounds = []
+        self.calcPathBounds()
 
 
     def run(self):
@@ -101,9 +104,6 @@ class Game:
 
             if VISUAL_MODE:
                 self.draw(clock.get_fps())
-
-            if SHOW_PATH_BOUNDS:
-                self.drawPathBounds()
 
         self.gameover()
         pygame.quit()
@@ -221,6 +221,9 @@ class Game:
 
         self.menu.draw(self.win)
 
+        if SHOW_PATH_BOUNDS:
+            self.drawPathBounds(self.win)
+
         #Update the window
         pygame.display.update()
 
@@ -232,9 +235,8 @@ class Game:
         '''
         i = 0
         numPathPoints = len(ENEMY_PATH)
-        pathBounds = []
         for i in range(numPathPoints):
-            if i < numPathPoints:
+            if i < numPathPoints - 1:
                 x1, y1 = ENEMY_PATH[i][0], ENEMY_PATH[i][1]
                 x2, y2 = ENEMY_PATH[i+1][0], ENEMY_PATH[i+1][1]
 
@@ -246,10 +248,18 @@ class Game:
                     #Moving on x-axis
                     rect = pygame.Rect((x1, y1 + PATH_WIDTH_PX), (abs(x2 - x1), PATH_WIDTH_PX*2))
 
-                pathBounds.append(rect)
+                self.pathBounds.append(rect)
 
-    def drawPathBounds(self):
-        
+    def drawPathBounds(self, win):
+        ''' Draws rectangles around the path bounds '''
+        for bound in self.pathBounds:
+            # pygame.draw.rect(win, (255, 0, 0), bound)
+            self.bgRect = pygame.Surface((bound.width, bound.height))
+            # self.bgRect.set_alpha(150)
+            self.bgRect.fill((255, 0, 0))
+            # print(f"{bound.x}, {bound.y} => w,h {bound.width}, {bound.height}") #Seems right... not displaying though
+            win.blit(self.bgRect, (bound.x, bound.y))
+
 
 
     def displayTextUI(self, win, fps):
