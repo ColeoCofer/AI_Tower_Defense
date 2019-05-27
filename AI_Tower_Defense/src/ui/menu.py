@@ -89,10 +89,14 @@ class Menu:
         self.height = IMG_SIZE[1] + HEIGHT_GAP_PX + BOTTOM_PX
         self.bgRect = pygame.Surface((self.width, self.height))
 <<<<<<< HEAD
+<<<<<<< HEAD
         self.bgRect.fill((234, 209, 161))
 >>>>>>> Got the name and cost displayed but it needs some tweaking
 =======
         self.bgRect.set_alpha(200)
+=======
+        self.bgRect.set_alpha(220)
+>>>>>>> Added color variance in health text
         self.bgRect.fill((137, 139, 145))
 >>>>>>> Got the menu looking much better
 
