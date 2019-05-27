@@ -45,11 +45,11 @@ class Menu:
             button.draw(win)
 
 
-    def handleEvents(self, mousePosition, wallet):
+    def handleEvents(self, mousePosition, wallet, pathBounds):
         ''' Handle if the user selects a tower button '''
         i = 0
         for i in range(len(self.buttons)):
-            isSelected = self.buttons[i].handleEvents(mousePosition, wallet)
+            isSelected = self.buttons[i].handleEvents(mousePosition, wallet, pathBounds)
 
             #If we selected a new button, deselect the rest of them
             if isSelected == True:
