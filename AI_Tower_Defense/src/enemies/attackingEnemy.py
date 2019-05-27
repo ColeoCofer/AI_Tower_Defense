@@ -52,7 +52,7 @@ class AttackingEnemy(Enemy):
                     projectileToFire.attackAnimationStopTime = ticks + projectileToFire.attackAnimationDuration
                     projectileToFire.color = self.projectileColor
                     projectileToFire.fire()
-                    self.projectilesFired.append(projectileToFire)  
+                    self.projectilesFired.append(projectileToFire)
 
         return enemies
 
@@ -80,14 +80,16 @@ class AttackingEnemy(Enemy):
         centerY = self.y - (self.height / 2)
 
         # checks projectile magazine for projectiles to render
-        for i in range(len(self.projectilesFired)):
+        i = 0
+        while i < len(self.projectilesFired):
             # check and make sure animation time hasn't lapsed
             if self.projectilesFired[i].attackAnimationStopTime < pygame.time.get_ticks():
                 del self.projectilesFired[i]
             # TODO I think we may want to think about this. It currently is saying that a projectile has hit it's target
             elif self.projectilesFired[i].draw(win) == True:
                 del self.projectilesFired[i]
-            
+            i += 1
+
         # draw health box, render sprite, and move sprite for next iteration
         self.drawHealthBox(win, centerX, centerY)
         win.blit(self.image, (centerX, centerY))

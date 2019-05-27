@@ -55,7 +55,7 @@ class Game:
             self.win = pygame.display.set_mode((self.width, self.height))
 
         self.win.set_alpha(None)
-        self.enemies = [Zombie(30), Robot(0), Dino(15), Wizard(-25)]
+        self.enemies = [Warrior(0), Zombie(30), Robot(0), Dino(15), Wizard(-25)]
         self.towers = [Obelisk(TOWER_POSITIONS[2]),  SquareTower(TOWER_POSITIONS[3]), Pyramid(TOWER_POSITIONS[5]), BirdCastle(TOWER_POSITIONS[7]), SquareTower(TOWER_POSITIONS[10]), Igloo(TOWER_POSITIONS[15]), WizardTower(TOWER_POSITIONS[8]), City((1180, 230))]
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = 0
