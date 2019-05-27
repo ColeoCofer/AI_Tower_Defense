@@ -17,6 +17,7 @@ class Cannonball(RangeProjectile):
         self.height = 30
         self.attackAnimationDuration = 10000
         self.attackRadius = 30
+        self.animationSpeed = 4
 
         #Load images
         for i in range(0, self.numImages):
