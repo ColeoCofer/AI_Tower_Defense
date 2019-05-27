@@ -15,7 +15,7 @@ class Tower:
         self.closeEnemies = []
         self.maxHealth = 5
         self.health = self.maxHealth
-        self.weaknesses = [DamageType.melee]    # All towers are weak to the punches
+        self.weaknesses = [DamageType.melee, DamageType.fakeNews]    # All towers are weak to the punches
         self.attackCooldownTime = 0             # Timestamp showing when tower can attack again
 
         self.healthBarWidth = 50

@@ -4,6 +4,7 @@ from enemies.dragon import Dragon
 from enemies.robot import Robot
 from enemies.wizard import Wizard
 from enemies.warrior import Warrior
+from enemies.trump import Trump
 from enemies.attackingEnemy import AttackingEnemy
 
 from towers.squareTower import SquareTower
@@ -29,7 +30,7 @@ WIN_WIDTH = 1200
 WIN_HEIGHT = 800
 
 #Enemies
-ENEMY_TYPES = [Zombie, Dino, Dragon, Robot, Wizard, Warrior]
+ENEMY_TYPES = [Zombie, Dino, Dragon, Robot, Wizard, Warrior, Trump]
 Y_MAX_OFFSET = 35  #yOffset along enemy walking path
 
 #Towers
