@@ -78,6 +78,8 @@ class Game:
         self.uiFont = pygame.font.SysFont('lucidagrandettc', 24)
         self.gameoverFont = pygame.font.SysFont('lucidagrandettc', 50)
 
+        self.pathBounds = self.calcPathBounds()
+
 
     def run(self):
         ''' Main game loop '''
@@ -99,6 +101,9 @@ class Game:
 
             if VISUAL_MODE:
                 self.draw(clock.get_fps())
+
+            if SHOW_PATH_BOUNDS:
+                self.drawPathBounds()
 
         self.gameover()
         pygame.quit()
@@ -218,6 +223,33 @@ class Game:
 
         #Update the window
         pygame.display.update()
+
+
+    def calcPathBounds(self):
+        '''
+        Calculates an array of rectangles that describe the enemies path
+        This function assumes that the ENEMY_PATH transitions are all straight lines
+        '''
+        i = 0
+        numPathPoints = len(ENEMY_PATH)
+        pathBounds = []
+        for i in range(numPathPoints):
+            if i < numPathPoints:
+                x1, y1 = ENEMY_PATH[i][0], ENEMY_PATH[i][1]
+                x2, y2 = ENEMY_PATH[i+1][0], ENEMY_PATH[i+1][1]
+
+                #Check what direction the points are moving and construct a rectangle
+                if x1 == x2:
+                    #Moving on y-axis
+                    rect = pygame.Rect((x1 - PATH_WIDTH_PX, y1), (PATH_WIDTH_PX*2, abs(y2 - y1)))
+                else:
+                    #Moving on x-axis
+                    rect = pygame.Rect((x1, y1 + PATH_WIDTH_PX), (abs(x2 - x1), PATH_WIDTH_PX*2))
+
+                pathBounds.append(rect)
+
+    def drawPathBounds(self):
+        
 
 
     def displayTextUI(self, win, fps):
