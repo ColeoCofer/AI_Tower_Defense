@@ -4,10 +4,14 @@ from .towerButton import TowerButton
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Now selects tower and draws it at mouse position
 HEIGHT_GAP_PX = 4     #Distance from top of background rect
 WIDTH_GAP_PX = 40     #How "spread out" the tower buttons are from each other
 IMG_SIZE = (60, 60)   #Size of tower buttons
 BOTTOM_PX = 40        #Area where name and cost are displayed
+<<<<<<< HEAD
 =======
 GAP_PX = 2
 IMG_SIZE = (60, 60)
@@ -21,6 +25,8 @@ WIDTH_GAP_PX = 40
 IMG_SIZE = (60, 60)
 BOTTOM_PX = 40 #Area where name and cost is
 >>>>>>> Got the name and cost displayed but it needs some tweaking
+=======
+>>>>>>> Now selects tower and draws it at mouse position
 
 class Menu:
     ''' Creates a purchase menu of tower buttons '''
@@ -150,7 +156,23 @@ class Menu:
 >>>>>>> Got the basic menu displaying
 =======
 
+<<<<<<< HEAD
     def handleEvents(self, mousePosition):
         for button in self.buttons:
             button.handleEvents(mousePosition)
 >>>>>>> Got the name and cost displayed but it needs some tweaking
+=======
+
+    def handleEvents(self, mousePosition, wallet):
+        i = 0
+        for i in range(len(self.buttons)):
+            isSelected = self.buttons[i].handleEvents(mousePosition, wallet)
+
+            #If we selected a new button, deselect the rest of them
+            if isSelected == True:
+                for j in range(len(self.buttons)):
+                    if j != i:
+                        #Deselect all other buttons
+                        self.buttons[j].isSelected = False
+                break
+>>>>>>> Now selects tower and draws it at mouse position

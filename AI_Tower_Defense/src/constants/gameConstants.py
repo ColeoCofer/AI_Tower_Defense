@@ -26,6 +26,9 @@ TRAINING_MODE = False  #If true will uncap framerates
 VISUAL_MODE = True     #Set false to stop rendering
 FPS = 60
 
+#Player
+STARTING_COINS = 300
+
 #Window Dimensions
 WIN_WIDTH = 1200
 WIN_HEIGHT = 800

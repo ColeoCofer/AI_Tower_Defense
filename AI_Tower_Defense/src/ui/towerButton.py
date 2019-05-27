@@ -19,6 +19,7 @@ class TowerButton:
         self.titleColor = (0, 0, 0)
         self.costColor = (250, 241, 95)
         self.isSelected = False
+<<<<<<< HEAD
 =======
         self.font = pygame.font.SysFont('lucidagrandettc', 10)
         self.titleColor = (0, 0, 0)
@@ -30,6 +31,8 @@ class TowerButton:
         self.titleColor = (0, 0, 0)
         self.costColor = (250, 241, 95)
 >>>>>>> Got the menu looking much better
+=======
+>>>>>>> Now selects tower and draws it at mouse position
 
     def draw(self, win):
         ''' Draw the button containing an image of the tower '''
@@ -96,6 +99,7 @@ class TowerButton:
         self.displayText(str(self.cost), costPosition, self.costColor, win, self.costFont)
 >>>>>>> Got the menu looking much better
 
+<<<<<<< HEAD
     def handleEvents(self, mousePosition):
         ''' Attempts to purchase the tower if the user clicks on it '''
 <<<<<<< HEAD
@@ -105,9 +109,29 @@ class TowerButton:
                 #This is where we'd attempt to but the tower
 >>>>>>> Got the basic menu displaying
 =======
+=======
+        self.isPlacingTower(win)
+
+    def handleEvents(self, mousePosition, wallet):
+        '''
+        Attempts to purchase the tower if the user clicks on it
+        Returns the name of the tower so we can reset all isSelected values in menu
+        '''
+        #Check if they clicked within bounds of the button
+>>>>>>> Now selects tower and draws it at mouse position
         if self.rect.collidepoint(mousePosition):
-            print(f"You clicked the {self.title} button!")
-            #This is where we'd attempt to but the tower
+            #Check if they have enough coins
+            if wallet.coins >= self.cost and self.isSelected == False:
+                self.isSelected = True
+                return True
+
+        return False
+
+    def isPlacingTower(self, win):
+        ''' Checks if the user is currently placing a tower and draws it on the mouse position '''
+        if self.isSelected == True:
+            mousePosition = pygame.mouse.get_pos()
+            win.blit(self.image, (mousePosition[0] - (self.size[0] / 2), mousePosition[1] - (self.size[1] / 2)))
 
     def displayText(self, text, position, color, win, font):
         ''' Displays the text at the given position '''

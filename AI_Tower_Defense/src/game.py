@@ -20,7 +20,7 @@ from towers.pyramid import Pyramid
 from towers.city import City
 from towers.igloo import Igloo
 
-from ui.coin import Coin
+from ui.wallet import Wallet
 from ui.menu import Menu
 
 from constants.gameConstants import *
@@ -65,7 +65,7 @@ class Game:
         self.lives = 10
         self.health = 100
         self.coinPosition = ((self.width - 150, 35))
-        self.coins = Coin(self.coinPosition, 50)
+        self.wallet = Wallet(self.coinPosition, STARTING_COINS)
         self.menu = Menu((350, 650), TOWER_TYPES)
         self.bg = pygame.image.load(os.path.join("../assets/map", "bg.png"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
@@ -147,11 +147,11 @@ class Game:
             #Store mouse clicks to determine path for enemies
             mousePosition = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                self.menu.handleEvents(mousePosition)
+                self.menu.handleEvents(mousePosition, self.wallet)
                 self.clicks.append(mousePosition)
                 if SHOW_MOUSE_CLICKS:
                     print(self.clicks)
-
+                return False
 
         return False
 
@@ -209,7 +209,7 @@ class Game:
             enemy.draw(self.win)
 
         #Render coin animation
-        self.coins.draw(self.win)
+        self.wallet.draw(self.win)
 
         #Render UI Text Elements
         self.displayTextUI(self.win, fps)
