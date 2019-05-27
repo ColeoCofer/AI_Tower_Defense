@@ -2,7 +2,7 @@ import pygame
 import os
 import random
 from .tower import Tower
-from projectile.lazer import Lazer
+from projectile.lightningBolt import LightningBolt
 
 
 class WizardTower(Tower):
@@ -21,6 +21,6 @@ class WizardTower(Tower):
 
     # overrides base class version
     def loadProjectile(self, enemy):
-        laser = Lazer(self.position, enemy, self.closeEnemies)
-        laser.color = self.projectileColor
-        return laser
+        lightning = LightningBolt(self.position, enemy, self.closeEnemies)
+        lightning.color = self.projectileColor
+        return lightning

@@ -3,13 +3,13 @@ import random
 import os
 from .rangeProjectile import RangeProjectile
 from .projectile import DamageType
-from animations.fireExplosion import FireExplosion
+from animations.explosion import Explosion
 
 class Fireball(RangeProjectile):
 
     def __init__(self, towerPosition, enemy, enemies):
         super().__init__(towerPosition, enemy, enemies)
-        self.damage = 0                   # fire doesn't do a lot of damage
+        self.damage = 2                   # fire doesn't do a lot of damage
         self.damageType = DamageType.fire
         self.reloadTime = 750
         self.velocity = 100
@@ -27,4 +27,4 @@ class Fireball(RangeProjectile):
         self.image = self.images[0]
 
     def finalAnimation(self, position):
-        return FireExplosion(position)
+        return Explosion(position)

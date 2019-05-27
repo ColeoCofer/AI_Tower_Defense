@@ -8,7 +8,7 @@ class FakeTanSpray(Projectile):
 
     def __init__(self, towerPosition, enemy, enemies):
         super().__init__(towerPosition, enemy, enemies)
-        self.damage = 20                        # fake news does a lot of damage
+        self.damage = 8                        # fake news does a lot of damage
         self.damageType = DamageType.fakeNews
         self.color = (200, 100, 50)
         self.reloadTime = 1250                  # it can be spread quickly

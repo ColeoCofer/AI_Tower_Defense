@@ -12,12 +12,13 @@ class Pyramid(Tower):
         super().__init__(position)
         self.maxHealth = 450                                # tough
         self.health = self.maxHealth
-        self.attackRadius = 125
+        self.attackRadius = 200
         self.weaknesses.append(DamageType.lightning)        # only weak to lightning and melee
         
-        self.projectileColor = (150, 150, 150)
+        self.projectileColor = (200, 69, 50)
         self.width = 80
         self.height = 80
+        self.healthBarYOffset = 30
 
         self.image = pygame.image.load(os.path.join("../assets/towers/pyramid/", "pyramid.png"))
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
