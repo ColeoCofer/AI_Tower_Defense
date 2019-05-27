@@ -10,6 +10,8 @@ class SquareTower(Tower):
 
     def __init__(self, position):
         super().__init__(position)
+        self.name = "Cannon Castle"
+        self.cost = 150
         self.maxHealth = 250                            # tough with cannnonballs
         self.health = self.maxHealth
         self.attackRadius = 250

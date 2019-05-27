@@ -10,11 +10,13 @@ class Pyramid(Tower):
 
     def __init__(self, position):
         super().__init__(position)
+        self.name = "Pyramid"
+        self.cost = 200
         self.maxHealth = 450                                # tough
         self.health = self.maxHealth
         self.attackRadius = 125
         self.weaknesses.append(DamageType.lightning)        # only weak to lightning and melee
-        
+
         self.projectileColor = (150, 150, 150)
         self.width = 80
         self.height = 80
