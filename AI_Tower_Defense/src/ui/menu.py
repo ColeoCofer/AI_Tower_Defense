@@ -28,7 +28,6 @@ class Menu:
             resizedTowerImage = pygame.transform.scale(tower.image, IMG_SIZE)
             self.buttons.append(TowerButton((buttonPositionX, self.position[1] + HEIGHT_GAP_PX), IMG_SIZE, resizedTowerImage, tower.name, tower.cost))
 
-        # self.width = (IMG_SIZE[0] *  + (len(towers) * GAP_PX)
         self.width = (len(towers) * (IMG_SIZE[0] + WIDTH_GAP_PX)) - WIDTH_GAP_PX
         self.height = IMG_SIZE[1] + HEIGHT_GAP_PX + BOTTOM_PX
         self.bgRect = pygame.Surface((self.width, self.height))
@@ -47,6 +46,7 @@ class Menu:
 
 
     def handleEvents(self, mousePosition, wallet):
+        ''' Handle if the user selects a tower button '''
         i = 0
         for i in range(len(self.buttons)):
             isSelected = self.buttons[i].handleEvents(mousePosition, wallet)

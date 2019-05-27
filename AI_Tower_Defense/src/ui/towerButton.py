@@ -27,7 +27,7 @@ class TowerButton:
 
         self.isPlacingTower(win)
 
-    def handleEvents(self, mousePosition, wallet):
+    def handleEvents(self, mousePosition, wallet, pathBounds):
         '''
         Attempts to purchase the tower if the user clicks on it
         Returns the name of the tower so we can reset all isSelected values in menu
@@ -38,8 +38,19 @@ class TowerButton:
             if wallet.coins >= self.cost and self.isSelected == False:
                 self.isSelected = True
                 return True
+        elif self.isSelected == True and wallet.coints >= self.cost and canPlaceTower(pathBounds) == True:
+            #Make the purchase
+            #Place the tower
+            self.isSelected = False
 
         return False
+
+    def canPlaceTower(self, pathBounds):
+        ''' Returns true if the current mouse position is a valid place to build a tower '''
+        mousePosition = pygame.mouse.get_pos()
+
+
+        pass
 
     def isPlacingTower(self, win):
         ''' Checks if the user is currently placing a tower and draws it on the mouse position '''

@@ -10,7 +10,7 @@ class Enemy:
     def __init__(self, yOffset):
         self.maxHealth = 0
         self.health = self.maxHealth
-        self.velocity = 0           
+        self.velocity = 0
         self.weaknesses = [DamageType.ice, DamageType.exploding]      # all creatures are weak to ice and explosions
         self.superWeakness = None   # will cause an enemy to lose 2x damage when projectile damage is the same
         self.frozen = False
@@ -33,7 +33,7 @@ class Enemy:
 
         # List of coordinates that the enemy will follow
         self.pathIndex = 0
-        self.path = [(-5, 362), (19, 362), (197, 362), (197, 217), (360, 217), (360, 456), (565, 456), (565, 280), (743, 280), (743, 397), (905, 397), (905, 244), (1250, 244)]
+        self.path = ENEMY_PATH
         self.x = self.path[0][0]
         self.y = self.path[0][1]
         self.path.append((1250 + (self.width * 2), self.path[-1][1]))
