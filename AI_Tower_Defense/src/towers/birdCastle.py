@@ -3,7 +3,7 @@ import os
 import random
 from .tower import Tower
 from projectile.projectile import DamageType
-from projectile.lazer import Lazer
+from projectile.barrel import Barrel
 
 
 class BirdCastle(Tower):
@@ -12,7 +12,7 @@ class BirdCastle(Tower):
         super().__init__(position)
         self.maxHealth = 250                            # pretty tough
         self.health = self.maxHealth
-        self.attackRadius = 100
+        self.attackRadius = 300
         self.weaknesses.append(DamageType.lazer)
         self.weaknesses.append(DamageType.lightning)    # not weak to fire 
 
@@ -26,6 +26,6 @@ class BirdCastle(Tower):
 
     # overrides base class version
     def loadProjectile(self, enemy):
-        laser = Lazer(self.position, enemy, self.closeEnemies)
-        laser.color = self.projectileColor
-        return laser
+        barrel = Barrel(self.position, enemy, self.closeEnemies)
+        barrel.color = self.projectileColor
+        return barrel

@@ -13,6 +13,7 @@ class Dragon(Enemy):
         self.health = self.maxHealth
         self.velocity = random.randint(8, 12)             # dragons are pretty fast
         self.weaknesses.append(DamageType.lazer)
+        self.weaknesses.append(DamageType.poison)
         self.weaknesses.append(DamageType.lightning)      # dragons are not weak to fire
         self.superWeakness = DamageType.lightning         # dragons are super weak to lightning
 

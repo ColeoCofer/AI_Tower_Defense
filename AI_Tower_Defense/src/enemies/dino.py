@@ -14,6 +14,7 @@ class Dino(Enemy):
         self.velocity = random.randint(5, 8)            # Dino's are slow
         self.weaknesses.append(DamageType.lazer)
         self.weaknesses.append(DamageType.fire)
+        self.weaknesses.append(DamageType.poison)
         self.weaknesses.append(DamageType.lightning)    # Dino's are weak to everything
         self.superWeakness = None                       # but not super weak to anything
 

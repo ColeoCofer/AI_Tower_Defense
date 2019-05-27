@@ -11,7 +11,7 @@ class Enemy:
         self.maxHealth = 0
         self.health = self.maxHealth
         self.velocity = 0           
-        self.weaknesses = [DamageType.ice, DamageType.exploding]      # all creatures are weak to ice and explosions
+        self.weaknesses = [DamageType.ice, DamageType.exploding, DamageType.melee]      # all creatures are weak to ice, explosions, and melee
         self.superWeakness = None   # will cause an enemy to lose 2x damage when projectile damage is the same
         self.frozen = False
         self.frozenDuration = 0

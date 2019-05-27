@@ -17,6 +17,7 @@ class Trump(AttackingEnemy):
         self.velocity = random.randint(3, 6)            # Trump is super slow
         self.weaknesses.append(DamageType.lazer)
         self.weaknesses.append(DamageType.fire)
+        self.weaknesses.append(DamageType.poison)
         self.weaknesses.append(DamageType.lightning)    # Trump is weak to EVERYTHING
         self.superWeakness = DamageType.fire            # and super weak to fire
 

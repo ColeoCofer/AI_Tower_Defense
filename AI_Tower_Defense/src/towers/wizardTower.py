@@ -11,7 +11,7 @@ class WizardTower(Tower):
         super().__init__(position)
         self.maxHealth = 350                # tough and long range
         self.health = self.maxHealth
-        self.attackRadius = 350
+        self.attackRadius = 275
         
         self.projectileColor = (150, 150, 150)
 
