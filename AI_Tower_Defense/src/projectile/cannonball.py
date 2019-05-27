@@ -17,14 +17,10 @@ class Cannonball(RangeProjectile):
         self.velocity = 100                     # cannonballs are fast
         self.attackRadius = 40                  # radius to take secondary damage on
         self.detonationRange = 30
-
         self.numImages = 4
         self.width = 30
         self.height = 30
         self.attackAnimationDuration = 5000
-        # self.attackAnimationDuration = 10000
-        # self.attackRadius = 30
-        # self.animationSpeed = 4
 
         #Load images
         for i in range(0, self.numImages):

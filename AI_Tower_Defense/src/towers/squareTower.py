@@ -15,7 +15,7 @@ class SquareTower(Tower):
         self.attackRadius = 250
         self.weaknesses.append(DamageType.lazer)        # impevious to fire
         self.weaknesses.append(DamageType.lightning)
-        
+
         self.projectileColor = (100, 100, 100)
 
         self.image = pygame.image.load(os.path.join("../assets/towers/basic_castle/", "tower_square.png"))

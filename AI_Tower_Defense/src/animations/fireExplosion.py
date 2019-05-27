@@ -2,11 +2,11 @@ import os
 import pygame
 from .animation import Animation
 
-class Explosion(Animation):
+class FireExplosion(Animation):
 
     def __init__(self, position):
         super().__init__(position)
-        self.numImages = 8
+        self.numImages = 11
         self.width = 100
         self.height = 100
         self.attackAnimationDuration = 1000
@@ -16,6 +16,6 @@ class Explosion(Animation):
 
         #Load images
         for i in range(0, self.numImages):
-            image = pygame.image.load(os.path.join("../assets/projectiles/explosion", "explosion" + str(i) + ".png"))
+            image = pygame.image.load(os.path.join("../assets/projectiles/fireballExplosion", "fireballExplosion" + str(i) + ".png"))
             self.images.append(pygame.transform.scale(image, (self.width, self.height)))
         self.image = self.images[0]
