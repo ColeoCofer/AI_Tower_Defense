@@ -152,7 +152,7 @@ class Game:
             #Store mouse clicks to determine path for enemies
             mousePosition = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                self.menu.handleEvents(mousePosition, self.wallet)
+                self.menu.handleEvents(mousePosition, self.wallet, self.pathBounds)
                 self.clicks.append(mousePosition)
                 if SHOW_MOUSE_CLICKS:
                     print(self.clicks)

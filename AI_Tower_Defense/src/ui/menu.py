@@ -123,6 +123,7 @@ class Menu:
 
 
     def handleEvents(self, mousePosition, wallet, pathBounds):
+<<<<<<< HEAD
         '''
         Handle if the user selects a tower button
         Returns the tower type if a user selected one for purchasing
@@ -167,10 +168,12 @@ class Menu:
 =======
 
     def handleEvents(self, mousePosition, wallet):
+=======
+>>>>>>> You can actually buy the towers now
         ''' Handle if the user selects a tower button '''
         i = 0
         for i in range(len(self.buttons)):
-            isSelected = self.buttons[i].handleEvents(mousePosition, wallet)
+            isSelected = self.buttons[i].handleEvents(mousePosition, wallet, pathBounds)
 
             #If we selected a new button, deselect the rest of them
             if isSelected == True:
