@@ -15,6 +15,7 @@ class TowerButton:
         self.costFont = pygame.font.SysFont('lucidagrandettc', 15)
         self.titleColor = (0, 0, 0)
         self.costColor = (250, 241, 95)
+        self.isSelected = False
 
     def draw(self, win):
         ''' Draw the button containing an image of the tower '''
@@ -24,11 +25,27 @@ class TowerButton:
         costPosition = (namePosition[0], namePosition[1] + TEXT_GAP_PX)
         self.displayText(str(self.cost), costPosition, self.costColor, win, self.costFont)
 
-    def handleEvents(self, mousePosition):
-        ''' Attempts to purchase the tower if the user clicks on it '''
+        self.isPlacingTower(win)
+
+    def handleEvents(self, mousePosition, wallet):
+        '''
+        Attempts to purchase the tower if the user clicks on it
+        Returns the name of the tower so we can reset all isSelected values in menu
+        '''
+        #Check if they clicked within bounds of the button
         if self.rect.collidepoint(mousePosition):
-            print(f"You clicked the {self.title} button!")
-            #This is where we'd attempt to but the tower
+            #Check if they have enough coins
+            if wallet.coins >= self.cost and self.isSelected == False:
+                self.isSelected = True
+                return True
+
+        return False
+
+    def isPlacingTower(self, win):
+        ''' Checks if the user is currently placing a tower and draws it on the mouse position '''
+        if self.isSelected == True:
+            mousePosition = pygame.mouse.get_pos()
+            win.blit(self.image, (mousePosition[0] - (self.size[0] / 2), mousePosition[1] - (self.size[1] / 2)))
 
     def displayText(self, text, position, color, win, font):
         ''' Displays the text at the given position '''

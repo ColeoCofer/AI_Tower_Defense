@@ -1,10 +1,10 @@
 import pygame
 from .towerButton import TowerButton
 
-HEIGHT_GAP_PX = 4
-WIDTH_GAP_PX = 40
-IMG_SIZE = (60, 60)
-BOTTOM_PX = 40 #Area where name and cost is
+HEIGHT_GAP_PX = 4     #Distance from top of background rect
+WIDTH_GAP_PX = 40     #How "spread out" the tower buttons are from each other
+IMG_SIZE = (60, 60)   #Size of tower buttons
+BOTTOM_PX = 40        #Area where name and cost are displayed
 
 class Menu:
     ''' Creates a purchase menu of tower buttons '''
@@ -45,6 +45,16 @@ class Menu:
         for button in self.buttons:
             button.draw(win)
 
-    def handleEvents(self, mousePosition):
-        for button in self.buttons:
-            button.handleEvents(mousePosition)
+
+    def handleEvents(self, mousePosition, wallet):
+        i = 0
+        for i in range(len(self.buttons)):
+            isSelected = self.buttons[i].handleEvents(mousePosition, wallet)
+
+            #If we selected a new button, deselect the rest of them
+            if isSelected == True:
+                for j in range(len(self.buttons)):
+                    if j != i:
+                        #Deselect all other buttons
+                        self.buttons[j].isSelected = False
+                break

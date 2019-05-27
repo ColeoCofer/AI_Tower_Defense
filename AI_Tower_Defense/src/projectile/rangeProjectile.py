@@ -10,14 +10,14 @@ from animations.animation import Animation
 
 # base class for ranged projectiles
 class RangeProjectile(Projectile):
-    
+
     def __init__(self, towerPosition, enemy, enemies):
         super().__init__(towerPosition, enemy, enemies)
         self.animationCount = 0
         self.detonationRange = 0
-        
 
-    # only checks for weaknesses, ranges weapons only explode on contact so that is handled elsewhere   
+
+    # only checks for weaknesses, ranges weapons only explode on contact so that is handled elsewhere
     def fire(self):
         for weakness in self.targetEnemy.weaknesses:
             if self.damageType == weakness:
@@ -29,10 +29,10 @@ class RangeProjectile(Projectile):
         ''' Draws the enemy with given images '''
         numImages = len(self.images)
         self.image = self.images[self.animationCount // self.animationSpeed]
-        
+
         #Iterate to the next animation image
         self.animationCount += 1
-        
+
         #Reset the animation count if we rendered the last image
         if self.animationCount >= (numImages * self.animationSpeed):
             self.animationCount = 0
@@ -89,4 +89,4 @@ class RangeProjectile(Projectile):
 
     # base class stub
     def finalAnimation(self, position):
-        return 
+        return
