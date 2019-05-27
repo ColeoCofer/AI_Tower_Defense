@@ -21,6 +21,7 @@ class TowerButton:
     def draw(self, win):
         ''' Draw the button containing an image of the tower '''
         win.blit(self.image, self.rect)
+<<<<<<< HEAD
         namePosition = (self.position[0], self.position[1] + self.size[1])
         self.displayText(self.title, namePosition, self.titleColor, win, self.titleFont)
         costPosition = (namePosition[0], namePosition[1] + TEXT_GAP_PX)
@@ -69,3 +70,12 @@ class TowerButton:
         ''' Displays the text at the given position '''
         fontSurface = font.render(text, False, color)
         win.blit(fontSurface, position)
+=======
+
+    def didClick(self, event):
+        ''' Attempts to purchase the tower if the user clicks on it '''
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.rect.collidepoint(event.pos):
+                print(f"You clicked the {self.title} button!")
+                #This is where we'd attempt to but the tower
+>>>>>>> Got the basic menu displaying

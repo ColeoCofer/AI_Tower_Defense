@@ -1,10 +1,15 @@
 import pygame
 from .towerButton import TowerButton
 
+<<<<<<< HEAD
 HEIGHT_GAP_PX = 4     #Distance from top of background rect
 WIDTH_GAP_PX = 40     #How "spread out" the tower buttons are from each other
 IMG_SIZE = (60, 60)   #Size of tower buttons
 BOTTOM_PX = 40        #Area where name and cost are displayed
+=======
+GAP_PX = 2
+IMG_SIZE = (60, 60)
+>>>>>>> Got the basic menu displaying
 
 class Menu:
     ''' Creates a purchase menu of tower buttons '''
@@ -14,6 +19,7 @@ class Menu:
 
         #Create a button for every tower
         totalSizeX = 0
+<<<<<<< HEAD
 <<<<<<< HEAD
         i = 0
         for i in range(len(towers)):
@@ -37,14 +43,22 @@ class Menu:
 =======
         for tower in towers:
             buttonPosition = position + GAP + lastImgX
+=======
+        i = 0
+        for i in range(len(towers)):
+            buttonPosition = position[0] + GAP_PX + lastImgX
+            tower = towers[i]((0, 0))
+>>>>>>> Got the basic menu displaying
             resizedTowerImage = pygame.transform.scale(tower.image, IMG_SIZE)
-            self.buttons.append(Tower(buttonPosition, IMG_SIZE, resizedTowerImage, tower.name, tower.cost))
+            self.buttons.append(TowerButton((buttonPosition, self.position[1]), IMG_SIZE, resizedTowerImage, tower.name, tower.cost))
             lastImgX = buttonPosition
             totalSizeX += buttonPosition
 
         self.width = totalSizeX
         self.height = IMG_SIZE[1] + GAP_PX
-        self.bgRect = pygame.Rect(position, (self.width, self.width))
+        # self.bgRect = pygame.Rect(position, (self.width, self.width))
+        self.bgRect = pygame.Surface((self.width, self.width))
+        self.bgRect.fill((0, 0, 0))
 
 >>>>>>> Save point before running
 
@@ -55,6 +69,7 @@ class Menu:
         win.blit(self.bgRect, self.position)
 
         #Render the buttons over the background
+<<<<<<< HEAD
 <<<<<<< HEAD
         for button in self.buttons:
             button.draw(win)
@@ -90,3 +105,7 @@ class Menu:
         for button in buttons:
             button.draw()
 >>>>>>> Save point before running
+=======
+        for button in self.buttons:
+            button.draw(win)
+>>>>>>> Got the basic menu displaying

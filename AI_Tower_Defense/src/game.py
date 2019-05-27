@@ -148,7 +148,8 @@ class Game:
             mousePosition = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.clicks.append(mousePosition)
-                print(self.clicks)
+                if SHOW_MOUSE_CLICKS:
+                    print(self.clicks)
 
         return False
 
@@ -193,8 +194,9 @@ class Game:
         self.win.blit(self.bg, (0, 0))
 
         #Uncomment to see clicked dots for path findings
-        for p in self.clicks:
-            pygame.draw.circle(self.win, (255, 0, 0), (p[0], p[1]), 5, 0)
+        if SHOW_MOUSE_CLICKS:
+            for p in self.clicks:
+                pygame.draw.circle(self.win, (255, 0, 0), (p[0], p[1]), 5, 0)
 
         #Render towers
         for tower in self.towers:
@@ -209,6 +211,8 @@ class Game:
 
         #Render UI Text Elements
         self.displayTextUI(self.win, fps)
+
+        self.menu.draw(self.win)
 
         #Update the window
         pygame.display.update()
