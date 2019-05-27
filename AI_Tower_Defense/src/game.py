@@ -66,7 +66,7 @@ class Game:
         self.health = 100
         self.coinPosition = ((self.width - 150, 45))
         self.coins = Coin(self.coinPosition, 50)
-        self.menu = Menu((400, 700), TOWER_TYPES)
+        self.menu = Menu((400, 650), TOWER_TYPES)
         self.bg = pygame.image.load(os.path.join("../assets/map", "bg.png"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
         self.gameoverImage = pygame.image.load(os.path.join("../assets/other", "gameover.png"))

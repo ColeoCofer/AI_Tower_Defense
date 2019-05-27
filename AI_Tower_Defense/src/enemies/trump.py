@@ -11,7 +11,7 @@ class Trump(AttackingEnemy):
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        self.maxHealth = 5000                             # Trump is hard to kill
+        self.maxHealth = 150                             # Trump is hard to kill
         self.attackRadius = 300
         self.health = self.maxHealth
         self.velocity = random.randint(3, 6)            # Trump is super slow
