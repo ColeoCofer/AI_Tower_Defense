@@ -13,6 +13,7 @@ class TowerButton:
         self.cost = cost
         self.rect = pygame.Rect(self.position, self.size)
 <<<<<<< HEAD
+<<<<<<< HEAD
         self.titleFont = pygame.font.SysFont('lucidagrandettc', 12)
         self.costFont = pygame.font.SysFont('lucidagrandettc', 15)
         self.titleColor = (0, 0, 0)
@@ -23,6 +24,12 @@ class TowerButton:
         self.titleColor = (0, 0, 0)
         self.costColor = (160, 141, 95)
 >>>>>>> Got the name and cost displayed but it needs some tweaking
+=======
+        self.titleFont = pygame.font.SysFont('lucidagrandettc', 12)
+        self.costFont = pygame.font.SysFont('lucidagrandettc', 15)
+        self.titleColor = (0, 0, 0)
+        self.costColor = (250, 241, 95)
+>>>>>>> Got the menu looking much better
 
     def draw(self, win):
         ''' Draw the button containing an image of the tower '''
@@ -80,10 +87,14 @@ class TowerButton:
 =======
 =======
         namePosition = (self.position[0], self.position[1] + self.size[1])
-        self.displayText(self.title, namePosition, self.titleColor, win)
+        self.displayText(self.title, namePosition, self.titleColor, win, self.titleFont)
         costPosition = (namePosition[0], namePosition[1] + TEXT_GAP_PX)
+<<<<<<< HEAD
         self.displayText(str(self.cost), costPosition, self.costColor, win)
 >>>>>>> Got the name and cost displayed but it needs some tweaking
+=======
+        self.displayText(str(self.cost), costPosition, self.costColor, win, self.costFont)
+>>>>>>> Got the menu looking much better
 
     def handleEvents(self, mousePosition):
         ''' Attempts to purchase the tower if the user clicks on it '''
@@ -98,8 +109,8 @@ class TowerButton:
             print(f"You clicked the {self.title} button!")
             #This is where we'd attempt to but the tower
 
-    def displayText(self, text, position, color, win):
+    def displayText(self, text, position, color, win, font):
         ''' Displays the text at the given position '''
-        fontSurface = self.font.render(text, False, color)
+        fontSurface = font.render(text, False, color)
         win.blit(fontSurface, position)
 >>>>>>> Got the name and cost displayed but it needs some tweaking

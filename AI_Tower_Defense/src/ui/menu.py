@@ -3,6 +3,7 @@ from .towerButton import TowerButton
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 HEIGHT_GAP_PX = 4     #Distance from top of background rect
 WIDTH_GAP_PX = 40     #How "spread out" the tower buttons are from each other
 IMG_SIZE = (60, 60)   #Size of tower buttons
@@ -13,6 +14,10 @@ IMG_SIZE = (60, 60)
 >>>>>>> Got the basic menu displaying
 =======
 GAP_PX = 1
+=======
+HEIGHT_GAP_PX = 4
+WIDTH_GAP_PX = 40
+>>>>>>> Got the menu looking much better
 IMG_SIZE = (60, 60)
 BOTTOM_PX = 40 #Area where name and cost is
 >>>>>>> Got the name and cost displayed but it needs some tweaking
@@ -22,8 +27,6 @@ class Menu:
     def __init__(self, position, towers):
         self.buttons = []
         self.position = position
-        self.font = pygame.font.SysFont('lucidagrandettc', 18)
-        self.fontColor = (250, 241, 95)
 
         #Create a button for every tower
         totalSizeX = 0
@@ -55,6 +58,7 @@ class Menu:
         i = 0
         for i in range(len(towers)):
 <<<<<<< HEAD
+<<<<<<< HEAD
             buttonPosition = position[0] + GAP_PX + lastImgX
             tower = towers[i]((0, 0))
 >>>>>>> Got the basic menu displaying
@@ -63,18 +67,34 @@ class Menu:
             buttonPosition = i * IMG_SIZE[0] + GAP_PX + self.position[0]
             tower = towers[i]((0, 0))                               #Create a dummy tower object to get the data members
 >>>>>>> Got the name and cost displayed but it needs some tweaking
+=======
+            if i == -1:
+                #Position the first image at the front
+                buttonPositionX = self.position[0] + WIDTH_GAP_PX
+            else:
+                #Position consecutive buttons after each other
+                buttonPositionX = (i * (IMG_SIZE[0] + (WIDTH_GAP_PX))) + self.position[0]
+
+            #Create a dummy tower object to get the data members
+            tower = towers[i]((0, 0))
+>>>>>>> Got the menu looking much better
             resizedTowerImage = pygame.transform.scale(tower.image, IMG_SIZE)
-            self.buttons.append(TowerButton((buttonPosition, self.position[1] + GAP_PX), IMG_SIZE, resizedTowerImage, tower.name, tower.cost))
+            self.buttons.append(TowerButton((buttonPositionX, self.position[1] + HEIGHT_GAP_PX), IMG_SIZE, resizedTowerImage, tower.name, tower.cost))
 
 <<<<<<< HEAD
 >>>>>>> Save point before running
 =======
         # self.width = (IMG_SIZE[0] *  + (len(towers) * GAP_PX)
-        self.width = len(towers) * (IMG_SIZE[0] + GAP_PX)
-        self.height = IMG_SIZE[1] + GAP_PX * 2 + BOTTOM_PX
+        self.width = (len(towers) * (IMG_SIZE[0] + WIDTH_GAP_PX)) - WIDTH_GAP_PX
+        self.height = IMG_SIZE[1] + HEIGHT_GAP_PX + BOTTOM_PX
         self.bgRect = pygame.Surface((self.width, self.height))
+<<<<<<< HEAD
         self.bgRect.fill((234, 209, 161))
 >>>>>>> Got the name and cost displayed but it needs some tweaking
+=======
+        self.bgRect.set_alpha(200)
+        self.bgRect.fill((137, 139, 145))
+>>>>>>> Got the menu looking much better
 
     def draw(self, win):
         ''' Draws the tower buttons over the background rect '''
