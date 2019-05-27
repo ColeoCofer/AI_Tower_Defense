@@ -32,7 +32,7 @@ class Menu:
         self.width = (len(towers) * (IMG_SIZE[0] + WIDTH_GAP_PX)) - WIDTH_GAP_PX
         self.height = IMG_SIZE[1] + HEIGHT_GAP_PX + BOTTOM_PX
         self.bgRect = pygame.Surface((self.width, self.height))
-        self.bgRect.set_alpha(200)
+        self.bgRect.set_alpha(220)
         self.bgRect.fill((137, 139, 145))
 
     def draw(self, win):

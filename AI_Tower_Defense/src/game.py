@@ -64,9 +64,9 @@ class Game:
         self.score = 0
         self.lives = 10
         self.health = 100
-        self.coinPosition = ((self.width - 150, 45))
+        self.coinPosition = ((self.width - 150, 35))
         self.coins = Coin(self.coinPosition, 50)
-        self.menu = Menu((400, 650), TOWER_TYPES)
+        self.menu = Menu((350, 650), TOWER_TYPES)
         self.bg = pygame.image.load(os.path.join("../assets/map", "bg.png"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
         self.gameoverImage = pygame.image.load(os.path.join("../assets/other", "gameover.png"))
@@ -232,8 +232,8 @@ class Game:
 
         #Health Remaining Surface UI
         healthText = "Health: " + str(self.health)
-        healthPosition = (WIN_WIDTH-180, WIN_HEIGHT-30)
-        healthColor = (255, 255, 255)
+        healthPosition = (self.coinPosition[0] - 15, self.coinPosition[1] + 60)
+        healthColor = self.getHealthColor()
         healthSurface = self.uiFont.render(healthText, False, healthColor)
         win.blit(healthSurface, healthPosition)
 
@@ -250,6 +250,18 @@ class Game:
         scoreColor = (250, 241, 95)
         scoreSurface = self.uiFont.render(scoreText, False, scoreColor)
         win.blit(scoreSurface, scorePosition)
+
+    def getHealthColor(self):
+        if self.health >= 90:
+            return (23, 186, 39)
+        elif self.health >= 75:
+            return (184, 201, 34)
+        elif self.health >= 60:
+            return (201, 151, 34)
+        elif self.health >= 45:
+            return (201, 67, 34)
+        else:
+            return (178, 20, 12)
 
     def isAlive(self):
         return self.health > 0
