@@ -51,6 +51,7 @@ class Menu:
             tower = towers[i]((0, 0))
             resizedTowerImage = pygame.transform.scale(tower.image, IMG_SIZE)
 <<<<<<< HEAD
+<<<<<<< HEAD
             self.buttons.append(TowerButton((buttonPositionX, self.position[1] + HEIGHT_GAP_PX), IMG_SIZE, resizedTowerImage, tower.name, tower.cost, towers[i]))
 
         self.width = (len(towers) * (IMG_SIZE[0] + WIDTH_GAP_PX)) - WIDTH_GAP_PX
@@ -89,6 +90,8 @@ class Menu:
             self.buttons.append(TowerButton((buttonPositionX, self.position[1] + HEIGHT_GAP_PX), IMG_SIZE, resizedTowerImage, tower.name, tower.cost))
 =======
 
+=======
+>>>>>>> Fixed placement issue
             self.buttons.append(TowerButton((buttonPositionX, self.position[1] + HEIGHT_GAP_PX), IMG_SIZE, resizedTowerImage, tower.name, tower.cost, towers[i]))
 >>>>>>> Got them placinggit statusgit status
 
@@ -180,16 +183,27 @@ class Menu:
         for i in range(len(self.buttons)):
             isSelected, towerType = self.buttons[i].handleEvents(mousePosition, wallet, pathBounds)
 
+            #If they purchased one, deselect all and return the tower to place
+            if isSelected == False and towerType != None:
+                for button in self.buttons:
+                    button.isSelected = False
+                return towerType
+
             #If we selected a new button, deselect the rest of them
             if isSelected == True:
                 for j in range(len(self.buttons)):
                     if j != i:
                         #Deselect all other buttons
                         self.buttons[j].isSelected = False
+<<<<<<< HEAD
                 break
 <<<<<<< HEAD
 >>>>>>> Now selects tower and draws it at mouse position
 =======
         #User has purchased and placed a tower if not None
+=======
+                return towerType
+
+>>>>>>> Fixed placement issue
         return towerType
 >>>>>>> Got them placinggit statusgit status

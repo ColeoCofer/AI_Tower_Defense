@@ -124,11 +124,10 @@ class TowerButton:
             if wallet.coins >= self.cost and self.isSelected == False:
                 self.isSelected = True
                 return True, None
+        #Check if they have already selected a tower, and tried place it at a valid location
         elif self.isSelected == True and wallet.coins >= self.cost and self.canPlaceTower(pathBounds) == True:
             wallet.spendCoins(self.cost)
             #May need to return a tower to be created here...
-            print(f"You bought a tower!!!")
-            print(f"type: {type(self.type)}")
             self.isSelected = False
             return False, self.type
 
