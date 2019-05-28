@@ -46,7 +46,11 @@ class Menu:
 
 
     def handleEvents(self, mousePosition, wallet, pathBounds):
-        ''' Handle if the user selects a tower button '''
+        '''
+        Handle if the user selects a tower button
+        Returns the tower type if a user selected one for purchasing
+        '''
+        buttonWasSelected = False
         i = 0
         for i in range(len(self.buttons)):
             isSelected, towerType = self.buttons[i].handleEvents(mousePosition, wallet, pathBounds)
@@ -55,7 +59,7 @@ class Menu:
             if isSelected == False and towerType != None:
                 for button in self.buttons:
                     button.isSelected = False
-                return towerType
+                return towerType, buttonWasSelected
 
             #If we selected a new button, deselect the rest of them
             if isSelected == True:
@@ -63,6 +67,7 @@ class Menu:
                     if j != i:
                         #Deselect all other buttons
                         self.buttons[j].isSelected = False
-                return towerType
+                        buttonWasSelected = True
+                return towerType, buttonWasSelected
 
-        return towerType
+        return towerType, buttonWasSelected

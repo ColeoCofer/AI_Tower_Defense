@@ -51,9 +51,11 @@ class TowerButton:
     def canPlaceTower(self, pathBounds):
         ''' Returns true if the current mouse position is a valid place to build a tower '''
         mousePosition = pygame.mouse.get_pos()
+        w, h = (self.size[0]/2), (self.size[1]/2)
         for rect in pathBounds:
             #If we collide with any of these rectangles, return False
-            if rect.collidepoint(mousePosition):
+            x, y = mousePosition[0], mousePosition[1]
+            if rect.collidepoint((x-w, y-h)) or rect.collidepoint((x-w, y+h)) or rect.collidepoint((x+w, y-h)) or rect.collidepoint((x+w, y+h)):
                 return False
         return True
 
