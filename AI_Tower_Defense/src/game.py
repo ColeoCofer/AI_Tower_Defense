@@ -58,8 +58,8 @@ class Game:
             self.win = pygame.display.set_mode((self.width, self.height))
 
         self.win.set_alpha(None)
-        self.enemies = [Trump(-10), Warrior(0), Zombie(30), Robot(0), Dino(15), Wizard(-25)]
-        self.towers = [Obelisk(TOWER_POSITIONS[3]), Pyramid(TOWER_POSITIONS[5]), BirdCastle(TOWER_POSITIONS[7]), SquareTower(TOWER_POSITIONS[10]), Igloo(TOWER_POSITIONS[15]), WizardTower(TOWER_POSITIONS[8]), City((1180, 230))]
+        self.enemies = [Zombie(0), Zombie(10)]
+        self.towers = [City((1180, 230))]
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = 0
         self.score = 0
@@ -73,7 +73,7 @@ class Game:
         self.gameoverImage = pygame.image.load(os.path.join("../assets/other", "gameover.png"))
         self.gameoverImage = pygame.transform.scale(self.bg, (self.width, self.height))
         self.clicks = []
-        self.spawnChance = 0.015
+        self.spawnChance = 0.0055
         self.showPathBounds = False
 
         #Fonts
