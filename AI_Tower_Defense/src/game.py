@@ -74,6 +74,7 @@ class Game:
         self.gameoverImage = pygame.transform.scale(self.bg, (self.width, self.height))
         self.clicks = []
         self.spawnChance = 0.015
+        self.showPathBounds = False
 
         #Fonts
         self.uiFont = pygame.font.SysFont('lucidagrandettc', 24)
@@ -259,21 +260,23 @@ class Game:
                 #Check what direction the points are moving and construct a rectangle
                 if x1 == x2:
                     #Moving on y-axis
-                    rect = pygame.Rect((x1 - PATH_WIDTH_PX, y1), (PATH_WIDTH_PX*2, abs(y2 - y1)))
+                    if y2 > y1: #Downward
+                        rect = pygame.Rect((x1 - PATH_WIDTH_PX, y1 - PATH_WIDTH_PX), (PATH_WIDTH_PX*2, abs(y2 - y1)))
+                    else:
+                        rect = pygame.Rect((x2 - PATH_WIDTH_PX, y2 + PATH_WIDTH_PX), (PATH_WIDTH_PX*2, abs(y2 - y1)))
+
                 else:
                     #Moving on x-axis
-                    rect = pygame.Rect((x1, y1 + PATH_WIDTH_PX), (abs(x2 - x1), PATH_WIDTH_PX*2))
+                    rect = pygame.Rect((x1 - PATH_WIDTH_PX, y1 - PATH_WIDTH_PX), (abs(x2 - x1), PATH_WIDTH_PX*2))
 
                 self.pathBounds.append(rect)
 
     def drawPathBounds(self, win):
         ''' Draws rectangles around the path bounds '''
         for bound in self.pathBounds:
-            # pygame.draw.rect(win, (255, 0, 0), bound)
             self.bgRect = pygame.Surface((bound.width, bound.height))
-            # self.bgRect.set_alpha(150)
-            self.bgRect.fill((255, 0, 0))
-            # print(f"{bound.x}, {bound.y} => w,h {bound.width}, {bound.height}") #Seems right... not displaying though
+            self.bgRect.set_alpha(125)
+            self.bgRect.fill((200, 0, 0))
             win.blit(self.bgRect, (bound.x, bound.y))
 
 
