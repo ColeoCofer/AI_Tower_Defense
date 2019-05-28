@@ -28,7 +28,7 @@ VISUAL_MODE = True     #Set false to stop rendering
 FPS = 60
 
 #Player
-STARTING_COINS = 300
+STARTING_COINS = 2000
 
 #Window Dimensions
 WIN_WIDTH = 1200
