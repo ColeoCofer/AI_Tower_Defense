@@ -11,7 +11,7 @@ class DamageType(Enum):
     lightning = 4
     fakeNews = 5
     melee = 6
-    arrow = 7
+    poison = 7
 
 
 # base class for all porjectiles

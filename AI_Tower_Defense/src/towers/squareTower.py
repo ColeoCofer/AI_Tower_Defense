@@ -13,7 +13,7 @@ class SquareTower(Tower):
         self.maxHealth = 250                            # tough with cannnonballs
         self.health = self.maxHealth
         self.attackRadius = 250
-        self.weaknesses.append(DamageType.lazer)        # impevious to fire
+        self.weaknesses.append(DamageType.lazer)        # impervious to fire
         self.weaknesses.append(DamageType.lightning)
 
         self.projectileColor = (100, 100, 100)

@@ -17,6 +17,7 @@ class Warrior(AttackingEnemy):
         self.velocity = random.randint(7,10)            # warriors are pretty fast
         self.weaknesses.append(DamageType.fire)
         self.weaknesses.append(DamageType.lightning)
+        self.weaknesses.append(DamageType.poison)
         self.weaknesses.append(DamageType.lazer)        # warriors are weak to everything
         self.superWeakness = DamageType.fire            # and super weak to fire
 

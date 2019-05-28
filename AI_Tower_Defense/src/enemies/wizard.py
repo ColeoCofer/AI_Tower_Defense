@@ -15,6 +15,7 @@ class Wizard(AttackingEnemy):
         self.health = self.maxHealth
         self.velocity = random.randint(9, 13)       # wizards are fast as hell
         self.weaknesses.append(DamageType.lazer)
+        self.weaknesses.append(DamageType.poison)
         self.weaknesses.append(DamageType.fire)     # wizards are not weak to lightning
         self.superWeakness = DamageType.exploding   # and super weak to exploding shells
         

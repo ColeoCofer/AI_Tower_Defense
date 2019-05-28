@@ -3,7 +3,7 @@ import os
 import random
 from .tower import Tower
 from projectile.projectile import DamageType
-from projectile.lazer import Lazer
+from projectile.knightEgg import KnightEgg
 
 
 class City(Tower):
@@ -12,7 +12,7 @@ class City(Tower):
         super().__init__(position)
         self.maxHealth = 1500
         self.health = self.maxHealth
-        self.attackRadius = 150
+        self.attackRadius = 350
         self.weaknesses.append(DamageType.lazer)            # weak to everything but she is super buff
         self.weaknesses.append(DamageType.fire)
         self.weaknesses.append(DamageType.lightning)
@@ -27,6 +27,6 @@ class City(Tower):
 
     # overrides basae class version
     def loadProjectile(self, enemy):
-        laser = Lazer(self.position, enemy, self.closeEnemies)
-        laser.color = self.projectileColor
-        return laser
+        knight = KnightEgg(self.position, enemy, self.closeEnemies)
+        knight.color = self.projectileColor
+        return knight

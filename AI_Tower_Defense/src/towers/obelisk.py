@@ -13,9 +13,11 @@ class Obelisk(Tower):
         self.health = self.maxHealth
         self.attackRadius = 200
         self.weaknesses.append(DamageType.lightning)
+        
         self.projectileColor = (100, 100, 100)
         self.image = pygame.image.load(os.path.join("../assets/towers/obelisk/", "obelisk.png"))
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
+
 
     # overrides base class version
     def loadProjectile(self, enemy):

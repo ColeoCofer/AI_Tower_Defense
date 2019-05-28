@@ -1,24 +1,34 @@
 import pygame
 import random
-from .projectile import Projectile
+import os
+from .rangeProjectile import RangeProjectile
 from .projectile import DamageType
+from animations.disintegrate import Disintegrate
 
 
-class LightningBolt(Projectile):
+class LightningBolt(RangeProjectile):
     
     def __init__(self, towerPosition, enemy, enemies):
         super().__init__(towerPosition, enemy, enemies)
         self.damage = 4                             # do a lot of damage but slow reload
         self.damageType = DamageType.lightning
-        self.color = (200, 100, 50)
-        self.reloadTime = 1500
-        self.velocity = 5
+        self.reloadTime = 2500
+        self.velocity = 80                     # cannonballs are fast
+        self.detonationRange = 30
+        
+        self.numImages = 14
+        self.width = 80
+        self.height = 80
+        self.animationSpeed = 2
+        self.attackAnimationDuration = 5000
+
+        #Load images
+        for i in range(1, self.numImages):
+            image = pygame.image.load(os.path.join("../assets/projectiles/lightning", "Explosion_" + str(i) + ".png"))
+            self.images.append(pygame.transform.scale(image, (self.width, self.height)))
+        self.image = self.images[0]
 
 
-    # TODO placeholder
-    def draw(self, win):
-        newColor = []
-        for channel in self.color:
-            newColor.append(channel + random.randint(-50, 50))
-
-        color = tuple(newColor)
+    # returns a residual animation
+    def finalAnimation(self, position):
+        return Disintegrate(position)

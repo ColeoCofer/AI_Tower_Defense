@@ -4,7 +4,7 @@ import random
 import math
 from .projectile import DamageType
 from .rangeProjectile import RangeProjectile
-from animations.explosion import Explosion
+from animations.fireExplosion import FireExplosion
 
 
 class Cannonball(RangeProjectile):
@@ -17,7 +17,8 @@ class Cannonball(RangeProjectile):
         self.velocity = 100                     # cannonballs are fast
         self.attackRadius = 40                  # radius to take secondary damage on
         self.detonationRange = 30
-        self.numImages = 4
+        
+        self.numImages = 5
         self.width = 30
         self.height = 30
         self.attackAnimationDuration = 5000
@@ -40,4 +41,4 @@ class Cannonball(RangeProjectile):
 
     # returns a residual animation
     def finalAnimation(self, position):
-        return Explosion(position)
+        return FireExplosion(position)
