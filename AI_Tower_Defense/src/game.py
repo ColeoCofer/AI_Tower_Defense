@@ -152,7 +152,12 @@ class Game:
             #Store mouse clicks to determine path for enemies
             mousePosition = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                self.menu.handleEvents(mousePosition, self.wallet, self.pathBounds)
+                towerType = self.menu.handleEvents(mousePosition, self.wallet, self.pathBounds)
+
+                #If not None, the user has purchased and placed a tower
+                if towerType != None:
+                    self.placeTower(towerType)
+
                 self.clicks.append(mousePosition)
                 if SHOW_MOUSE_CLICKS:
                     print(self.clicks)
@@ -226,6 +231,16 @@ class Game:
 
         #Update the window
         pygame.display.update()
+
+    def placeTower(self, towerType):
+        print("in placeTower")
+        mousePosition = pygame.mouse.get_pos()
+        i = 0
+        for i in range(len(TOWER_TYPES)):
+            print(f"{TOWER_TYPES[i]} and {towerType}")
+            if TOWER_TYPES[i] == towerType:
+                print("IT WORKED")
+                self.towers.append(TOWER_TYPES[i](mousePosition))
 
 
     def calcPathBounds(self):

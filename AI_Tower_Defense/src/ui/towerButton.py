@@ -123,14 +123,16 @@ class TowerButton:
             #Check if they have enough coins
             if wallet.coins >= self.cost and self.isSelected == False:
                 self.isSelected = True
-                return True
+                return True, None
         elif self.isSelected == True and wallet.coins >= self.cost and self.canPlaceTower(pathBounds) == True:
             wallet.spendCoins(self.cost)
             #May need to return a tower to be created here...
             print(f"You bought a tower!!!")
+            print(f"type: {type(self.type)}")
             self.isSelected = False
+            return False, self.type
 
-        return False
+        return False, None
 
     def canPlaceTower(self, pathBounds):
         ''' Returns true if the current mouse position is a valid place to build a tower '''

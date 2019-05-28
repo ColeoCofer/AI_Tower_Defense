@@ -50,6 +50,7 @@ class Menu:
             #Create a dummy tower object to get the data members
             tower = towers[i]((0, 0))
             resizedTowerImage = pygame.transform.scale(tower.image, IMG_SIZE)
+<<<<<<< HEAD
             self.buttons.append(TowerButton((buttonPositionX, self.position[1] + HEIGHT_GAP_PX), IMG_SIZE, resizedTowerImage, tower.name, tower.cost, towers[i]))
 
         self.width = (len(towers) * (IMG_SIZE[0] + WIDTH_GAP_PX)) - WIDTH_GAP_PX
@@ -86,6 +87,10 @@ class Menu:
 >>>>>>> Got the menu looking much better
             resizedTowerImage = pygame.transform.scale(tower.image, IMG_SIZE)
             self.buttons.append(TowerButton((buttonPositionX, self.position[1] + HEIGHT_GAP_PX), IMG_SIZE, resizedTowerImage, tower.name, tower.cost))
+=======
+
+            self.buttons.append(TowerButton((buttonPositionX, self.position[1] + HEIGHT_GAP_PX), IMG_SIZE, resizedTowerImage, tower.name, tower.cost, towers[i]))
+>>>>>>> Got them placinggit statusgit status
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -173,7 +178,7 @@ class Menu:
         ''' Handle if the user selects a tower button '''
         i = 0
         for i in range(len(self.buttons)):
-            isSelected = self.buttons[i].handleEvents(mousePosition, wallet, pathBounds)
+            isSelected, towerType = self.buttons[i].handleEvents(mousePosition, wallet, pathBounds)
 
             #If we selected a new button, deselect the rest of them
             if isSelected == True:
@@ -182,4 +187,9 @@ class Menu:
                         #Deselect all other buttons
                         self.buttons[j].isSelected = False
                 break
+<<<<<<< HEAD
 >>>>>>> Now selects tower and draws it at mouse position
+=======
+        #User has purchased and placed a tower if not None
+        return towerType
+>>>>>>> Got them placinggit statusgit status
