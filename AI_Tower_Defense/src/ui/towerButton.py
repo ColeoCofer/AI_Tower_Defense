@@ -14,11 +14,15 @@ class TowerButton:
         self.rect = pygame.Rect(self.position, self.size)
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3763082b962a5a2c5af4c44e701e1bf8a9064b11
         self.titleFont = pygame.font.SysFont('lucidagrandettc', 12)
         self.costFont = pygame.font.SysFont('lucidagrandettc', 15)
         self.titleColor = (0, 0, 0)
         self.costColor = (250, 241, 95)
         self.isSelected = False
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
         self.font = pygame.font.SysFont('lucidagrandettc', 10)
@@ -33,10 +37,13 @@ class TowerButton:
 >>>>>>> Got the menu looking much better
 =======
 >>>>>>> Now selects tower and draws it at mouse position
+=======
+>>>>>>> 3763082b962a5a2c5af4c44e701e1bf8a9064b11
 
     def draw(self, win):
         ''' Draw the button containing an image of the tower '''
         win.blit(self.image, self.rect)
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
         namePosition = (self.position[0], self.position[1] + self.size[1])
@@ -110,6 +117,13 @@ class TowerButton:
 >>>>>>> Got the basic menu displaying
 =======
 =======
+=======
+        namePosition = (self.position[0], self.position[1] + self.size[1])
+        self.displayText(self.title, namePosition, self.titleColor, win, self.titleFont)
+        costPosition = (namePosition[0], namePosition[1] + TEXT_GAP_PX)
+        self.displayText(str(self.cost), costPosition, self.costColor, win, self.costFont)
+
+>>>>>>> 3763082b962a5a2c5af4c44e701e1bf8a9064b11
         self.isPlacingTower(win)
 
     def handleEvents(self, mousePosition, wallet, pathBounds):
@@ -118,7 +132,10 @@ class TowerButton:
         Returns the name of the tower so we can reset all isSelected values in menu
         '''
         #Check if they clicked within bounds of the button
+<<<<<<< HEAD
 >>>>>>> Now selects tower and draws it at mouse position
+=======
+>>>>>>> 3763082b962a5a2c5af4c44e701e1bf8a9064b11
         if self.rect.collidepoint(mousePosition):
             #Check if they have enough coins
             if wallet.coins >= self.cost and self.isSelected == False:
@@ -154,4 +171,7 @@ class TowerButton:
         ''' Displays the text at the given position '''
         fontSurface = font.render(text, False, color)
         win.blit(fontSurface, position)
+<<<<<<< HEAD
 >>>>>>> Got the name and cost displayed but it needs some tweaking
+=======
+>>>>>>> 3763082b962a5a2c5af4c44e701e1bf8a9064b11

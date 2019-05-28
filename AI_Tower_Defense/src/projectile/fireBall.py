@@ -30,7 +30,11 @@ class Fireball(RangeProjectile):
 
 
     def finalAnimation(self, position):
+<<<<<<< HEAD
         return Explosion(position)
+=======
+        return FireExplosion(position)
+>>>>>>> 3763082b962a5a2c5af4c44e701e1bf8a9064b11
 
     # fires a projectile
     def fire(self):

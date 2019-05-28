@@ -17,7 +17,11 @@ class Pyramid(Tower):
         self.attackRadius = 200
         self.weaknesses.append(DamageType.lightning)        # only weak to lightning and melee
 
+<<<<<<< HEAD
         self.projectileColor = (200, 69, 50)
+=======
+        self.projectileColor = (150, 150, 150)
+>>>>>>> 3763082b962a5a2c5af4c44e701e1bf8a9064b11
         self.width = 80
         self.height = 80
         self.healthBarYOffset = 30

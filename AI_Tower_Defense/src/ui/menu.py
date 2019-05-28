@@ -5,12 +5,16 @@ from .towerButton import TowerButton
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> Now selects tower and draws it at mouse position
+=======
+>>>>>>> 3763082b962a5a2c5af4c44e701e1bf8a9064b11
 HEIGHT_GAP_PX = 4     #Distance from top of background rect
 WIDTH_GAP_PX = 40     #How "spread out" the tower buttons are from each other
 IMG_SIZE = (60, 60)   #Size of tower buttons
 BOTTOM_PX = 40        #Area where name and cost are displayed
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 GAP_PX = 2
@@ -27,6 +31,8 @@ BOTTOM_PX = 40 #Area where name and cost is
 >>>>>>> Got the name and cost displayed but it needs some tweaking
 =======
 >>>>>>> Now selects tower and draws it at mouse position
+=======
+>>>>>>> 3763082b962a5a2c5af4c44e701e1bf8a9064b11
 
 class Menu:
     ''' Creates a purchase menu of tower buttons '''
@@ -38,6 +44,9 @@ class Menu:
         totalSizeX = 0
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3763082b962a5a2c5af4c44e701e1bf8a9064b11
         i = 0
         for i in range(len(towers)):
             if i == -1:
@@ -52,6 +61,9 @@ class Menu:
             resizedTowerImage = pygame.transform.scale(tower.image, IMG_SIZE)
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3763082b962a5a2c5af4c44e701e1bf8a9064b11
             self.buttons.append(TowerButton((buttonPositionX, self.position[1] + HEIGHT_GAP_PX), IMG_SIZE, resizedTowerImage, tower.name, tower.cost, towers[i]))
 
         self.width = (len(towers) * (IMG_SIZE[0] + WIDTH_GAP_PX)) - WIDTH_GAP_PX
@@ -59,6 +71,7 @@ class Menu:
         self.bgRect = pygame.Surface((self.width, self.height))
         self.bgRect.set_alpha(220)
         self.bgRect.fill((137, 139, 145))
+<<<<<<< HEAD
 =======
         for tower in towers:
             buttonPosition = position + GAP + lastImgX
@@ -116,6 +129,8 @@ class Menu:
 >>>>>>> Added color variance in health text
         self.bgRect.fill((137, 139, 145))
 >>>>>>> Got the menu looking much better
+=======
+>>>>>>> 3763082b962a5a2c5af4c44e701e1bf8a9064b11
 
     def draw(self, win):
         ''' Draws the tower buttons over the background rect '''
@@ -126,6 +141,9 @@ class Menu:
         #Render the buttons over the background
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3763082b962a5a2c5af4c44e701e1bf8a9064b11
         for button in self.buttons:
             button.draw(win)
 
@@ -133,14 +151,20 @@ class Menu:
     def handleEvents(self, mousePosition, wallet, pathBounds):
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> its pretty ballin
+=======
+>>>>>>> 3763082b962a5a2c5af4c44e701e1bf8a9064b11
         '''
         Handle if the user selects a tower button
         Returns the tower type if a user selected one for purchasing
         '''
         buttonWasSelected = False
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3763082b962a5a2c5af4c44e701e1bf8a9064b11
         i = 0
         for i in range(len(self.buttons)):
             isSelected, towerType = self.buttons[i].handleEvents(mousePosition, wallet, pathBounds)
@@ -161,6 +185,7 @@ class Menu:
                 return towerType, buttonWasSelected
 
         return towerType, buttonWasSelected
+<<<<<<< HEAD
 =======
         for button in buttons:
             button.draw()
@@ -220,3 +245,5 @@ class Menu:
 
         return towerType, buttonWasSelected
 >>>>>>> its pretty ballin
+=======
+>>>>>>> 3763082b962a5a2c5af4c44e701e1bf8a9064b11
