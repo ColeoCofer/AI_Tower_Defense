@@ -26,7 +26,6 @@ class Menu:
             #Create a dummy tower object to get the data members
             tower = towers[i]((0, 0))
             resizedTowerImage = pygame.transform.scale(tower.image, IMG_SIZE)
-
             self.buttons.append(TowerButton((buttonPositionX, self.position[1] + HEIGHT_GAP_PX), IMG_SIZE, resizedTowerImage, tower.name, tower.cost, towers[i]))
 
         self.width = (len(towers) * (IMG_SIZE[0] + WIDTH_GAP_PX)) - WIDTH_GAP_PX
@@ -52,12 +51,18 @@ class Menu:
         for i in range(len(self.buttons)):
             isSelected, towerType = self.buttons[i].handleEvents(mousePosition, wallet, pathBounds)
 
+            #If they purchased one, deselect all and return the tower to place
+            if isSelected == False and towerType != None:
+                for button in self.buttons:
+                    button.isSelected = False
+                return towerType
+
             #If we selected a new button, deselect the rest of them
             if isSelected == True:
                 for j in range(len(self.buttons)):
                     if j != i:
                         #Deselect all other buttons
                         self.buttons[j].isSelected = False
-                break
-        #User has purchased and placed a tower if not None
+                return towerType
+
         return towerType

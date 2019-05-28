@@ -156,6 +156,7 @@ class Game:
 
                 #If not None, the user has purchased and placed a tower
                 if towerType != None:
+                    print("***********************")
                     self.placeTower(towerType)
 
                 self.clicks.append(mousePosition)
