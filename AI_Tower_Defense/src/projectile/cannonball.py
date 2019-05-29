@@ -22,6 +22,8 @@ class Cannonball(RangeProjectile):
         self.width = 30
         self.height = 30
         self.attackAnimationDuration = 5000
+        self.attackSound = pygame.mixer.Sound("../assets/sounds/cannonShot.flac")
+        self.attackSound.set_volume(0.15)
 
         #Load images
         for i in range(0, self.numImages):
@@ -36,6 +38,7 @@ class Cannonball(RangeProjectile):
             dist = (enemy.x - self.x) ** 2 + (enemy.y - self.y) ** 2
             #Use radius squared to avoid taking square roots of distance
             if dist <= self.attackRadius ** 2:
+                self.attackSound.play()
                 enemy.hit((self.damage / 2), self.damageType)
 
 

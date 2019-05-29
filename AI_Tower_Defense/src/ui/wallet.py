@@ -1,7 +1,7 @@
 import pygame
 import os
 
-class Coin:
+class Wallet:
     def __init__(self, position, coins):
         self.x = position[0]
         self.y = position[1]

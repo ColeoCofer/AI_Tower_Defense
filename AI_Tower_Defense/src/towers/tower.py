@@ -8,6 +8,8 @@ from constants.animationConstants import *
 class Tower:
 
     def __init__(self, position):
+        self.name = "No Name"
+        self.cost = 100
         self.position = position
         self.x = position[0]   # Position on map
         self.y = position[1]
