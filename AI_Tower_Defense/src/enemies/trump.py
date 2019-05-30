@@ -13,6 +13,7 @@ class Trump(AttackingEnemy):
         super().__init__(yOffset)
         self.maxHealth = 100                             # Trump is hard to kill
         self.health = self.maxHealth
+        self.coinReward = 100
         self.attackRadius = 125
         self.velocity = random.randint(3, 6)            # Trump is super slow
         self.weaknesses.append(DamageType.lazer)

@@ -10,6 +10,7 @@ class Enemy:
     def __init__(self, yOffset):
         self.maxHealth = 0
         self.health = self.maxHealth
+        self.coinReward = 20
         self.velocity = 0
         self.weaknesses = [DamageType.ice, DamageType.exploding, DamageType.melee]      # all creatures are weak to ice, explosions, and melee
         self.superWeakness = None   # will cause an enemy to lose 2x damage when projectile damage is the same
@@ -27,6 +28,7 @@ class Enemy:
         self.healthBarHeight = 10
         self.healthBarYOffset = 10    #Larger numbers will move the health bar closer to the enemies head
         self.numImages = 0
+        self.yOffset = yOffset
 
         #Spawn
         self.spawnChance = 0.5        #Default starting chance of being spawned
@@ -43,8 +45,8 @@ class Enemy:
         self.path.append((1250 + (self.width * 2), self.path[-1][1]))
 
         # Slightly offset the y-axis
-        for i in range(len(self.path)):
-            self.path[i] = (self.path[i][0], self.path[i][1] + yOffset)
+        #for i in range(len(self.path)):
+        #    self.path[i] = (self.path[i][0], self.path[i][1] + yOffset)
 
     def draw(self, win):
         # if the enemy is frozen display snowman
@@ -65,7 +67,7 @@ class Enemy:
 
         # Display from center of character
         centerX = self.x - (self.width / 2)
-        centerY = self.y - (self.height / 2)
+        centerY = self.y - (self.height / 2) + self.yOffset
 
         # draw health box, render sprite, and move
         self.drawHealthBox(win, centerX, centerY)
@@ -128,26 +130,53 @@ class Enemy:
         and then if it surpassed the next point on the appropriate axis.
         Note: pyGame axis starts from the top left corner
         '''
-        if dx >= 0: #Moving right
+        if dx > 0: #Moving right
             if dy > 0: #Moving down
                 if self.x >= x2 and self.y >= y2:
                     self.pathIndex += 1
-            elif dy < 0:
+            elif dy < 0: #Moving up
                 if self.x >= x2 and self.y <= y2:
                     self.pathIndex += 1
-            else:
-                #Not moving on y-axis
+            else: #Not moving on y-axis
                 if self.x >= x2:
                     self.pathIndex += 1
-        else:
-            #This shouldn't be ran for our map
-            if dy >= 0: #Moving left
-                if dy <= 0: #Moving up
-                    if self.x <= x2 and self.y >= y2:
-                        self.pathIndex += 1
-                else:
-                    if self.x <= x2 and self.y <= y2:
-                        self.pathIndex += 1
+        elif dx < 0: #Moving left
+            if dy > 0: #Moving down
+                if self.x <= x2 and self.y >= y2:
+                    self.pathIndex += 1
+            elif dy < 0: #Moving up
+                if self.x <= x2 and self.y <= y2:
+                    self.pathIndex += 1
+            else: #Not moving on y-axis
+                if self.x <= x2:
+                    self.pathIndex += 1
+        else: #Not moving on x-axis
+            if dy > 0 and self.y >= y2: #Moving down
+                self.pathIndex += 1
+            elif dy < 0 and self.y <= y2: #Moving up
+                self.pathIndex += 1
+
+
+        # if dx >= 0: #Moving right
+        #     if dy > 0: #Moving down
+        #         if self.x >= x2 and self.y >= y2:
+        #             self.pathIndex += 1
+        #     elif dy < 0:
+        #         if self.x >= x2 and self.y <= y2:
+        #             self.pathIndex += 1
+        #     else:
+        #         #Not moving on y-axis
+        #         if self.x >= x2:
+        #             self.pathIndex += 1
+        # else:
+        #     #This shouldn't be ran for our map
+        #     if dy >= 0: #Moving left
+        #         if dy <= 0: #Moving up
+        #             if self.x <= x2 and self.y >= y2:
+        #                 self.pathIndex += 1
+        #         else:
+        #             if self.x <= x2 and self.y <= y2:
+        #                 self.pathIndex += 1
 
 
     def hit(self, damage, damageType):

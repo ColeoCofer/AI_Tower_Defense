@@ -63,7 +63,7 @@ class Game:
         self.towers = [City((1180, 230))]
         self.score = 0
         self.lives = 10
-        self.health = 100
+        self.health = 10000
         self.coinPosition = ((self.width - 150, 35))
         self.wallet = Wallet(self.coinPosition, STARTING_COINS)
         self.menu = Menu((350, 650), TOWER_TYPES)
@@ -188,6 +188,7 @@ class Game:
 
             if enemy.health <= 0:
                 self.score += enemy.maxHealth
+                self.wallet.coins += enemy.coinReward
 
             if enemy.x > WIN_WIDTH or enemy.health <= 0:
                 self.enemies.remove(enemy)
@@ -208,11 +209,9 @@ class Game:
             #Should we spawn an enemy
             if shouldSpawn <= self.spawnChance:
                 #Pick an enemy to spawn based on their probabilities
-                randVerticalOffset = random.randint(-Y_MAX_OFFSET, Y_MAX_OFFSET)
+                randVerticalOffset = random.randint(-Y_MAX_OFFSET, (Y_MAX_OFFSET - int((Y_MAX_OFFSET / 2))))
                 enemyToSpawn = np.random.choice(ENEMY_INDICES, 1, self.enemySpawnProbs)
                 self.enemies.append(ENEMY_TYPES[enemyToSpawn[0]](randVerticalOffset))
-                #randEnemyType = random.randint(0, len(ENEMY_TYPES) - 1)
-                #self.enemies.append(ENEMY_TYPES[randEnemyType](randVerticalOffset))
         else:
             #New Level
             #Increase chance to spawn an enemy by a percentage of the last spawn chance
@@ -325,8 +324,8 @@ class Game:
         ''' Render UI elements above all other graphics '''
 
         #Enemies Remaining Surface UI
-        numEnemiesText = "Enemies: " + str(len(self.enemies))
-        numEnemiesPosition = (WIN_WIDTH-180, WIN_HEIGHT-50)
+        numEnemiesText = "Enemies: " + str(len(self.enemies)) + " of " + str(self.numEnemiesPerLevel)
+        numEnemiesPosition = (WIN_WIDTH-280, WIN_HEIGHT-50)
         numEnemiesColor = (255, 255, 255)
         numEnemiesSurface = self.uiFont.render(numEnemiesText, False, numEnemiesColor)
         win.blit(numEnemiesSurface, numEnemiesPosition)
