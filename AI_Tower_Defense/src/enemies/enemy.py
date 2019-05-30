@@ -28,6 +28,10 @@ class Enemy:
         self.healthBarYOffset = 10    #Larger numbers will move the health bar closer to the enemies head
         self.numImages = 0
 
+        #Spawn
+        self.spawnChance = 0.5        #Default starting chance of being spawned
+        self.spawnChanceLimit = 0.8   #Maximum limit that an enemy's spawn chance will be
+
         # default snowman animation
         self.snowman = pygame.transform.scale(pygame.image.load(os.path.join("../assets/enemy/snowman", "snowman.png")), (self.width, self.height))
 

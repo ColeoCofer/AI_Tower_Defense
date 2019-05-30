@@ -18,11 +18,14 @@ class Wizard(AttackingEnemy):
         self.weaknesses.append(DamageType.poison)
         self.weaknesses.append(DamageType.fire)     # wizards are not weak to lightning
         self.superWeakness = DamageType.exploding   # and super weak to exploding shells
-        
+
         self.images = []
         self.animationSpeed = 1
         self.numImages = 20
         self.healthBarYOffset = 15
+
+        self.spawnChance = 0.4
+        self.spawnChanceLimit = 0.7
 
         #Load images
         for i in range(0, self.numImages):

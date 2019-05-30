@@ -28,6 +28,9 @@ class Trump(AttackingEnemy):
         self.numImages = 2
         self.animationSpeed = 10
 
+        self.spawnChance = 0.1
+        self.spawnChanceLimit = 0.3
+
         #Load images
         for i in range(0, self.numImages):
             image = pygame.image.load(os.path.join("../assets/enemy/trump", "trump" + str(i) + ".png"))

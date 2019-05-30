@@ -23,6 +23,9 @@ class Dino(Enemy):
         self.healthBarYOffset = 15
         self.images = []
 
+        self.spawnChance = 0.4
+        self.spawnChanceLimit = 0.8
+
         #Load images
         for i in range(1, self.numImages):
             image = pygame.image.load(os.path.join("../assets/enemy/dino", "Walk (" + str(i) + ").png"))

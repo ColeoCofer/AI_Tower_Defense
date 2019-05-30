@@ -22,6 +22,9 @@ class Dragon(Enemy):
         self.healthBarYOffset = 30
         self.images = []
 
+        self.spawnChance = 0.5
+        self.spawnChanceLimit = 0.9
+
 
         #Load animation images
         for i in range(0, self.numImages):

@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 import os
 import random
+import numpy as np
 
 from enemies.zombie import Zombie
 from enemies.dino import Dino
@@ -60,8 +61,6 @@ class Game:
         self.win.set_alpha(None)
         self.enemies = [Zombie(0), Zombie(10)]
         self.towers = [City((1180, 230))]
-        self.numEnemiesPerLevel = 10
-        self.remainingEnemies = 0
         self.score = 0
         self.lives = 10
         self.health = 100
@@ -73,7 +72,13 @@ class Game:
         self.gameoverImage = pygame.image.load(os.path.join("../assets/other", "gameover.png"))
         self.gameoverImage = pygame.transform.scale(self.bg, (self.width, self.height))
         self.clicks = []
+
+        #Level & Spawn
+        self.numEnemiesPerLevel = 10
+        self.remainingEnemies = self.numEnemiesPerLevel
+        self.totalEnemiesKilled = 0
         self.spawnChance = 0.0055
+        self.enemySpawnProbs = []
         self.showPathBounds = False
 
         #Fonts
@@ -83,6 +88,7 @@ class Game:
         #Path
         self.pathBounds = []
         self.calcPathBounds()
+        self.initSpawnProbabilities()
 
 
     def run(self):
@@ -185,6 +191,7 @@ class Game:
 
             if enemy.x > WIN_WIDTH or enemy.health <= 0:
                 self.enemies.remove(enemy)
+                self.totalEnemiesKilled += 1
                 self.remainingEnemies -= 1
 
 
@@ -195,10 +202,41 @@ class Game:
         Caps number of enemies at once with self.numEnemiesPerLevel
         '''
         shouldSpawn = random.random()
-        if shouldSpawn <= self.spawnChance and self.remainingEnemies < self.numEnemiesPerLevel:
-            randVerticalOffset = random.randint(-Y_MAX_OFFSET, Y_MAX_OFFSET)
-            randEnemyType = random.randint(0, len(ENEMY_TYPES) - 1)
-            self.enemies.append(ENEMY_TYPES[randEnemyType](randVerticalOffset))
+
+        #Check if there are still enemies to kill for this level
+        if self.remainingEnemies > 0:
+            #Should we spawn an enemy
+            if shouldSpawn <= self.spawnChance:
+                #Pick an enemy to spawn based on their probabilities
+                randVerticalOffset = random.randint(-Y_MAX_OFFSET, Y_MAX_OFFSET)
+                enemyToSpawn = np.random.choice(ENEMY_INDICES, 1, self.enemySpawnProbs)
+                self.enemies.append(ENEMY_TYPES[enemyToSpawn[0]](randVerticalOffset))
+                #randEnemyType = random.randint(0, len(ENEMY_TYPES) - 1)
+                #self.enemies.append(ENEMY_TYPES[randEnemyType](randVerticalOffset))
+        else:
+            #New Level
+            #Increase chance to spawn an enemy by a percentage of the last spawn chance
+            self.spawnChance += GLOBAL_SPAWN_PROB_INC * self.spawnChance
+            self.numEnemiesPerLevel += ENEMY_PROB_INC * self.numEnemiesPerLevel
+            self.remainingEnemies = self.numEnemiesPerLevel
+
+            #Increase spawn chances for each enemy
+            for enemy in self.enemies:
+                newSpawnChance = enemy.spawnChance + ENEMY_SPAWN_INC
+
+                #Check if we've maxed out spawn limit
+                if newSpawnChance < enemy.spawnChanceLimit:
+                    enemy.spawnChance = newSpawnChance
+                else:
+                    enemy.spawnChance = enemy.spawnChanceLimit
+
+        # if shouldSpawn <= self.spawnChance and self.remainingEnemies > 0:  #self.remainingEnemies > self.numEnemiesPerLevel:
+
+            #On level change:
+            #Increase game spawnChance
+            #Increase individual enemies spawnChance
+            #Increase numEnemiesPerLevel
+            #Increase enemy speed? health?
 
 
     def draw(self, fps):
@@ -314,7 +352,13 @@ class Game:
         scoreSurface = self.uiFont.render(scoreText, False, scoreColor)
         win.blit(scoreSurface, scorePosition)
 
+    def initSpawnProbabilities(self):
+        ''' Initialized list of enemy spawn probabilities '''
+        for enemy in self.enemies:
+            self.enemySpawnProbs.append(enemy.spawnChance)
+
     def getHealthColor(self):
+        ''' Changes the text color of the players health '''
         if self.health >= 90:
             return (23, 186, 39)
         elif self.health >= 75:

@@ -29,6 +29,9 @@ class Warrior(AttackingEnemy):
         self.isAttacking = False
         self.animationSpeed = 2
 
+        self.spawnChance = 0.3
+        self.spawnChanceLimit = 0.9
+
         #Load images
         for i in range(0, self.numImages):
             walkingImage = pygame.image.load(os.path.join("../assets/enemy/warrior/walk", "3_enemies_1_walk_" + str(i) + ".png"))
