@@ -61,6 +61,7 @@ class Game:
         self.win.set_alpha(None)
         self.enemies = [Zombie(0), Zombie(10)]
         self.towers = [City((1180, 230))]
+        self.towerGrid = [] #Holds all possible locations for a tower to be placed, and whether one is there or not
         self.score = 0
         self.lives = 10
         self.health = 100
@@ -171,7 +172,7 @@ class Game:
                     self.placeTower(towerType)
 
                 #Store & print mouse clicks for path finding and debugging
-                if SHOW_MOUSE_CLICKS:
+                if SHOW_CLICKS:
                     self.clicks.append(mousePosition)
                     print(self.clicks)
                 return False
@@ -244,9 +245,21 @@ class Game:
         self.win.blit(self.bg, (0, 0))
 
         #Uncomment to see clicked dots for path findings
-        if SHOW_MOUSE_CLICKS:
+        if SHOW_CLICKS:
+            #Display already placed squares
             for p in self.clicks:
                 pygame.draw.circle(self.win, (255, 0, 0), (p[0], p[1]), 5, 0)
+                bgRect = pygame.Surface((64, 64))
+                bgRect.set_alpha(180)
+                bgRect.fill((200, 0, 0))
+                self.win.blit(bgRect, (p[0], p[1]))
+
+            #Display square on mouse cursor
+            mousePosition = pygame.mouse.get_pos()
+            bgRect = pygame.Surface((64, 64))
+            bgRect.set_alpha(180)
+            bgRect.fill((0, 0, 200))
+            self.win.blit(bgRect, (mousePosition[0], mousePosition[1]))
 
         #Render towers
         for tower in self.towers:

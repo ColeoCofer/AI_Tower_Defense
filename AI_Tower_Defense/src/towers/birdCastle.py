@@ -19,8 +19,6 @@ class BirdCastle(Tower):
         self.weaknesses.append(DamageType.lightning)    # not weak to fire
 
         self.projectileColor = (100, 100, 100)
-        self.width = 75
-        self.height = 75
 
         self.image = pygame.image.load(os.path.join("../assets/towers/bird_castle/", "birdCastle.png"))
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
