@@ -63,7 +63,7 @@ class Game:
         self.towers = [City((1180, 230))]
         self.score = 0
         self.lives = 10
-        self.health = 10000
+        self.health = 100
         self.coinPosition = ((self.width - 150, 35))
         self.wallet = Wallet(self.coinPosition, STARTING_COINS)
         self.menu = Menu((350, 650), TOWER_TYPES)
@@ -74,10 +74,11 @@ class Game:
         self.clicks = []
 
         #Level & Spawn
+        self.level = 1
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = self.numEnemiesPerLevel
         self.totalEnemiesKilled = 0
-        self.spawnChance = 0.0055
+        self.spawnChance = 0.005
         self.enemySpawnProbs = []
         self.showPathBounds = False
 
@@ -88,7 +89,7 @@ class Game:
         #Path
         self.pathBounds = []
         self.calcPathBounds()
-        self.initSpawnProbabilities()
+        self.updateSpawnProbabilities()
 
 
     def run(self):
@@ -214,10 +215,12 @@ class Game:
                 self.enemies.append(ENEMY_TYPES[enemyToSpawn[0]](randVerticalOffset))
         else:
             #New Level
+            self.level += 1
             #Increase chance to spawn an enemy by a percentage of the last spawn chance
             self.spawnChance += GLOBAL_SPAWN_PROB_INC * self.spawnChance
             self.numEnemiesPerLevel += ENEMY_PROB_INC * self.numEnemiesPerLevel
             self.remainingEnemies = self.numEnemiesPerLevel
+            self.updateSpawnProbabilities()
 
             #Increase spawn chances for each enemy
             for enemy in self.enemies:
@@ -228,14 +231,6 @@ class Game:
                     enemy.spawnChance = newSpawnChance
                 else:
                     enemy.spawnChance = enemy.spawnChanceLimit
-
-        # if shouldSpawn <= self.spawnChance and self.remainingEnemies > 0:  #self.remainingEnemies > self.numEnemiesPerLevel:
-
-            #On level change:
-            #Increase game spawnChance
-            #Increase individual enemies spawnChance
-            #Increase numEnemiesPerLevel
-            #Increase enemy speed? health?
 
 
     def draw(self, fps):
@@ -288,6 +283,7 @@ class Game:
         '''
         Calculates an array of rectangles that describe the enemies path
         This function assumes that the ENEMY_PATH transitions are all straight lines
+        Stores a list of rectanlges in self.pathBounds
         '''
         i = 0
         numPathPoints = len(ENEMY_PATH)
@@ -323,35 +319,31 @@ class Game:
     def displayTextUI(self, win, fps):
         ''' Render UI elements above all other graphics '''
 
-        #Enemies Remaining Surface UI
+        #Info about enemies
         numEnemiesText = "Enemies: " + str(len(self.enemies)) + " of " + str(self.numEnemiesPerLevel)
-        numEnemiesPosition = (WIN_WIDTH-280, WIN_HEIGHT-50)
-        numEnemiesColor = (255, 255, 255)
-        numEnemiesSurface = self.uiFont.render(numEnemiesText, False, numEnemiesColor)
-        win.blit(numEnemiesSurface, numEnemiesPosition)
+        numEnemiesPosition = (WIN_WIDTH-220, WIN_HEIGHT-50)
+        self.displayText(numEnemiesText, numEnemiesPosition, self.uiFont, WHITE)
 
-        #Health Remaining Surface UI
-        healthText = "Health: " + str(self.health)
+        self.displayText("Level: " + str(self.level), ((numEnemiesPosition[0] , numEnemiesPosition[1] - 25)), self.uiFont, WHITE)
+
+        #Health
+        healthText = "Health: " + str(int(self.health))
         healthPosition = (self.coinPosition[0] - 15, self.coinPosition[1] + 60)
-        healthColor = self.getHealthColor()
-        healthSurface = self.uiFont.render(healthText, False, healthColor)
-        win.blit(healthSurface, healthPosition)
-
-        #Frames Per Second
-        fpsText = "FPS: " + str(int(fps))
-        fpsPosition = (15, 20)
-        fpsColor = (255, 255, 255)
-        fpsSurface = self.uiFont.render(fpsText, False, fpsColor)
-        win.blit(fpsSurface, fpsPosition)
+        self.displayText(healthText, healthPosition, self.uiFont, self.getHealthColor())
 
         #Score
-        scoreText = "Score: " + str(self.score)
-        scorePosition = (self.coinPosition[0], self.coinPosition[1] + 30)
-        scoreColor = (250, 241, 95)
-        scoreSurface = self.uiFont.render(scoreText, False, scoreColor)
-        win.blit(scoreSurface, scorePosition)
+        self.displayText("Score: " + str(self.score), (self.coinPosition[0] - 20, self.coinPosition[1] + 30), self.uiFont, (250, 241, 95))
 
-    def initSpawnProbabilities(self):
+        # Display FPS, however, it always displays 0 for some reason...
+        # self.displayText("FPS: " + str(int(fps)), (15, 20), self.uiFont, WHITE)
+
+    def displayText(self, text, position, font, color):
+        ''' Renders text at location using a specific font '''
+        surface = font.render(text, False, color)
+        self.win.blit(surface, position)
+
+
+    def updateSpawnProbabilities(self):
         ''' Initialized list of enemy spawn probabilities '''
         for enemy in self.enemies:
             self.enemySpawnProbs.append(enemy.spawnChance)
