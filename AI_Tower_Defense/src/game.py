@@ -58,6 +58,7 @@ class Game:
         else:
             self.win = pygame.display.set_mode((self.width, self.height))
 
+        # game stats
         self.win.set_alpha(None)
         self.enemies = [Zombie(0), Zombie(10)]
         self.towers = [City((1180, 230))]
@@ -66,6 +67,10 @@ class Game:
         self.health = 100
         self.coinPosition = ((self.width - 150, 35))
         self.wallet = Wallet(self.coinPosition, STARTING_COINS)
+        self.addedHealth = 0
+        self.addedSpeed = 0
+        
+        # graphics
         self.menu = Menu((350, 650), TOWER_TYPES)
         self.bg = pygame.image.load(os.path.join("../assets/map", "bg.png"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
@@ -212,7 +217,12 @@ class Game:
                 #Pick an enemy to spawn based on their probabilities
                 randVerticalOffset = random.randint(-Y_MAX_OFFSET, (Y_MAX_OFFSET - int((Y_MAX_OFFSET / 2))))
                 enemyToSpawn = np.random.choice(ENEMY_INDICES, 1, self.enemySpawnProbs)
-                self.enemies.append(ENEMY_TYPES[enemyToSpawn[0]](randVerticalOffset))
+                newEnemy = ENEMY_TYPES[enemyToSpawn[0]](randVerticalOffset)
+                self.updateEnemyHealth()
+                self.updateEnemyWalkingSpeed()
+                newEnemy.health += self.addedHealth
+                newEnemy.velocity += self.addedSpeed
+                self.enemies.append(newEnemy)
         else:
             #New Level
             self.level += 1
@@ -348,6 +358,21 @@ class Game:
         for enemy in self.enemies:
             self.enemySpawnProbs.append(enemy.spawnChance)
 
+
+    def updateEnemyWalkingSpeed(self):
+        ''' Bumps up the enemy speed every 2 levels by 1 '''
+        levelForIncrease = (self.level % NUMBER_LEVELS_SPEED_INCREASE) == 0
+        if levelForIncrease:
+            self.addedSpeed += SPEED_INCREASE
+
+
+    def updateEnemyHealth(self):
+        ''' Bumps up the enemy health every 3 levels by 2'''
+        levelForIncrease = (self.level % NUMBER_LEVELS_HEALTH_INCREASE) == 0
+        if levelForIncrease:
+            self.addedHealth += HEALTH_INCREASE
+        
+
     def getHealthColor(self):
         ''' Changes the text color of the players health '''
         if self.health >= 90:
@@ -361,8 +386,10 @@ class Game:
         else:
             return (178, 20, 12)
 
+
     def isAlive(self):
         return self.health > 0
+
 
     def gameover(self):
         ''' I can't for the life of me get this to be displayed'''
