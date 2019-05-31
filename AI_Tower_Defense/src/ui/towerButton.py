@@ -28,7 +28,7 @@ class TowerButton:
 
         self.isPlacingTower(win)
 
-    def handleEvents(self, mousePosition, wallet, pathBounds):
+    def handleEvents(self, mousePosition, wallet, towerGrid):
         '''
         Attempts to purchase the tower if the user clicks on it
         Returns the name of the tower so we can reset all isSelected values in menu
@@ -38,18 +38,33 @@ class TowerButton:
             #Check if they have enough coins
             if wallet.coins >= self.cost and self.isSelected == False:
                 self.isSelected = True
-                return True, None
+                return True, None, None
         #Check if they have already selected a tower, and tried place it at a valid location
-        elif self.isSelected == True and wallet.coins >= self.cost and self.canPlaceTower(pathBounds) == True:
-            wallet.spendCoins(self.cost)
-            #May need to return a tower to be created here...
-            self.isSelected = False
-            return False, self.type
+        elif self.isSelected == True and wallet.coins >= self.cost:
+            towerLocation = self.canPlaceTower(towerGrid)
+            if towerLocation != None:
+                wallet.spendCoins(self.cost)
+                #May need to return a tower to be created here...
+                self.isSelected = False
+                return False, self.type, towerLocation
 
-        return False, None
+        return False, None, None
 
-    def canPlaceTower(self, pathBounds):
-        ''' Returns true if the current mouse position is a valid place to build a tower '''
+    def canPlaceTower(self, towerGrid):
+        ''' Returns the location to place a tower if the current mouse position is in an empty grid space'''
+        mousePosition = pygame.mouse.get_pos()
+        for cell in towerGrid:
+            #Return true if user attempts to place a tower in an empty cell
+            if cell[1] == False and cell[0].collidepoint(mousePosition):
+                return cell[0]
+        return None
+
+
+    def canPlaceTowerOutsideOfPath(self, pathBounds):
+        '''
+        Returns true if the current mouse position is a valid place to build a tower
+        This is the old way without using the grid. It just looks if the user is trying to place it on the path or not
+        '''
         mousePosition = pygame.mouse.get_pos()
         w, h = (self.size[0]/2), (self.size[1]/2) #Half the width of the tower image
         for rect in pathBounds:

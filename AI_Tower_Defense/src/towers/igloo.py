@@ -28,6 +28,6 @@ class Igloo(Tower):
 
     # overrides base class version
     def loadProjectile(self, enemy):
-        iceBeam =  IceBeam(self.position, enemy, self.closeEnemies)
+        iceBeam =  IceBeam((self.position[0], self.position[1]), enemy, self.closeEnemies)
         iceBeam.color = self.projectileColor
         return iceBeam
