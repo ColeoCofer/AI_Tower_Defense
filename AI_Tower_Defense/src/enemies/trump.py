@@ -13,6 +13,7 @@ class Trump(AttackingEnemy):
         super().__init__(yOffset)
         self.maxHealth = 100                             # Trump is hard to kill
         self.health = self.maxHealth
+        self.coinReward = 100
         self.attackRadius = 125
         self.velocity = random.randint(3, 6)            # Trump is super slow
         self.weaknesses.append(DamageType.lazer)
@@ -27,6 +28,9 @@ class Trump(AttackingEnemy):
         self.images = []
         self.numImages = 2
         self.animationSpeed = 10
+
+        self.spawnChance = 0.1
+        self.spawnChanceLimit = 0.3
 
         #Load images
         for i in range(0, self.numImages):

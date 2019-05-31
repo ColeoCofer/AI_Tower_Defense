@@ -10,7 +10,7 @@ from .attackingEnemy import AttackingEnemy
 class Robot(AttackingEnemy):
 
     def __init__(self, yOffset):
-        super().__init__(yOffset)        
+        super().__init__(yOffset)
         self.maxHealth = 25                             # robots are tough
         self.health = self.maxHealth
         self.velocity = random.randint(5, 8)            # robots are slow
@@ -24,6 +24,9 @@ class Robot(AttackingEnemy):
         self.height = 54
         self.numImages = 3
         self.animationSpeed = 5
+
+        self.spawnChance = 0.4
+        self.spawnChanceLimit = 0.85
 
         #Load images
         for i in range(0, self.numImages):

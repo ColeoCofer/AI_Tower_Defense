@@ -10,6 +10,7 @@ class Dragon(Enemy):
     def __init__(self, yOffset):
         super().__init__(yOffset)
         self.maxHealth = 14                               # dragons have medium health
+        self.coinReward = 30
         self.health = self.maxHealth
         self.velocity = random.randint(8, 12)             # dragons are pretty fast
         self.weaknesses.append(DamageType.lazer)
@@ -21,6 +22,9 @@ class Dragon(Enemy):
         self.animationSpeed = 5
         self.healthBarYOffset = 30
         self.images = []
+
+        self.spawnChance = 0.5
+        self.spawnChanceLimit = 0.9
 
 
         #Load animation images

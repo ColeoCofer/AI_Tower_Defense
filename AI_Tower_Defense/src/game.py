@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 import os
 import random
+import numpy as np
 
 from enemies.zombie import Zombie
 from enemies.dino import Dino
@@ -60,8 +61,6 @@ class Game:
         self.win.set_alpha(None)
         self.enemies = [Zombie(0), Zombie(10)]
         self.towers = [City((1180, 230))]
-        self.numEnemiesPerLevel = 10
-        self.remainingEnemies = 0
         self.score = 0
         self.lives = 10
         self.health = 100
@@ -73,7 +72,14 @@ class Game:
         self.gameoverImage = pygame.image.load(os.path.join("../assets/other", "gameover.png"))
         self.gameoverImage = pygame.transform.scale(self.bg, (self.width, self.height))
         self.clicks = []
-        self.spawnChance = 0.0055
+
+        #Level & Spawn
+        self.level = 1
+        self.numEnemiesPerLevel = 10
+        self.remainingEnemies = self.numEnemiesPerLevel
+        self.totalEnemiesKilled = 0
+        self.spawnChance = 0.005
+        self.enemySpawnProbs = []
         self.showPathBounds = False
 
         #Fonts
@@ -83,6 +89,7 @@ class Game:
         #Path
         self.pathBounds = []
         self.calcPathBounds()
+        self.updateSpawnProbabilities()
 
 
     def run(self):
@@ -182,9 +189,11 @@ class Game:
 
             if enemy.health <= 0:
                 self.score += enemy.maxHealth
+                self.wallet.coins += enemy.coinReward
 
             if enemy.x > WIN_WIDTH or enemy.health <= 0:
                 self.enemies.remove(enemy)
+                self.totalEnemiesKilled += 1
                 self.remainingEnemies -= 1
 
 
@@ -195,10 +204,33 @@ class Game:
         Caps number of enemies at once with self.numEnemiesPerLevel
         '''
         shouldSpawn = random.random()
-        if shouldSpawn <= self.spawnChance and self.remainingEnemies < self.numEnemiesPerLevel:
-            randVerticalOffset = random.randint(-Y_MAX_OFFSET, Y_MAX_OFFSET)
-            randEnemyType = random.randint(0, len(ENEMY_TYPES) - 1)
-            self.enemies.append(ENEMY_TYPES[randEnemyType](randVerticalOffset))
+
+        #Check if there are still enemies to kill for this level
+        if self.remainingEnemies > 0:
+            #Should we spawn an enemy
+            if shouldSpawn <= self.spawnChance:
+                #Pick an enemy to spawn based on their probabilities
+                randVerticalOffset = random.randint(-Y_MAX_OFFSET, (Y_MAX_OFFSET - int((Y_MAX_OFFSET / 2))))
+                enemyToSpawn = np.random.choice(ENEMY_INDICES, 1, self.enemySpawnProbs)
+                self.enemies.append(ENEMY_TYPES[enemyToSpawn[0]](randVerticalOffset))
+        else:
+            #New Level
+            self.level += 1
+            #Increase chance to spawn an enemy by a percentage of the last spawn chance
+            self.spawnChance += GLOBAL_SPAWN_PROB_INC * self.spawnChance
+            self.numEnemiesPerLevel += ENEMY_PROB_INC * self.numEnemiesPerLevel
+            self.remainingEnemies = self.numEnemiesPerLevel
+            self.updateSpawnProbabilities()
+
+            #Increase spawn chances for each enemy
+            for enemy in self.enemies:
+                newSpawnChance = enemy.spawnChance + ENEMY_SPAWN_INC
+
+                #Check if we've maxed out spawn limit
+                if newSpawnChance < enemy.spawnChanceLimit:
+                    enemy.spawnChance = newSpawnChance
+                else:
+                    enemy.spawnChance = enemy.spawnChanceLimit
 
 
     def draw(self, fps):
@@ -251,6 +283,7 @@ class Game:
         '''
         Calculates an array of rectangles that describe the enemies path
         This function assumes that the ENEMY_PATH transitions are all straight lines
+        Stores a list of rectanlges in self.pathBounds
         '''
         i = 0
         numPathPoints = len(ENEMY_PATH)
@@ -286,35 +319,37 @@ class Game:
     def displayTextUI(self, win, fps):
         ''' Render UI elements above all other graphics '''
 
-        #Enemies Remaining Surface UI
-        numEnemiesText = "Enemies: " + str(len(self.enemies))
-        numEnemiesPosition = (WIN_WIDTH-180, WIN_HEIGHT-50)
-        numEnemiesColor = (255, 255, 255)
-        numEnemiesSurface = self.uiFont.render(numEnemiesText, False, numEnemiesColor)
-        win.blit(numEnemiesSurface, numEnemiesPosition)
+        #Info about enemies
+        numEnemiesText = "Enemies: " + str(len(self.enemies)) + " of " + str(self.numEnemiesPerLevel)
+        numEnemiesPosition = (WIN_WIDTH-220, WIN_HEIGHT-50)
+        self.displayText(numEnemiesText, numEnemiesPosition, self.uiFont, WHITE)
 
-        #Health Remaining Surface UI
-        healthText = "Health: " + str(self.health)
+        self.displayText("Level: " + str(self.level), ((numEnemiesPosition[0] , numEnemiesPosition[1] - 25)), self.uiFont, WHITE)
+
+        #Health
+        healthText = "Health: " + str(int(self.health))
         healthPosition = (self.coinPosition[0] - 15, self.coinPosition[1] + 60)
-        healthColor = self.getHealthColor()
-        healthSurface = self.uiFont.render(healthText, False, healthColor)
-        win.blit(healthSurface, healthPosition)
-
-        #Frames Per Second
-        fpsText = "FPS: " + str(int(fps))
-        fpsPosition = (15, 20)
-        fpsColor = (255, 255, 255)
-        fpsSurface = self.uiFont.render(fpsText, False, fpsColor)
-        win.blit(fpsSurface, fpsPosition)
+        self.displayText(healthText, healthPosition, self.uiFont, self.getHealthColor())
 
         #Score
-        scoreText = "Score: " + str(self.score)
-        scorePosition = (self.coinPosition[0], self.coinPosition[1] + 30)
-        scoreColor = (250, 241, 95)
-        scoreSurface = self.uiFont.render(scoreText, False, scoreColor)
-        win.blit(scoreSurface, scorePosition)
+        self.displayText("Score: " + str(self.score), (self.coinPosition[0] - 20, self.coinPosition[1] + 30), self.uiFont, (250, 241, 95))
+
+        # Display FPS, however, it always displays 0 for some reason...
+        # self.displayText("FPS: " + str(int(fps)), (15, 20), self.uiFont, WHITE)
+
+    def displayText(self, text, position, font, color):
+        ''' Renders text at location using a specific font '''
+        surface = font.render(text, False, color)
+        self.win.blit(surface, position)
+
+
+    def updateSpawnProbabilities(self):
+        ''' Initialized list of enemy spawn probabilities '''
+        for enemy in self.enemies:
+            self.enemySpawnProbs.append(enemy.spawnChance)
 
     def getHealthColor(self):
+        ''' Changes the text color of the players health '''
         if self.health >= 90:
             return (23, 186, 39)
         elif self.health >= 75:

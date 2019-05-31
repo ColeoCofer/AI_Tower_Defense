@@ -16,7 +16,7 @@ from towers.city import City
 from towers.igloo import Igloo
 
 #Fullscreen will make the game run waaaay better
-FULLSCREEN_MODE = False
+FULLSCREEN_MODE = True
 PLAY_BG_MUSIC = True        #Set false to turn music off
 SHOW_MOUSE_CLICKS = False   #If true will display dots where clicked, and print the coordinate in terminal
 SHOW_PATH_BOUNDS = True     #If true will display bounds to enemy path
@@ -28,7 +28,12 @@ VISUAL_MODE = True     #Set false to stop rendering
 FPS = 60
 
 #Player
-STARTING_COINS = 2000
+STARTING_COINS = 500
+
+#Spawn Probabilities
+GLOBAL_SPAWN_PROB_INC = 0.15   #Percent increase spawn chance per level
+ENEMY_PROB_INC = 0.20          #Percent increase number of enemies per level
+ENEMY_SPAWN_INC = 0.30         #Increments individual enemies spawn chances
 
 #Window Dimensions
 WIN_WIDTH = 1200
@@ -36,6 +41,7 @@ WIN_HEIGHT = 800
 
 #Enemies
 ENEMY_TYPES = [Zombie, Dino, Dragon, Robot, Wizard, Warrior, Trump]
+ENEMY_INDICES = [0, 1, 2, 3, 4, 5, 6]
 Y_MAX_OFFSET = 35  #yOffset along enemy walking path
 
 #Towers
