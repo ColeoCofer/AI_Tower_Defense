@@ -1,7 +1,8 @@
 *.cpython*
 **cpython**
 *.pyc
-**.pyc
-__pycache__
 .vscode
 **/.DS_Store
+*/*/*/__pycache__/
+*/*/__pycache__/
+*/__pycache__/

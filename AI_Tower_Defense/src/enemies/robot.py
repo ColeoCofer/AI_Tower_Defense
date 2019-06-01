@@ -11,8 +11,8 @@ class Robot(AttackingEnemy):
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        self.maxHealth = 25                             # robots are tough
-        self.health = self.maxHealth
+        self.startingHealth = 25                             # robots are tough
+        self.health = self.startingHealth
         self.velocity = random.randint(5, 8)            # robots are slow
         self.weaknesses.append(DamageType.fire)
         self.weaknesses.append(DamageType.lightning)    # robots are not weak to lasers

@@ -9,8 +9,8 @@ class Dino(Enemy):
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        self.maxHealth = 20                             # Dino's are tough
-        self.health = self.maxHealth
+        self.startingHealth = 20                             # Dino's are tough
+        self.health = self.startingHealth
         self.velocity = random.randint(5, 8)            # Dino's are slow
         self.weaknesses.append(DamageType.lazer)
         self.weaknesses.append(DamageType.fire)

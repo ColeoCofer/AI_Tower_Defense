@@ -11,10 +11,10 @@ class Warrior(AttackingEnemy):
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        self.maxHealth = 16
+        self.startingHealth = 16
         self.attackRadius = 30
         self.coinReward = 50
-        self.health = self.maxHealth
+        self.health = self.startingHealth
         self.velocity = random.randint(7,10)            # warriors are pretty fast
         self.weaknesses.append(DamageType.fire)
         self.weaknesses.append(DamageType.lightning)

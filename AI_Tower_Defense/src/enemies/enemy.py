@@ -8,8 +8,9 @@ from constants.animationConstants import *
 class Enemy:
 
     def __init__(self, yOffset):
-        self.maxHealth = 0
-        self.health = self.maxHealth
+        self.startingHealth = 0
+        self.health = self.startingHealth
+        self.levelHealth = 0
         self.coinReward = 20
         self.velocity = 0
         self.weaknesses = [DamageType.ice, DamageType.exploding, DamageType.melee]      # all creatures are weak to ice, explosions, and melee
@@ -80,12 +81,12 @@ class Enemy:
         if self.health > 0:
             healthBarX = self.x - (self.healthBarWidth / 2)
             healthBarY = self.y - self.height + self.healthBarYOffset
-            if self.health == self.maxHealth:
+            if self.health == self.levelHealth:
                 pygame.draw.rect(win, HEALTH_GREEN, (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Outline of health bar
                 pygame.draw.rect(win, HEALTH_RED, (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Inside of health bar
             else:
                 pygame.draw.rect(win, HEALTH_GREEN, (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Outline health bar
-                pygame.draw.rect(win, HEALTH_RED, (healthBarX, healthBarY, (self.healthBarWidth / self.maxHealth) * self.health, self.healthBarHeight))
+                pygame.draw.rect(win, HEALTH_RED, (healthBarX, healthBarY, (self.healthBarWidth / self.startingHealth) * self.health, self.healthBarHeight))
 
 
     def collide(self, col_x, col_y):

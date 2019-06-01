@@ -11,8 +11,8 @@ class Obelisk(Tower):
         super().__init__(position)
         self.name = "Obelisk"
         self.cost = 200
-        self.maxHealth = 100                    # weak but with range
-        self.health = self.maxHealth
+        self.startingHealth = 100                    # weak but with range
+        self.health = self.startingHealth
         self.attackRadius = 200
         self.weaknesses.append(DamageType.lightning)
         

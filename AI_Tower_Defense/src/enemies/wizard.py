@@ -11,8 +11,8 @@ class Wizard(AttackingEnemy):
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        self.maxHealth = 12                         # wizards are kind of squishy
-        self.health = self.maxHealth
+        self.startingHealth = 12                         # wizards are kind of squishy
+        self.health = self.startingHealth
         self.coinReward = 25
         self.velocity = random.randint(9, 13)       # wizards are fast as hell
         self.weaknesses.append(DamageType.lazer)
