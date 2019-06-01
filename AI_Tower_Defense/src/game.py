@@ -62,6 +62,7 @@ class Game:
         self.win.set_alpha(None)
         self.enemies = [Zombie(0), Zombie(10)]
         self.towers = [City((1180, 230))]
+        self.towerGrid = [] #Holds all possible locations for a tower to be placed, and whether one is there or not
         self.score = 0
         self.health = 200
         self.coinPosition = ((self.width - 150, 35))
@@ -95,6 +96,7 @@ class Game:
         self.pathBounds = []
         self.calcPathBounds()
         self.updateSpawnProbabilities()
+        self.initTowerGrid()
 
 
     def run(self):
@@ -165,18 +167,18 @@ class Game:
             #Store mouse clicks to determine path for enemies
             mousePosition = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                towerType, buttonWasSelected = self.menu.handleEvents(mousePosition, self.wallet, self.pathBounds)
+                towerType, buttonWasSelected, towerLocation = self.menu.handleEvents(mousePosition, self.wallet, self.towerGrid)
 
                 #Show path bounds if the user is placing a tower
                 if buttonWasSelected == True:
                     self.showPathBounds = True
 
                 #If not None, the user has purchased and placed a tower
-                if towerType != None:
-                    self.placeTower(towerType)
+                if towerType != None and towerLocation != None:
+                    self.placeTower(towerType, towerLocation)
 
                 #Store & print mouse clicks for path finding and debugging
-                if SHOW_MOUSE_CLICKS:
+                if SHOW_CLICKS:
                     self.clicks.append(mousePosition)
                     print(self.clicks)
                 return False
@@ -253,10 +255,8 @@ class Game:
         #Render the background
         self.win.blit(self.bg, (0, 0))
 
-        #Uncomment to see clicked dots for path findings
-        if SHOW_MOUSE_CLICKS:
-            for p in self.clicks:
-                pygame.draw.circle(self.win, (255, 0, 0), (p[0], p[1]), 5, 0)
+        #Displays click locations and rectangles where clicked
+        self.showClicks()
 
         #Render towers
         for tower in self.towers:
@@ -276,17 +276,18 @@ class Game:
 
         if SHOW_PATH_BOUNDS and self.showPathBounds:
             self.drawPathBounds(self.win)
+            self.drawTowerGrid(self.win)
 
         #Update the window
         pygame.display.update()
 
 
     def placeTower(self, towerType):
-        mousePosition = pygame.mouse.get_pos()
         i = 0
         for i in range(len(TOWER_TYPES)):
             if TOWER_TYPES[i] == towerType:
-                self.towers.append(TOWER_TYPES[i](mousePosition))
+                towerLocation = (towerLocation[0] + (TOWER_GRID_SIZE / 2), towerLocation[1] + (TOWER_GRID_SIZE / 2))
+                self.towers.append(TOWER_TYPES[i](towerLocation))
                 self.showPathBounds = False
 
 
@@ -326,6 +327,15 @@ class Game:
             self.bgRect.fill((200, 0, 0))
             win.blit(self.bgRect, (bound.x, bound.y))
 
+    def drawTowerGrid(self, win):
+        for tower in self.towerGrid:
+            #Check if there's already a tower placed there
+            if tower[1] == False:
+                bgRect = pygame.Surface((GRID_DISPLAY_SIZE, GRID_DISPLAY_SIZE))
+                bgRect.set_alpha(100)
+                bgRect.fill((0, 100, 0))
+                position = (tower[0][0] + (TOWER_GRID_SIZE - GRID_DISPLAY_SIZE) / 2, tower[0][1] + (TOWER_GRID_SIZE - GRID_DISPLAY_SIZE) / 2)
+                self.win.blit(bgRect, position)
 
     def displayTextUI(self, win, fps):
         ''' Render UI elements above all other graphics '''
@@ -393,6 +403,31 @@ class Game:
     def isAlive(self):
         return self.health > 0
 
+    def initTowerGrid(self):
+        '''
+        Initializes tower grid based on hard coded values in TOWER_GRID
+        Second value is True if a tower is placed in that location
+        '''
+        for location in TOWER_GRID:
+            self.towerGrid.append((pygame.Rect(location, (TOWER_GRID_SIZE, TOWER_GRID_SIZE)), False))
+
+    def showClicks(self):
+        ''' Displays click locations and rectangles to assist with towerGrid placement and logs coordinates to terminal '''
+        if SHOW_CLICKS:
+            #Display already placed squares
+            for p in self.clicks:
+                pygame.draw.circle(self.win, (255, 0, 0), (p[0], p[1]), 5, 0)
+                bgRect = pygame.Surface((64, 64))
+                bgRect.set_alpha(180)
+                bgRect.fill((200, 0, 0))
+                self.win.blit(bgRect, (p[0], p[1]))
+
+            #Display square on mouse cursor
+            mousePosition = pygame.mouse.get_pos()
+            bgRect = pygame.Surface((64, 64))
+            bgRect.set_alpha(180)
+            bgRect.fill((0, 0, 200))
+            self.win.blit(bgRect, (mousePosition[0], mousePosition[1]))
 
     def gameover(self):
         ''' I can't for the life of me get this to be displayed'''

@@ -48,7 +48,7 @@ class Projectile:
                 continue
             # deal damage to enemy
             if self.damageType == weakness:
-                self.targetEnemy.hit(self.damage, self.damageType)                
+                self.targetEnemy.hit(self.damage, self.damageType)
 
     # draw base class stub
     def draw(self, win):

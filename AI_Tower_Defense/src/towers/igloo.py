@@ -21,8 +21,6 @@ class Igloo(Tower):
         self.weaknesses.append(DamageType.fire)             # not weak to lightning
 
         self.projectileColor = (9, 146, 208)
-        self.width = 60
-        self.height = 60
 
         self.image = pygame.image.load(os.path.join("../assets/towers/igloo/", "igloo.png"))
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
@@ -30,6 +28,6 @@ class Igloo(Tower):
 
     # overrides base class version
     def loadProjectile(self, enemy):
-        iceBeam =  IceBeam(self.position, enemy, self.closeEnemies)
+        iceBeam =  IceBeam((self.position[0], self.position[1]), enemy, self.closeEnemies)
         iceBeam.color = self.projectileColor
         return iceBeam
