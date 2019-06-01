@@ -53,10 +53,13 @@ class TowerButton:
     def canPlaceTower(self, towerGrid):
         ''' Returns the location to place a tower if the current mouse position is in an empty grid space'''
         mousePosition = pygame.mouse.get_pos()
-        for cell in towerGrid:
+        i = 0
+        for i in range(len(towerGrid)):
             #Return true if user attempts to place a tower in an empty cell
-            if cell[1] == False and cell[0].collidepoint(mousePosition):
-                return cell[0]
+            if towerGrid[i][1] == False and towerGrid[i][0].collidepoint(mousePosition):
+                towerGrid[i] = ((towerGrid[i][0], True))
+
+                return towerGrid[i][0]
         return None
 
 

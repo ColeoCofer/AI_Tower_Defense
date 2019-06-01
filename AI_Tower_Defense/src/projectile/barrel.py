@@ -11,9 +11,9 @@ class Barrel(RangeProjectile):
 
     def __init__(self, towerPosition, enemy, enemies):
         super().__init__(towerPosition, enemy, enemies)
-        self.damage = 4                         # barrels also do half this damage to the surroundings
+        self.damage = 8                         # barrels also do half this damage to the surroundings
         self.damageType = DamageType.poison     # barrels have snakes
-        self.reloadTime = 4000                  # reload time long
+        self.reloadTime = 3000                  # reload time long
         self.velocity = 100                     # barrels are fast
         self.attackRadius = 30                  # radius to take secondary damage on
         self.detonationRange = 30

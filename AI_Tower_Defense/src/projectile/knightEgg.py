@@ -13,10 +13,10 @@ class KnightEgg(RangeProjectile):
         super().__init__(towerPosition, enemy, enemies)
         self.damage = 4                         # knights also do half this damage to the surroundings
         self.damageType = DamageType.melee      # knights go boom
-        self.reloadTime = 3000                  # reload time long
+        self.reloadTime = 2000                  # reload time long
         self.velocity = 100                     # knights are fast
         self.attackRadius = 40                  # radius to take secondary damage on
-        self.detonationRange = 30
+        self.detonationRange = 50
         
         self.numImages = 5
         self.width = 50
