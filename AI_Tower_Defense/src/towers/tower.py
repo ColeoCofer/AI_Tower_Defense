@@ -116,7 +116,7 @@ class Tower:
 
         # draw health bar and render sprite
         self.drawHealthBox(win, centerX, centerY)
-        win.blit(self.image, (centerX, centerY))
+        win.blit(self.image, (self.x - (self.width / 2), self.y - (self.height / 2)))
 
 
     # this is called when an enemy has hit a tower to reduce the towers health

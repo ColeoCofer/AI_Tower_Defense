@@ -43,10 +43,7 @@ class Enemy:
         self.x = self.path[0][0]
         self.y = self.path[0][1]
         self.path.append((1250 + (self.width * 2), self.path[-1][1]))
-
-        # Slightly offset the y-axis
-        #for i in range(len(self.path)):
-        #    self.path[i] = (self.path[i][0], self.path[i][1] + yOffset)
+        
 
     def draw(self, win):
         # if the enemy is frozen display snowman
@@ -82,7 +79,7 @@ class Enemy:
             healthBarY = self.y - self.height + self.healthBarYOffset
             if self.health == self.maxHealth:
                 pygame.draw.rect(win, HEALTH_GREEN, (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Outline of health bar
-                pygame.draw.rect(win, HEALTH_RED, (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Inside of health bar
+                pygame.draw.rect(win, HEALTH_RED, (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight))   #Inside of health bar
             else:
                 pygame.draw.rect(win, HEALTH_GREEN, (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Outline health bar
                 pygame.draw.rect(win, HEALTH_RED, (healthBarX, healthBarY, (self.healthBarWidth / self.maxHealth) * self.health, self.healthBarHeight))
@@ -155,28 +152,6 @@ class Enemy:
                 self.pathIndex += 1
             elif dy < 0 and self.y <= y2: #Moving up
                 self.pathIndex += 1
-
-
-        # if dx >= 0: #Moving right
-        #     if dy > 0: #Moving down
-        #         if self.x >= x2 and self.y >= y2:
-        #             self.pathIndex += 1
-        #     elif dy < 0:
-        #         if self.x >= x2 and self.y <= y2:
-        #             self.pathIndex += 1
-        #     else:
-        #         #Not moving on y-axis
-        #         if self.x >= x2:
-        #             self.pathIndex += 1
-        # else:
-        #     #This shouldn't be ran for our map
-        #     if dy >= 0: #Moving left
-        #         if dy <= 0: #Moving up
-        #             if self.x <= x2 and self.y >= y2:
-        #                 self.pathIndex += 1
-        #         else:
-        #             if self.x <= x2 and self.y <= y2:
-        #                 self.pathIndex += 1
 
 
     def hit(self, damage, damageType):
