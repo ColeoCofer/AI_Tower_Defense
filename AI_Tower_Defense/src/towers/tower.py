@@ -15,8 +15,8 @@ class Tower:
         self.y = position[1]
         self.attackRadius = 0  # Distance it can attach enemies from
         self.closeEnemies = []
-        self.maxHealth = 5
-        self.health = self.maxHealth
+        self.startingHealth = 5
+        self.health = self.startingHealth
         self.weaknesses = [DamageType.melee, DamageType.fakeNews]    # All towers are weak to the punches
         self.attackCooldownTime = 0             # Timestamp showing when tower can attack again
 
@@ -75,12 +75,12 @@ class Tower:
         if self.health > 0:
             healthBarX = self.x - (self.healthBarWidth / 2)
             healthBarY = self.y - self.height + self.healthBarYOffset
-            if self.health == self.maxHealth:
+            if self.health == self.startingHealth:
                 pygame.draw.rect(win, HEALTH_GREEN, (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Outline of health bar
                 pygame.draw.rect(win, HEALTH_RED, (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Inside of health bar
             else:
                 pygame.draw.rect(win, HEALTH_GREEN, (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Outline health bar
-                pygame.draw.rect(win, HEALTH_RED, (healthBarX, healthBarY, (self.healthBarWidth / self.maxHealth) * self.health, self.healthBarHeight))
+                pygame.draw.rect(win, HEALTH_RED, (healthBarX, healthBarY, (self.healthBarWidth / self.startingHealth) * self.health, self.healthBarHeight))
 
 
     # draw the tower and any of its projectiles/animations

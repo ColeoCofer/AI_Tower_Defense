@@ -12,8 +12,8 @@ class Pyramid(Tower):
         super().__init__(position)
         self.name = "Pyramid"
         self.cost = 200
-        self.maxHealth = 450
-        self.health = self.maxHealth
+        self.startingHealth = 450                                # tough
+        self.health = self.startingHealth
         self.attackRadius = 200
         self.weaknesses.append(DamageType.lightning)
         self.projectileColor = (200, 69, 50)

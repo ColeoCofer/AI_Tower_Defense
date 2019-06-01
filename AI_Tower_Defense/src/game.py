@@ -58,15 +58,19 @@ class Game:
         else:
             self.win = pygame.display.set_mode((self.width, self.height))
 
+        # game stats
         self.win.set_alpha(None)
         self.enemies = [Zombie(0), Zombie(10)]
         self.towers = [City((1180, 230))]
         self.towerGrid = [] #Holds all possible locations for a tower to be placed, and whether one is there or not
         self.score = 0
-        self.lives = 10
         self.health = 200
         self.coinPosition = ((self.width - 150, 35))
         self.wallet = Wallet(self.coinPosition, STARTING_COINS)
+        self.addedHealth = 0
+        self.addedSpeed = 0
+        
+        # graphics
         self.menu = Menu((350, 650), TOWER_TYPES)
         self.bg = pygame.image.load(os.path.join("../assets/map", "bg.png"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
@@ -76,6 +80,7 @@ class Game:
 
         #Level & Spawn
         self.level = 1
+        self.enemiesSpawnedThisLevel = 0
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = self.numEnemiesPerLevel
         self.totalEnemiesKilled = 0
@@ -183,14 +188,12 @@ class Game:
 
     ''' Removes enemies that have walked off screen'''
     def removeEnemies(self):
-        enemiesToDelete = []
         for enemy in self.enemies:
             if enemy.x > WIN_WIDTH:
-                self.lives -= 1
-                self.health -= enemy.health
+                self.health -= enemy.startingHealth
 
             if enemy.health <= 0:
-                self.score += enemy.maxHealth
+                self.score += enemy.startingHealth
                 self.wallet.coins += enemy.coinReward
 
             if enemy.x > WIN_WIDTH or enemy.health <= 0:
@@ -214,10 +217,18 @@ class Game:
                 #Pick an enemy to spawn based on their probabilities
                 randVerticalOffset = random.randint(-Y_MAX_OFFSET, (Y_MAX_OFFSET - int((Y_MAX_OFFSET / 2))))
                 enemyToSpawn = np.random.choice(ENEMY_INDICES, 1, self.enemySpawnProbs)
-                self.enemies.append(ENEMY_TYPES[enemyToSpawn[0]](randVerticalOffset))
+                newEnemy = ENEMY_TYPES[enemyToSpawn[0]](randVerticalOffset)
+                self.enemiesSpawnedThisLevel += 1
+                self.updateEnemyHealth()
+                self.updateEnemyWalkingSpeed()
+                newEnemy.health += self.addedHealth
+                newEnemy.startingHealth = newEnemy.health
+                newEnemy.velocity += self.addedSpeed
+                self.enemies.append(newEnemy)
         else:
             #New Level
             self.level += 1
+            self.enemiesSpawnedThisLevel = 0
             #Increase chance to spawn an enemy by a percentage of the last spawn chance
             self.spawnChance += GLOBAL_SPAWN_PROB_INC * self.spawnChance
             self.numEnemiesPerLevel += ENEMY_PROB_INC * self.numEnemiesPerLevel
@@ -227,7 +238,6 @@ class Game:
             #Increase spawn chances for each enemy
             for enemy in self.enemies:
                 newSpawnChance = enemy.spawnChance + ENEMY_SPAWN_INC
-
                 #Check if we've maxed out spawn limit
                 if newSpawnChance < enemy.spawnChanceLimit:
                     enemy.spawnChance = newSpawnChance
@@ -271,8 +281,8 @@ class Game:
         #Update the window
         pygame.display.update()
 
-    def placeTower(self, towerType, towerLocation):
-        # mousePosition = pygame.mouse.get_pos()
+
+    def placeTower(self, towerType):
         i = 0
         for i in range(len(TOWER_TYPES)):
             if TOWER_TYPES[i] == towerType:
@@ -308,6 +318,7 @@ class Game:
 
                 self.pathBounds.append(rect)
 
+
     def drawPathBounds(self, win):
         ''' Draws rectangles around the path bounds '''
         for bound in self.pathBounds:
@@ -326,16 +337,16 @@ class Game:
                 position = (tower[0][0] + (TOWER_GRID_SIZE - GRID_DISPLAY_SIZE) / 2, tower[0][1] + (TOWER_GRID_SIZE - GRID_DISPLAY_SIZE) / 2)
                 self.win.blit(bgRect, position)
 
-
     def displayTextUI(self, win, fps):
         ''' Render UI elements above all other graphics '''
-
         #Info about enemies
-        numEnemiesText = "Enemies: " + str(len(self.enemies)) + " of " + str(self.numEnemiesPerLevel)
-        numEnemiesPosition = (WIN_WIDTH-220, WIN_HEIGHT-50)
+        numEnemiesText = "Enemies: " + str(self.enemiesSpawnedThisLevel) + " of " + str(int(self.numEnemiesPerLevel))
+        numEnemiesPosition = (WIN_WIDTH-260, WIN_HEIGHT-50)
         self.displayText(numEnemiesText, numEnemiesPosition, self.uiFont, WHITE)
 
         self.displayText("Level: " + str(self.level), ((numEnemiesPosition[0] , numEnemiesPosition[1] - 25)), self.uiFont, WHITE)
+        
+        self.displayText("Total Enemies Destroyed: " + str(self.totalEnemiesKilled), ((numEnemiesPosition[0] , numEnemiesPosition[1] - 50)), self.uiFont, WHITE)
 
         #Health
         healthText = "Health: " + str(int(self.health))
@@ -348,6 +359,7 @@ class Game:
         # Display FPS, however, it always displays 0 for some reason...
         # self.displayText("FPS: " + str(int(fps)), (15, 20), self.uiFont, WHITE)
 
+
     def displayText(self, text, position, font, color):
         ''' Renders text at location using a specific font '''
         surface = font.render(text, False, color)
@@ -358,6 +370,21 @@ class Game:
         ''' Initialized list of enemy spawn probabilities '''
         for enemy in self.enemies:
             self.enemySpawnProbs.append(enemy.spawnChance)
+
+
+    def updateEnemyWalkingSpeed(self):
+        ''' Bumps up the enemy speed every 2 levels by 1 '''
+        levelForIncrease = (self.level % NUMBER_LEVELS_SPEED_INCREASE) == 0
+        if levelForIncrease:
+            self.addedSpeed += SPEED_INCREASE
+
+
+    def updateEnemyHealth(self):
+        ''' Bumps up the enemy health every 3 levels by 2 '''
+        levelForIncrease = (self.level % NUMBER_LEVELS_HEALTH_INCREASE) == 0
+        if levelForIncrease:
+            self.addedHealth += HEALTH_INCREASE
+        
 
     def getHealthColor(self):
         ''' Changes the text color of the players health '''
@@ -371,6 +398,7 @@ class Game:
             return (201, 67, 34)
         else:
             return (178, 20, 12)
+
 
     def isAlive(self):
         return self.health > 0
@@ -405,6 +433,10 @@ class Game:
         ''' I can't for the life of me get this to be displayed'''
         self.win.blit(self.gameoverImage, (0, 0))
         pygame.display.update()
+        print('Total Enemies Killed: ' + str(self.totalEnemiesKilled))
+        print('Final Level:          ' + str(self.level))
+        print('Final Score:          ' + str(self.score))
+        print('Towers Intact:        ' + str(len(self.towers)))
 
 
 # plays our awesome RenFair music

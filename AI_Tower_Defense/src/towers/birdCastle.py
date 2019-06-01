@@ -12,8 +12,8 @@ class BirdCastle(Tower):
         super().__init__(position)
         self.name = "Bird Castle"
         self.cost = 200
-        self.maxHealth = 250                            # pretty tough
-        self.health = self.maxHealth
+        self.startingHealth = 250                            # pretty tough
+        self.health = self.startingHealth
         self.attackRadius = 300
         self.weaknesses.append(DamageType.lazer)
         self.weaknesses.append(DamageType.lightning)    # not weak to fire

@@ -10,8 +10,8 @@ class City(Tower):
 
     def __init__(self, position):
         super().__init__(position)
-        self.maxHealth = 1500
-        self.health = self.maxHealth
+        self.startingHealth = 1500
+        self.health = self.startingHealth
         self.attackRadius = 350
         self.weaknesses.append(DamageType.lazer)            # weak to everything but she is super buff
         self.weaknesses.append(DamageType.fire)
