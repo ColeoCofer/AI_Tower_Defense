@@ -69,7 +69,7 @@ class Game:
         self.wallet = Wallet(self.coinPosition, STARTING_COINS)
         self.addedHealth = 0
         self.addedSpeed = 0
-        
+
         # graphics
         self.menu = Menu((350, 650), TOWER_TYPES)
         self.bg = pygame.image.load(os.path.join("../assets/map", "bg.png"))
@@ -282,7 +282,7 @@ class Game:
         pygame.display.update()
 
 
-    def placeTower(self, towerType):
+    def placeTower(self, towerType, towerLocation):
         i = 0
         for i in range(len(TOWER_TYPES)):
             if TOWER_TYPES[i] == towerType:
@@ -345,7 +345,7 @@ class Game:
         self.displayText(numEnemiesText, numEnemiesPosition, self.uiFont, WHITE)
 
         self.displayText("Level: " + str(self.level), ((numEnemiesPosition[0] , numEnemiesPosition[1] - 25)), self.uiFont, WHITE)
-        
+
         self.displayText("Total Enemies Destroyed: " + str(self.totalEnemiesKilled), ((numEnemiesPosition[0] , numEnemiesPosition[1] - 50)), self.uiFont, WHITE)
 
         #Health
@@ -384,7 +384,7 @@ class Game:
         levelForIncrease = (self.level % NUMBER_LEVELS_HEALTH_INCREASE) == 0
         if levelForIncrease:
             self.addedHealth += HEALTH_INCREASE
-        
+
 
     def getHealthColor(self):
         ''' Changes the text color of the players health '''
