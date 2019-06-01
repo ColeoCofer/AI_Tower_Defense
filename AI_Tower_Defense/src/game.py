@@ -64,7 +64,7 @@ class Game:
         self.towerGrid = [] #Holds all possible locations for a tower to be placed, and whether one is there or not
         self.score = 0
         self.lives = 10
-        self.health = 1000000
+        self.health = 200
         self.coinPosition = ((self.width - 150, 35))
         self.wallet = Wallet(self.coinPosition, STARTING_COINS)
         self.menu = Menu((350, 650), TOWER_TYPES)
