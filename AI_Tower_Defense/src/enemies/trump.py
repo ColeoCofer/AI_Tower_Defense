@@ -11,7 +11,7 @@ class Trump(AttackingEnemy):
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        self.startingHealth = 40                        # Trump is hard to kill
+        self.startingHealth = 50                        # Trump is hard to kill
         self.health = self.startingHealth
         self.coinReward = 100
         self.attackRadius = 125
@@ -20,7 +20,7 @@ class Trump(AttackingEnemy):
         self.weaknesses.append(DamageType.fire)
         self.weaknesses.append(DamageType.poison)
         self.weaknesses.append(DamageType.lightning)    # Trump is weak to EVERYTHING
-        self.superWeakness = DamageType.fire            # and super weak to fire
+        self.superWeakness = DamageType.poison            # and super weak to fire
 
         self.healthBarYOffset = 15
         self.width = 100

@@ -4,7 +4,7 @@ import os
 import random
 import numpy as np
 
-from enemies.zombie import Zombie
+import enemies.zombie
 from enemies.dino import Dino
 from enemies.dragon import Dragon
 from enemies.robot import Robot
@@ -41,6 +41,8 @@ def main():
     g = Game()
     g.run()
 
+
+
 '''
 Setup initial window and settings.
 Renders all objects and background to the screen.
@@ -60,7 +62,8 @@ class Game:
 
         # game stats
         self.win.set_alpha(None)
-        self.enemies = [Zombie(0), Zombie(10)]
+        # self.enemies = [Zombie(0), Zombie(10)]
+        self.enemies = []
         self.towers = [City((1180, 230))]
         self.towerGrid = [] #Holds all possible locations for a tower to be placed, and whether one is there or not
         self.score = 0
@@ -132,9 +135,11 @@ class Game:
             if self.towers[i].health > 0:
                 newTowers.append(self.towers[i])
             else:
+                print('Foo')
                 j = 0
                 for j in range(len(self.towerGrid)):
                     if self.towerGrid[j][0] == self.towers[i].position:
+                        print('Bar')
                         self.towerGrid[j] = ((self.towerGrid[j][0], False))
 
         self.towers = newTowers
