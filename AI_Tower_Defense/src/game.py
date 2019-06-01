@@ -320,11 +320,11 @@ class Game:
         for tower in self.towerGrid:
             #Check if there's already a tower placed there
             if tower[1] == False:
-                bgRect = pygame.Surface((64, 64))
+                bgRect = pygame.Surface((GRID_DISPLAY_SIZE, GRID_DISPLAY_SIZE))
                 bgRect.set_alpha(100)
                 bgRect.fill((0, 100, 0))
-                self.win.blit(bgRect, tower[0])
-
+                position = (tower[0][0] + (TOWER_GRID_SIZE - GRID_DISPLAY_SIZE) / 2, tower[0][1] + (TOWER_GRID_SIZE - GRID_DISPLAY_SIZE) / 2)
+                self.win.blit(bgRect, position)
 
 
     def displayTextUI(self, win, fps):
