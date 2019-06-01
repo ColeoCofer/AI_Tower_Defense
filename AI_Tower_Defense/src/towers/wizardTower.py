@@ -9,7 +9,7 @@ class WizardTower(Tower):
     def __init__(self, position):
         super().__init__(position)
         self.name = "Wizard Tower"
-        self.cost = 400
+        self.cost = 200
         self.startingHealth = 350                # tough and long range
         self.health = self.startingHealth
         self.attackRadius = 275

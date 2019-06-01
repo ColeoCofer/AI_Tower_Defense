@@ -127,9 +127,15 @@ class Game:
     # goes through and removes dead towers from the list
     def towerHealthCheck(self):
         newTowers = []
-        for tower in self.towers:
-            if tower.health > 0:
-                newTowers.append(tower)
+        i = 0
+        for i in range(len(self.towers)):
+            if self.towers[i].health > 0:
+                newTowers.append(self.towers[i])
+            else:
+                j = 0
+                for j in range(len(self.towerGrid)):
+                    if self.towerGrid[j][0] == self.towers[i].position:
+                        self.towerGrid[j] = ((self.towerGrid[j][0], False))
 
         self.towers = newTowers
 

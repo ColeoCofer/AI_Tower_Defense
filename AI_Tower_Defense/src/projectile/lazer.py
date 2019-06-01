@@ -8,10 +8,10 @@ class Lazer(Projectile):
 
     def __init__(self, towerPosition, enemy, enemies):
         super().__init__(towerPosition, enemy, enemies)
-        self.damage = 1                         # lazers do medium damage and fire quickly
+        self.damage = 2                         # lazers do medium damage and fire quickly
         self.damageType = DamageType.lazer
         self.color = (200, 100, 50)
-        self.reloadTime = 500
+        self.reloadTime = 200
         self.velocity = 5
         # self.towerWidth = towerPosition[2]
         # self.towerHeight = towerPosition[3]

@@ -10,7 +10,7 @@ class LightningBolt(RangeProjectile):
     
     def __init__(self, towerPosition, enemy, enemies):
         super().__init__(towerPosition, enemy, enemies)
-        self.damage = 4                             # do a lot of damage but slow reload
+        self.damage = 7                             # do a lot of damage but slow reload
         self.damageType = DamageType.lightning
         self.reloadTime = 2500
         self.velocity = 80                     # cannonballs are fast

@@ -11,7 +11,7 @@ class Fireball(RangeProjectile):
         super().__init__(towerPosition, enemy, enemies)
         self.damage = 2                   # fire doesn't do a lot of damage
         self.damageType = DamageType.fire
-        self.reloadTime = 1500
+        self.reloadTime = 1000
         self.velocity = 100
         self.attackRadius = 40
         self.detonationRange = 30

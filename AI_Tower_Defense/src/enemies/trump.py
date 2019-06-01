@@ -11,7 +11,7 @@ class Trump(AttackingEnemy):
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        self.startingHealth = 100                             # Trump is hard to kill
+        self.startingHealth = 40                        # Trump is hard to kill
         self.health = self.startingHealth
         self.coinReward = 100
         self.attackRadius = 125
@@ -29,8 +29,8 @@ class Trump(AttackingEnemy):
         self.numImages = 2
         self.animationSpeed = 10
 
-        self.spawnChance = 0.1
-        self.spawnChanceLimit = 0.3
+        self.spawnChance = 0.01
+        self.spawnChanceLimit = 0.04
 
         #Load images
         for i in range(0, self.numImages):
