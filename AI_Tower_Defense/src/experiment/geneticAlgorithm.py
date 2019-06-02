@@ -41,6 +41,7 @@ class GeneticAlgorithm:
                 # else:
                 #     self.trainingMode = True
                 #     self.visualMode = False
+
                 self.trainingMode = False
                 self.visualMode = True
 
@@ -136,6 +137,7 @@ class GeneticAlgorithm:
         for citizen in self.agent.population:
             mutate = rand.random()
             if mutate <= MUTATION_PCT:
+                print("\n ** MUTATION ** \n")
                 repeat = True
                 while(repeat):
                     locationToMutate = rand.randint(0, STARTING_POSITIONS - 1)
@@ -162,7 +164,7 @@ class GeneticAlgorithm:
         newPopulation = list()
         populationSize = len(self.agent.population)
         # this will take the best 20% of the population for survival of the fittest
-        n = populationSize // 6
+        n = populationSize // FITTEST_POPULATION_FRACTION
         if NUMBER_OF_CHILDREN == 1:
             populationMultiplier = 2
         else:

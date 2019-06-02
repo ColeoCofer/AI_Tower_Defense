@@ -49,10 +49,10 @@ class Game:
         self.width = WIN_WIDTH
         self.height = WIN_HEIGHT
 
-        if FULLSCREEN_MODE and not self.trainingMode:
-            self.win = pygame.display.set_mode((self.width, self.height), FULLSCREEN | DOUBLEBUF)
-        else:
-            if not self.trainingMode:
+        if self.visualMode == True:
+            if FULLSCREEN_MODE:
+                self.win = pygame.display.set_mode((self.width, self.height), FULLSCREEN | DOUBLEBUF)
+            else:
                 self.win = pygame.display.set_mode((self.width, self.height))
 
         # game stats
@@ -107,12 +107,14 @@ class Game:
         playerHasQuit = False
 
         while run == True and playerHasQuit == False:
-            if not (self.trainingMode):
+            if self.trainingMode == False:
+                clock.tick(FPS*2)
+                playerHasQuit = self.handleEvents()
+            else:
                 clock.tick(FPS)
 
             self.spawnEnemies()
             # left this in here training mode or not in case we are viewing the AI for a round and want to quit
-            playerHasQuit = self.handleEvents()
             self.towerHealthCheck()
             self.towersAttack()
             self.enemiesAttack()
@@ -236,6 +238,7 @@ class Game:
                 self.enemies.append(newEnemy)
         else:
             #New Level
+            print("New level")
             self.level += 1
             self.enemiesSpawnedThisLevel = 0
             #Increase chance to spawn an enemy by a percentage of the last spawn chance

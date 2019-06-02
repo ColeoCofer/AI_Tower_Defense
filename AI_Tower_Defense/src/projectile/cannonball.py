@@ -17,7 +17,7 @@ class Cannonball(RangeProjectile):
         self.velocity = 100                     # cannonballs are fast
         self.attackRadius = 40                  # radius to take secondary damage on
         self.detonationRange = 50
-        
+
         self.numImages = 5
         self.width = 30
         self.height = 30
