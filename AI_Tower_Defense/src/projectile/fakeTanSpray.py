@@ -11,7 +11,7 @@ class FakeTanSpray(Projectile):
         self.damage = 3                        # fake news does a lot of damage
         self.damageType = DamageType.fakeNews
         self.color = (200, 100, 50)
-        self.reloadTime = 1250                  # it can be spread quickly
+        self.reloadTime = 125                   # it can be spread quickly
         self.velocity = 15                      # it travels fast
 
         self.width = 97

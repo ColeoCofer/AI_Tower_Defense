@@ -42,7 +42,7 @@ class GeneticAlgorithm:
                 #     self.trainingMode = True
                 #     self.visualMode = False
 
-                self.trainingMode = False
+                self.trainingMode = True
                 self.visualMode = True
 
                 self.agent.currentCitizenIndex = i

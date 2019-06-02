@@ -11,7 +11,7 @@ class IceBeam(Projectile):
         self.damage = 0                     # ice does no damage but freezes the oponent for other attacks
         self.damageType = DamageType.ice
         self.color = (9, 146, 208)
-        self.reloadTime = 1250              # is slowish to reload
+        self.reloadTime = 125              # is slowish to reload
         self.velocity = 5
         self.attackSound = pygame.mixer.Sound("../assets/sounds/ice.wav")
         self.attackSound.set_volume(0.1)

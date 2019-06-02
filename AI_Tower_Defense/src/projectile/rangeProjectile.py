@@ -18,7 +18,7 @@ class RangeProjectile(Projectile):
 
 
     # only checks for weaknesses, ranges weapons only explode on contact so that is handled elsewhere
-    def fire(self):
+    def fire(self, ticks):
         for weakness in self.targetEnemy.weaknesses:
             if self.damageType == weakness:
                 return True
@@ -27,7 +27,7 @@ class RangeProjectile(Projectile):
 
 
     # draw a ranged weapon
-    def draw(self, win):
+    def draw(self, win, ticks):
         ''' Draws the enemy with given images '''
         numImages = len(self.images)
         self.image = self.images[self.animationCount // self.animationSpeed]
@@ -44,11 +44,11 @@ class RangeProjectile(Projectile):
         centerY = self.y - (self.height / 2)
 
         win.blit(self.image, (centerX, centerY))
-        return self.move()
+        return self.move(ticks)
 
 
     # moves animation along
-    def move(self):
+    def move(self, ticks):
         x1, y1 = self.towerPosition[0], self.towerPosition[1]
         x2, y2 = self.enemyStartingPosition[0], self.enemyStartingPosition[1]
         targetX, targetY = self.targetEnemy.x, self.targetEnemy.y
@@ -65,13 +65,13 @@ class RangeProjectile(Projectile):
         self.x = self.x + dx
         self.y = self.y + dy
 
-        return self.didHitEnemy(ballEnemyDistance)
+        return self.didHitEnemy(ballEnemyDistance, ticks)
 
 
     # checks if we are close to enemy to do damage
-    def didHitEnemy(self, distance):
+    def didHitEnemy(self, distance, ticks):
         if distance < self.detonationRange:
-            self.explosiveDamage()
+            self.explosiveDamage(ticks)
             self.resetRangeProjectile()
             # TODO I think we should be returning something for informative
             return True
@@ -85,7 +85,7 @@ class RangeProjectile(Projectile):
 
 
     # base class stub
-    def explosiveDamage(self):
+    def explosiveDamage(self, ticks):
         return
 
 

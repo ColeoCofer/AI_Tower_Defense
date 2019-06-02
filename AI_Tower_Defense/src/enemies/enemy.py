@@ -44,9 +44,9 @@ class Enemy:
         self.x = self.path[0][0]
         self.y = self.path[0][1]
         self.path.append((1250 + (self.width * 2), self.path[-1][1]))
-        
 
-    def draw(self, win):
+
+    def draw(self, win, ticks):
         # if the enemy is frozen display snowman
         if self.frozen:
             self.image = self.snowman
@@ -70,7 +70,7 @@ class Enemy:
         # draw health box, render sprite, and move
         self.drawHealthBox(win, centerX, centerY)
         win.blit(self.image, (centerX, centerY))
-        self.move()
+        self.move(ticks)
 
 
     def drawHealthBox(self, win, centerX, centerY):
@@ -94,9 +94,9 @@ class Enemy:
         return False
 
 
-    def move(self):
+    def move(self, ticks):
         if self.frozen:
-            if self.frozenDuration < pygame.time.get_ticks():
+            if self.frozenDuration < ticks:
                 self.frozen = False
         else:
             '''
@@ -155,11 +155,11 @@ class Enemy:
                 self.pathIndex += 1
 
 
-    def hit(self, damage, damageType):
+    def hit(self, damage, damageType, ticks):
         ''' Returns true if the enemy died and subtracts damage from its health '''
         if damageType == self.superWeakness:
             damage *= 2
         self.health = self.health - damage
         if damageType == DamageType.ice:
             self.frozen = True
-            self.frozenDuration = pygame.time.get_ticks() + 3000
+            self.frozenDuration = ticks + 300

@@ -12,7 +12,7 @@ class Punch(Projectile):
         self.damage = 5                        # punches do a lot of damage, but are kind of slow
         self.damageType = DamageType.melee
         self.color = (200, 100, 50)
-        self.reloadTime = 1500
+        self.reloadTime = 150
         self.velocity = 5
         self.numImages = 1
         self.width = 35
