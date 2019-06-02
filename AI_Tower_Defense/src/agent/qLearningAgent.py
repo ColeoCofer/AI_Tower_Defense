@@ -1,29 +1,27 @@
 from constants.gameConstants import *
 import numpy as np
 
-class Qrecord:
+class Qdata:
 
     def __init__(self):
-        self.qTable = []
+        self.qTable = np.zeros((STARTING_POSITIONS, NUMBER_OF_TOWERS))
         self.towers = []
+        self.gameScores = []
         self.currentScore = 0
 
 
 class QLearningAgent:
 
     def __init__(self):
-        self.record = Qrecord()
+        self.record = Qdata()
         
     
-
     def initTowers(self):
         tempTowers = list(TOWER_GRID)
         np.random.shuffle(tempTowers)
         self.record.towers = tempTowers[:NUMBER_OF_STARTING_TOWERS]
 
-    
-    def train(self):
 
-        return    
+    def updateRecord(self):
 
-    
+        return

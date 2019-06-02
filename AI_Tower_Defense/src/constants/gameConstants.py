@@ -60,6 +60,7 @@ Y_MAX_OFFSET = 35  #yOffset along enemy walking path
 
 #Towers
 TOWER_TYPES = [SquareTower, BirdCastle, Igloo, WizardTower, Pyramid, Obelisk]
+NUMBER_OF_TOWERS = len(TOWER_TYPES)
 
 #Sounds
 BG_MUSIC = ["old_town.mp3"]

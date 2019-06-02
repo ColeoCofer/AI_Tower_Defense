@@ -126,14 +126,15 @@ class Game:
         newTowers = []
         i = 0
         for i in range(len(self.towers)):
+            # add alive towers back into the list
             if self.towers[i].health > 0:
                 newTowers.append(self.towers[i])
+            # a dead tower was found, free up its tile
             else:
                 j = 0
                 for j in range(len(self.towerGrid)):
                     print(self.towers[i].position)
                     if self.towerGrid[j][0][0] == (self.towers[i].position[0] - (TOWER_GRID_SIZE / 2)) and self.towerGrid[j][0][1] == (self.towers[i].position[1] - (TOWER_GRID_SIZE / 2)):
-                        print('here')
                         self.towerGrid[j] = ((self.towerGrid[j][0], False))
 
         self.towers = newTowers
