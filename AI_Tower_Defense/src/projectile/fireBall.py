@@ -37,8 +37,12 @@ class Fireball(RangeProjectile):
         for weakness in self.targetEnemy.weaknesses:
             # skip if frozen
             if self.damageType == DamageType.ice and self.targetEnemy.frozen:
-                continue
+                return False
             # deal damage to enemy
             if self.damageType == weakness:
-                self.attackSound.play()
+                # if not (self.trainingMode):
+                #     self.attackSound.play()
                 self.targetEnemy.hit(self.damage, self.damageType)
+                return True
+
+        return False

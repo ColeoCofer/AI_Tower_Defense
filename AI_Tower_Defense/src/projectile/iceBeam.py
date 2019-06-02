@@ -15,6 +15,7 @@ class IceBeam(Projectile):
         self.velocity = 5
         self.attackSound = pygame.mixer.Sound("../assets/sounds/ice.wav")
         self.attackSound.set_volume(0.1)
+        self.attackAnimationDuration = 400
 
 
     # draws a simple blue line
@@ -29,8 +30,12 @@ class IceBeam(Projectile):
         for weakness in self.targetEnemy.weaknesses:
             # skip if frozen
             if self.damageType == DamageType.ice and self.targetEnemy.frozen:
-                continue
+                return False
             # deal damage to enemy
             if self.damageType == weakness:
-                self.attackSound.play()
+                # if not (self.trainingMode):
+                #     self.attackSound.play()
                 self.targetEnemy.hit(self.damage, self.damageType)
+                return True
+
+        return False

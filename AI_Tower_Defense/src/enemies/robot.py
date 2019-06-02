@@ -7,13 +7,19 @@ from .enemy import Enemy
 from .attackingEnemy import AttackingEnemy
 
 
+
 class Robot(AttackingEnemy):
+
+    spawnChance = 0.4
+    spawnChanceLimit = 0.85
+    startingHealth = 25                             # robots are tough
+    velocity = 6  #random.randint(5, 8)            # robots are slow
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        self.startingHealth = 25                             # robots are tough
+        # self.startingHealth = 25                             # robots are tough
         self.health = self.startingHealth
-        self.velocity = random.randint(5, 8)            # robots are slow
+        # self.velocity = random.randint(5, 8)            # robots are slow
         self.weaknesses.append(DamageType.fire)
         self.weaknesses.append(DamageType.lightning)    # robots are not weak to lasers
         self.superWeakness = DamageType.lightning       # they are super weak to lightning
@@ -25,8 +31,8 @@ class Robot(AttackingEnemy):
         self.numImages = 3
         self.animationSpeed = 5
 
-        self.spawnChance = 0.4
-        self.spawnChanceLimit = 0.85
+        # self.spawnChance = 0.4
+        # self.spawnChanceLimit = 0.85
 
         #Load images
         for i in range(0, self.numImages):

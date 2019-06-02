@@ -35,7 +35,7 @@ class Tower:
 
 
     # launches a tower attacking round
-    def attack(self, enemies, win):
+    def attack(self, enemies):
         '''
         Looks for enemies within it's attack radius
         Will find the closest one and attack it
@@ -62,10 +62,12 @@ class Tower:
                 projectileToFire = self.loadProjectile(enemies[closestEnemyIndex])
                 projectileToFire.enemies = enemies
                 self.attackCooldownTime = ticks + projectileToFire.reloadTime
-                projectileToFire.attackAnimationStopTime = ticks + projectileToFire.attackAnimationDuration
-                projectileToFire.color = self.projectileColor
-                projectileToFire.fire()
-                self.projectilesFired.append(projectileToFire)
+                targetAcquired = projectileToFire.fire()
+                if targetAcquired:
+                    projectileToFire.attackAnimationStopTime = ticks + projectileToFire.attackAnimationDuration
+                    projectileToFire.color = self.projectileColor
+                    self.projectilesFired.append(projectileToFire)
+
 
         return enemies
 
