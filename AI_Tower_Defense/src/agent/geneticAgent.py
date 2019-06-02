@@ -28,7 +28,7 @@ class GeneticAgent:
             # creates random strings for the populations to start
             citizen = np.zeros(STARTING_POSITIONS, int)
 
-            # randomly pick a tower type
+            # randomly pick a tower type (1-6 right now)
             for j in range(NUMBER_OF_STARTING_TOWERS):
                 citizen[j] = rand.randint(1, NUMBER_OF_TOWERS)
             np.random.shuffle(citizen)
@@ -36,6 +36,7 @@ class GeneticAgent:
 
 
     def setTowers(self, citizen):
+        self.currentTowers = []
         # iterate through the list representation of the towers
         for i in range(len(citizen)):
             # if the current tile position is not blank in the string reprentation

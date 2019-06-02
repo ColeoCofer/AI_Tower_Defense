@@ -50,13 +50,14 @@ class Game:
         self.width = WIN_WIDTH
         self.height = WIN_HEIGHT
 
-        if FULLSCREEN_MODE:
+        if FULLSCREEN_MODE and not self.trainingMode:
             self.win = pygame.display.set_mode((self.width, self.height), FULLSCREEN | DOUBLEBUF)
         else:
-            self.win = pygame.display.set_mode((self.width, self.height))
+            if not self.trainingMode:
+                self.win = pygame.display.set_mode((self.width, self.height))
 
         # game stats
-        self.win.set_alpha(None)
+        # self.win.set_alpha(None)
         self.enemies = []
         # set current agents towers   
         #   entry point for the AIs
@@ -80,12 +81,12 @@ class Game:
         self.clicks = []
 
         #Level & Spawn
-        self.level = 1
+        self.level = 9
         self.enemiesSpawnedThisLevel = 0
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = self.numEnemiesPerLevel
         self.totalEnemiesKilled = 0
-        self.spawnChance = 0.005
+        self.spawnChance = 0.5
         self.enemySpawnProbs = []
         self.showPathBounds = False
 
@@ -107,7 +108,7 @@ class Game:
         playerHasQuit = False
 
         while run == True and playerHasQuit == False:
-            if self.trainingMode:
+            if not (self.trainingMode):
                 clock.tick(FPS)
             
             self.spawnEnemies()
@@ -123,7 +124,6 @@ class Game:
                 self.draw(clock.get_fps())
 
         self.gameover()
-        pygame.quit()
 
 
     # goes through and removes dead towers from the list
@@ -138,7 +138,6 @@ class Game:
             else:
                 j = 0
                 for j in range(len(self.towerGrid)):
-                    print(self.towers[i].position)
                     if self.towerGrid[j][0][0] == (self.towers[i].position[0] - (TOWER_GRID_SIZE / 2)) and self.towerGrid[j][0][1] == (self.towers[i].position[1] - (TOWER_GRID_SIZE / 2)):
                         self.towerGrid[j] = ((self.towerGrid[j][0], False))
 
@@ -148,14 +147,14 @@ class Game:
     # cycles through all towers attack phase
     def towersAttack(self):
         for tower in self.towers:
-            self.enemies = tower.attack(self.enemies, self.win)
+            self.enemies = tower.attack(self.enemies)
 
 
     # cycles through any attacking enemies attack phase
     def enemiesAttack(self):
         for enemy in self.enemies:
             if isinstance(enemy, AttackingEnemy):
-                self.towers = enemy.attack(self.towers, self.win)
+                self.towers = enemy.attack(self.towers)
 
 
     ''' Handle keyboard and mouse events '''
@@ -448,10 +447,11 @@ class Game:
             ''' I can't for the life of me get this to be displayed'''
             self.win.blit(self.gameoverImage, (0, 0))
             pygame.display.update()
-            print('Total Enemies Killed: ' + str(self.totalEnemiesKilled))
-            print('Final Level:          ' + str(self.level))
-            print('Final Score:          ' + str(self.score))
-            print('Towers Intact:        ' + str(len(self.towers)))
+        print('\nTotal Enemies Killed: ' + str(self.totalEnemiesKilled))
+        print('Final Level:          ' + str(self.level))
+        print('Final Score:          ' + str(self.score))
+        print('Towers Intact:        ' + str(len(self.towers)))
+
         self.agent.fitnessScores.append(self.score)
         self.agent.gameScores.append(self.score)
         self.agent.enemiesKilled.append(self.totalEnemiesKilled)

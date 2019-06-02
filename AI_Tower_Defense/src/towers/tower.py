@@ -35,7 +35,7 @@ class Tower:
 
 
     # launches a tower attacking round
-    def attack(self, enemies, win):
+    def attack(self, enemies):
         '''
         Looks for enemies within it's attack radius
         Will find the closest one and attack it

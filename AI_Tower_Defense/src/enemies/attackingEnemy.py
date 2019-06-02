@@ -20,7 +20,7 @@ class AttackingEnemy(Enemy):
         self.attackAnimationTimeStamp = 0
 
     # the enemy attacks!!
-    def attack(self, enemies, win):
+    def attack(self, enemies):
         self.closeEnemies = enemies
 
         # only thawed enemies can attack

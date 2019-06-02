@@ -6,7 +6,7 @@ OFF = False
 
 
 # AI general constants
-NUMBER_OF_STARTING_TOWERS = 50
+NUMBER_OF_STARTING_TOWERS = 20
 
 # Q-Learning constants
 GAMMA          = 0.9
@@ -18,8 +18,8 @@ N_EPISODES     = 50000
 M_STEPS        = 500
 
 # GA constants
-POPULATION_SIZE = 50              # might need to be a multiple of 5 
-MAX_GENERATIONS = 100
+POPULATION_SIZE = 6              # might need to be a multiple of 5 
+MAX_GENERATIONS = 50
 MUTATION_PCT = 0.05
 SURVIVAL_OF_THE_FITTEST = True
 NUMBER_OF_CHILDREN = 2

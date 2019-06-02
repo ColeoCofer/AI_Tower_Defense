@@ -1,6 +1,7 @@
 import random as rand
 import numpy as np
 import matplotlib.pyplot as plt
+import pygame
 
 from constants.aiConstants import *
 from constants.gameConstants import *
@@ -24,17 +25,26 @@ class GeneticAlgorithm:
 
         gameCount = 0
         for generation in range(MAX_GENERATIONS):
+            
 
             # play all of the games for each member of the population
             for i in range(POPULATION_SIZE):
-                
+
+                #Setup Game
+                # pygame.init()
+                # pygame.font.init()
+                # pygame.mixer.init()
+                # pygame.display.set_caption("AI Tower Defense")
+
                 # display every tenth generation for testing
-                if generation == gameCount:
-                    self.trainingMode = False
-                    self.visualMode = True
-                else:
-                    self.trainingMode = True
-                    self.visualMode = False
+                # if generation == gameCount and i == 0: #and gameCount != 0:
+                #     self.trainingMode = False
+                #     self.visualMode = True
+                # else:
+                #     self.trainingMode = True
+                #     self.visualMode = False
+                self.trainingMode = False
+                self.visualMode = True
                 
                 self.agent.currentCitizenIndex = i
                 self.agent.setTowers(self.agent.population[i])
@@ -44,6 +54,8 @@ class GeneticAlgorithm:
                 game.run()
                 
                 fitnessPlot.append(self.agent.fitnessScores[i])  
+
+                # pygame.quit()
 
             self.normalizeFitnessOfPopulation()          
 
@@ -56,7 +68,7 @@ class GeneticAlgorithm:
             # perform the random mutation on the children
             self.mutateChildren() 
 
-            gameCount += 10
+            gameCount += 1
 
 
         #printGraph(fitnessPlot, populationSize)   
@@ -98,20 +110,24 @@ class GeneticAlgorithm:
     def crossoverParents(self):
         newPopulation = list()
         populationSize = len(self.agent.population)
+
         i = 0
         while(i < populationSize):
             pivotPoint = self.getPivot()
         
-            child1 = np.concatenate((self.agent.population[i][:pivotPoint], self.agent.population[i+1][pivotPoint:]))
+            child1 = np.concatenate((self.agent.population[i][:pivotPoint], self.agent.population[i+1][pivotPoint:])).tolist()
+            print(type(child1))
             newPopulation.append(child1)
 
             if NUMBER_OF_CHILDREN == 2:
-                child2 = np.concatenate((self.agent.population[i+1][:pivotPoint], self.agent.population[i][pivotPoint:]))  
+                child2 = np.concatenate((self.agent.population[i+1][:pivotPoint], self.agent.population[i][pivotPoint:])).tolist()  
                 newPopulation.append(child2)
 
             i += 2
 
         self.agent.population = newPopulation
+
+        print('CROSSOVER!!')
 
 
     # perform the random mutation on the location of the n-queens

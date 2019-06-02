@@ -33,7 +33,8 @@ class IceBeam(Projectile):
                 return False
             # deal damage to enemy
             if self.damageType == weakness:
-                self.attackSound.play()
+                # if not (self.trainingMode):
+                #     self.attackSound.play()
                 self.targetEnemy.hit(self.damage, self.damageType)
                 return True
 

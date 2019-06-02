@@ -11,7 +11,8 @@ from constants.gameConstants import *
 
 def main():
     ''' Entry point for game '''
-    #Setup Game
+
+    # #Setup Game
     pygame.init()
     pygame.font.init()
     pygame.mixer.init()
@@ -24,6 +25,8 @@ def main():
     gaAgent = GeneticAgent()
     gaAlgo = GeneticAlgorithm(gaAgent)
     gaAlgo.run()
+
+    pygame.quit()
 
     # qAgent = QLearningAgent()
     # qLearning = QLearning(qAgent)
