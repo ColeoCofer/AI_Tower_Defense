@@ -8,25 +8,39 @@ from constants.aiConstants import *
 class GeneticAgent:
 
     def __init__(self):
-        self.towers = []
-        self.population = []
-        self.fitnessScores = []
+        self.currentTowers       = []
+        self.population          = []
+        self.fitnessScores       = []
+        
+        self.gameScores          = []
+        self.earnings            = []
+        self.enemiesKilled       = []
+        self.towersRemaining     = []
 
-        self.gameScores = []
-        self.currentScore = 0
+        self.currentScore        = 0
+        self.currentCitizenIndex = 0
+        
         
     
     # Creates an initial randomized population
     def initPopulation(self):
-        population = list()
-
         for i in range(POPULATION_SIZE):
             # creates random strings for the populations to start
-            population = np.zeros(STARTING_POSITIONS, int)
+            citizen = np.zeros(STARTING_POSITIONS, int)
 
+            # randomly pick a tower type
             for j in range(NUMBER_OF_STARTING_TOWERS):
-                population[j] = rand.randint(1, NUMBER_OF_TOWERS)
-            np.random.shuffle(population)
-            self.population.append(population)
+                citizen[j] = rand.randint(1, NUMBER_OF_TOWERS)
+            np.random.shuffle(citizen)
+            self.population.append(citizen)
 
 
+    def setTowers(self, citizen):
+        # iterate through the list representation of the towers
+        for i in range(len(citizen)):
+            # if the current tile position is not blank in the string reprentation
+            #   place the corresonding tower in that position
+            if citizen[i] != 0:
+                newTowerPosition = ((TOWER_GRID[i][0] + (TOWER_GRID_SIZE / 2), TOWER_GRID[i][1] + (TOWER_GRID_SIZE / 2)))
+                newTower = TOWER_TYPES[citizen[i]](newTowerPosition)
+                self.currentTowers.append(newTower)

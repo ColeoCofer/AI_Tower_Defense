@@ -409,6 +409,7 @@ class Game:
     def isAlive(self):
         return self.health > 0
 
+
     def initTowerGrid(self):
         '''
         Initializes tower grid based on hard coded values in TOWER_GRID
@@ -416,6 +417,7 @@ class Game:
         '''
         for location in TOWER_GRID:
             self.towerGrid.append((pygame.Rect(location, (TOWER_GRID_SIZE, TOWER_GRID_SIZE)), False))
+
 
     def showClicks(self):
         ''' Displays click locations and rectangles to assist with towerGrid placement and logs coordinates to terminal '''
@@ -434,6 +436,7 @@ class Game:
             bgRect.set_alpha(180)
             bgRect.fill((0, 0, 200))
             self.win.blit(bgRect, (mousePosition[0], mousePosition[1]))
+
 
     def gameover(self):
         ''' I can't for the life of me get this to be displayed'''

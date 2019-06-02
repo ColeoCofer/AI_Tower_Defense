@@ -1,5 +1,6 @@
 import random as rand
 import numpy as np
+import matplotlib.pyplot as plt
 
 from constants.aiConstants import *
 from constants.gameConstants import *
@@ -18,6 +19,60 @@ class GeneticAlgorithm:
 
 
     def run(self):
+        self.agent.initPopulation()
+        fitnessPlot = []
+
+        gameCount = 0
+        for generation in range(MAX_GENERATIONS):
+
+            # play all of the games for each member of the population
+            for i in range(POPULATION_SIZE):
+                
+                # display every tenth generation for testing
+                if generation == gameCount:
+                    self.trainingMode = False
+                    self.visualMode = True
+                else:
+                    self.trainingMode = True
+                    self.visualMode = False
+                
+                self.agent.currentCitizen = i
+
+                # bool: visualMode, bool: trainingMode, Agent: agent
+                game = Game(self.visualMode, self.trainingMode, self.agent)
+                game.run()
+                
+                fitnessPlot.append(self.agent.fitnessScores[i])  
+
+            self.normalizeFitnessOfPopulation()          
+
+            # create the new population for crossover based off of the probabilities from the fitness scores
+            self.selectPopulationForCrossover()
+            
+            # perform the crossing over of pairs in the population
+            self.crossoverParents()
+
+            # perform the random mutation on the children
+            self.mutateChildren() 
+
+            gameCount += 10
+
+
+        #printGraph(fitnessPlot, populationSize)   
+
+        return
+
+
+    # print the average fitness graph
+    def printGraph(self):
+        populationSize = len(self.agent.population)
+        # plot the accuracy results from the training and test sets
+        title = 'Population = ' + str(populationSize)
+        plt.plot(self.agent.fitnessValues, label=title)
+        plt.xlabel('Generations')
+        plt.ylabel('Average Fitness')
+        plt.legend(loc='best')
+        plt.show()
 
         return
 
@@ -26,13 +81,13 @@ class GeneticAlgorithm:
     def getPivot(self):
         return rand.randint(0, STARTING_POSITIONS-1) 
 
-    
-    # generates fitness scores for the entire population
+
+    # normalizes fitness scores for the entire population
     def normalizeFitnessOfPopulation(self):
         populationSize = len(self.agent.population)
         
-        sumOfFitnessScores = np.sum(self.currentFitnessScores)
-        self.currentFitnessScores /= sumOfFitnessScores
+        sumOfFitnessScores = np.sum(self.agent.fitnessScores)
+        self.agent.fitnessScores /= sumOfFitnessScores
         averageFitnessScore = sumOfFitnessScores / populationSize
 
         return averageFitnessScore
@@ -88,41 +143,41 @@ class GeneticAlgorithm:
 
 
     # randomly generates a new population to subject to crossover based on their fitness score ratio to the whole
-def selectPopulationForCrossover(self):
-    newPopulation = list()
-    populationSize = len(self.agent.population)
-    
-    # this will take the best 20% of the population for survival of the fittest
-    n = populationSize // 5
-    
-    if NUMBER_OF_CHILDREN == 1:
-        populationMultiplier = 2
-    else:
-        populationMultiplier = 1
-
-    # translate fitness scores to ranges between 0.0-1.0 to select from randomly
-    if SURVIVAL_OF_THE_FITTEST:
-        fitParents = np.argpartition(self.agent.fitnessScores, -n)[-n:]
-        i = 0
-        while i < (populationSize * populationMultiplier):
-            for fitParent in fitParents:
-                newPopulation.append(self.agent.population[fitParent])
-            i += n
+    def selectPopulationForCrossover(self):
+        newPopulation = list()
+        populationSize = len(self.agent.population)
         
-    else:
-        # partition the fitness scores into buckets, thats why it is skipping the first index
-        for i in range(1, populationSize):
-            self.agent.fitnessScores[i] += self.agent.fitnessScores[i-1]
-
+        # this will take the best 20% of the population for survival of the fittest
+        n = populationSize // 5
         
-        # randomly pick new members for the population based on their fitness probabilities
-        for i in range(populationSize * populationMultiplier):
-            index = 0
-            current = rand.random()
-            for j in range(populationSize):
-                if current <= self.agent.fitnessScores[j]:
-                    index = j
-                    break
-            newPopulation.append(self.agent.population[index])
+        if NUMBER_OF_CHILDREN == 1:
+            populationMultiplier = 2
+        else:
+            populationMultiplier = 1
 
-    self.agent.population = newPopulation
+        # translate fitness scores to ranges between 0.0-1.0 to select from randomly
+        if SURVIVAL_OF_THE_FITTEST:
+            fitParents = np.argpartition(self.agent.fitnessScores, -n)[-n:]
+            i = 0
+            while i < (populationSize * populationMultiplier):
+                for fitParent in fitParents:
+                    newPopulation.append(self.agent.population[fitParent])
+                i += n
+            
+        else:
+            # partition the fitness scores into buckets, thats why it is skipping the first index
+            for i in range(1, populationSize):
+                self.agent.fitnessScores[i] += self.agent.fitnessScores[i-1]
+
+            
+            # randomly pick new members for the population based on their fitness probabilities
+            for i in range(populationSize * populationMultiplier):
+                index = 0
+                current = rand.random()
+                for j in range(populationSize):
+                    if current <= self.agent.fitnessScores[j]:
+                        index = j
+                        break
+                newPopulation.append(self.agent.population[index])
+
+        self.agent.population = newPopulation
