@@ -15,6 +15,7 @@ class IceBeam(Projectile):
         self.velocity = 5
         self.attackSound = pygame.mixer.Sound("../assets/sounds/ice.wav")
         self.attackSound.set_volume(0.1)
+        self.attackAnimationDuration = 400
 
 
     # draws a simple blue line

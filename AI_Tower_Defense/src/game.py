@@ -135,11 +135,11 @@ class Game:
             if self.towers[i].health > 0:
                 newTowers.append(self.towers[i])
             else:
-                print('Foo')
                 j = 0
                 for j in range(len(self.towerGrid)):
-                    if self.towerGrid[j][0] == self.towers[i].position:
-                        print('Bar')
+                    print(self.towers[i].position)
+                    if self.towerGrid[j][0][0] == (self.towers[i].position[0] - (TOWER_GRID_SIZE / 2)) and self.towerGrid[j][0][1] == (self.towers[i].position[1] - (TOWER_GRID_SIZE / 2)):
+                        print('here')
                         self.towerGrid[j] = ((self.towerGrid[j][0], False))
 
         self.towers = newTowers
