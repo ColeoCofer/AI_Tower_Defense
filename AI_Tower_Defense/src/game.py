@@ -24,6 +24,8 @@ from towers.igloo import Igloo
 from ui.wallet import Wallet
 from ui.menu import Menu
 
+from agent.qLearningAgent import QLearningAgent
+
 from constants.gameConstants import *
 from constants.animationConstants import *
 
