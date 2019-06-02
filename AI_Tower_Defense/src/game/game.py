@@ -41,8 +41,7 @@ class Game:
         self.visualMode = visualMode
         self.trainingMode = trainingMode
         self.agent = agent
-        
-        
+
         if self.visualMode:
             self.startBgMusic()
 
@@ -59,7 +58,7 @@ class Game:
         # game stats
         # self.win.set_alpha(None)
         self.enemies = []
-        # set current agents towers   
+        # set current agents towers
         #   entry point for the AIs
         if self.agent != None:
             self.towers = self.agent.currentTowers
@@ -110,7 +109,7 @@ class Game:
         while run == True and playerHasQuit == False:
             if not (self.trainingMode):
                 clock.tick(FPS)
-            
+
             self.spawnEnemies()
             # left this in here training mode or not in case we are viewing the AI for a round and want to quit
             playerHasQuit = self.handleEvents()
@@ -452,14 +451,15 @@ class Game:
         print('Final Score:          ' + str(self.score))
         print('Towers Intact:        ' + str(len(self.towers)))
 
+        self.agent.currentFitnessScores.append(self.score)
         self.agent.fitnessScores.append(self.score)
         self.agent.gameScores.append(self.score)
         self.agent.enemiesKilled.append(self.totalEnemiesKilled)
         self.agent.towersRemaining.append(len(self.towers))
         self.agent.earnings.append(self.wallet.coins)
-        
 
-    
+
+
     # plays our awesome RenFair music
     def startBgMusic(self):
         if PLAY_BG_MUSIC and self.visualMode:

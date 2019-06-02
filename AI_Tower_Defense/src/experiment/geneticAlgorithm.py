@@ -11,10 +11,8 @@ from game.game import Game
 
 class GeneticAlgorithm:
 
-    def __init__(self, agent):  
+    def __init__(self, agent):
         self.agent = agent
-        self.currentFitnessScores = []
-
         self.trainingMode = False
         self.visualMode   = True
 
@@ -25,7 +23,7 @@ class GeneticAlgorithm:
 
         gameCount = 0
         for generation in range(MAX_GENERATIONS):
-            
+
 
             # play all of the games for each member of the population
             for i in range(POPULATION_SIZE):
@@ -45,33 +43,35 @@ class GeneticAlgorithm:
                 #     self.visualMode = False
                 self.trainingMode = False
                 self.visualMode = True
-                
+
                 self.agent.currentCitizenIndex = i
                 self.agent.setTowers(self.agent.population[i])
 
                 # bool: visualMode, bool: trainingMode, Agent: agent
                 game = Game(self.visualMode, self.trainingMode, self.agent)
                 game.run()
-                
-                fitnessPlot.append(self.agent.fitnessScores[i])  
+
+                fitnessPlot.append(self.agent.fitnessScores[i])
 
                 # pygame.quit()
 
-            self.normalizeFitnessOfPopulation()          
+            self.normalizeFitnessOfPopulation()
 
             # create the new population for crossover based off of the probabilities from the fitness scores
             self.selectPopulationForCrossover()
-            
+
             # perform the crossing over of pairs in the population
             self.crossoverParents()
 
             # perform the random mutation on the children
-            self.mutateChildren() 
+            self.mutateChildren()
 
             gameCount += 1
 
+            self.agent.currentFitnessScores = []
 
-        #printGraph(fitnessPlot, populationSize)   
+
+        #printGraph(fitnessPlot, populationSize)
 
         return
 
@@ -92,15 +92,17 @@ class GeneticAlgorithm:
 
     # return a random pivot index
     def getPivot(self):
-        return rand.randint(0, STARTING_POSITIONS-1) 
+        return rand.randint(0, STARTING_POSITIONS-1)
 
 
     # normalizes fitness scores for the entire population
     def normalizeFitnessOfPopulation(self):
         populationSize = len(self.agent.population)
-        
-        sumOfFitnessScores = np.sum(self.agent.fitnessScores)
-        self.agent.fitnessScores /= sumOfFitnessScores
+
+        sumOfFitnessScores = sum(self.agent.currentFitnessScores)
+        for i in range(len(self.agent.currentFitnessScores)):
+            self.agent.currentFitnessScores[i] /= sumOfFitnessScores
+        # self.agent.currentFitnessScores /= sumOfFitnessScores
         averageFitnessScore = sumOfFitnessScores / populationSize
 
         return averageFitnessScore
@@ -114,29 +116,26 @@ class GeneticAlgorithm:
         i = 0
         while(i < populationSize):
             pivotPoint = self.getPivot()
-        
+
             child1 = np.concatenate((self.agent.population[i][:pivotPoint], self.agent.population[i+1][pivotPoint:])).tolist()
-            print(type(child1))
             newPopulation.append(child1)
 
             if NUMBER_OF_CHILDREN == 2:
-                child2 = np.concatenate((self.agent.population[i+1][:pivotPoint], self.agent.population[i][pivotPoint:])).tolist()  
+                child2 = np.concatenate((self.agent.population[i+1][:pivotPoint], self.agent.population[i][pivotPoint:])).tolist()
                 newPopulation.append(child2)
 
             i += 2
 
         self.agent.population = newPopulation
-
         print('CROSSOVER!!')
 
 
     # perform the random mutation on the location of the n-queens
     def mutateChildren(self):
         newPopulation = list()
-        
         for citizen in self.agent.population:
             mutate = rand.random()
-            if mutate <= MUTATION_PCT:           
+            if mutate <= MUTATION_PCT:
                 repeat = True
                 while(repeat):
                     locationToMutate = rand.randint(0, STARTING_POSITIONS - 1)
@@ -153,9 +152,8 @@ class GeneticAlgorithm:
                                 citizen[locationToMutate] = 0
                                 repeat = False
                                 break
-                
-            newPopulation.append(citizen)
 
+            newPopulation.append(citizen)
         self.agent.population = newPopulation
 
 
@@ -163,10 +161,8 @@ class GeneticAlgorithm:
     def selectPopulationForCrossover(self):
         newPopulation = list()
         populationSize = len(self.agent.population)
-        
         # this will take the best 20% of the population for survival of the fittest
-        n = populationSize // 5
-        
+        n = populationSize // 6
         if NUMBER_OF_CHILDREN == 1:
             populationMultiplier = 2
         else:
@@ -174,27 +170,28 @@ class GeneticAlgorithm:
 
         # translate fitness scores to ranges between 0.0-1.0 to select from randomly
         if SURVIVAL_OF_THE_FITTEST:
-            fitParents = np.argpartition(self.agent.fitnessScores, -n)[-n:]
+            print(f"Fitness scores: {self.agent.currentFitnessScores}")
+            fitParents = np.argpartition(self.agent.currentFitnessScores, -n)[-n:]
             i = 0
             while i < (populationSize * populationMultiplier):
                 for fitParent in fitParents:
+                    print(f"Current fit parent: {fitParent}")
                     newPopulation.append(self.agent.population[fitParent])
                 i += n
-            
+
         else:
             # partition the fitness scores into buckets, thats why it is skipping the first index
             for i in range(1, populationSize):
-                self.agent.fitnessScores[i] += self.agent.fitnessScores[i-1]
+                self.agent.currentFitnessScores[i] += self.agent.currentFitnessScores[i-1]
 
-            
+
             # randomly pick new members for the population based on their fitness probabilities
             for i in range(populationSize * populationMultiplier):
                 index = 0
                 current = rand.random()
                 for j in range(populationSize):
-                    if current <= self.agent.fitnessScores[j]:
+                    if current <= self.agent.currentFitnessScores[j]:
                         index = j
                         break
                 newPopulation.append(self.agent.population[index])
-
         self.agent.population = newPopulation
