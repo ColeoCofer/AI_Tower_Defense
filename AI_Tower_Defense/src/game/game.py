@@ -30,21 +30,6 @@ from constants.gameConstants import *
 from constants.animationConstants import *
 
 
-def main():
-    ''' Entry point for game '''
-    #Setup Game
-    pygame.init()
-    pygame.font.init()
-    pygame.mixer.init()
-    startBgMusic()
-    pygame.display.set_caption("AI Tower Defense")
-
-    #Kick off main game loop
-    g = Game()
-    g.run()
-
-
-
 '''
 Setup initial window and settings.
 Renders all objects and background to the screen.
@@ -52,7 +37,15 @@ Handles user events (keyboard, mouse, etc)
 Keeps track of score.
 '''
 class Game:
-    def __init__(self):
+    def __init__(self, visualMode, trainingMode, agent):
+        self.visualMode = visualMode
+        self.trainingMode = trainingMode
+        self.agent = agent
+        
+        
+        if self.visualMode:
+            self.startBgMusic()
+
         ''' Initial window setup '''
         self.width = WIN_WIDTH
         self.height = WIN_HEIGHT
@@ -64,7 +57,6 @@ class Game:
 
         # game stats
         self.win.set_alpha(None)
-        # self.enemies = [Zombie(0), Zombie(10)]
         self.enemies = []
         self.towers = [City((1180, 230))]
         self.towerGrid = [] #Holds all possible locations for a tower to be placed, and whether one is there or not
@@ -111,7 +103,7 @@ class Game:
         playerHasQuit = False
 
         while run == True and playerHasQuit == False:
-            if TRAINING_MODE:
+            if self.trainingMode:
                 clock.tick(FPS)
 
             self.spawnEnemies()
@@ -122,7 +114,7 @@ class Game:
             self.removeEnemies()
             run = self.isAlive()
 
-            if VISUAL_MODE:
+            if self.visualMode:
                 self.draw(clock.get_fps())
 
         self.gameover()
@@ -452,13 +444,9 @@ class Game:
         print('Towers Intact:        ' + str(len(self.towers)))
 
 
-# plays our awesome RenFair music
-def startBgMusic():
-    if PLAY_BG_MUSIC:
-        randSong = random.randint(0, len(BG_MUSIC) - 1)
-        pygame.mixer.music.load("../assets/music/background/" + BG_MUSIC[randSong])
-        pygame.mixer.music.play(-1)
-
-
-if __name__ == "__main__":
-    main()
+    # plays our awesome RenFair music
+    def startBgMusic(self):
+        if PLAY_BG_MUSIC and self.visualMode:
+            randSong = random.randint(0, len(BG_MUSIC) - 1)
+            pygame.mixer.music.load("../assets/music/background/" + BG_MUSIC[randSong])
+            pygame.mixer.music.play(-1)
