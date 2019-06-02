@@ -36,7 +36,8 @@ class GeneticAlgorithm:
                     self.trainingMode = True
                     self.visualMode = False
                 
-                self.agent.currentCitizen = i
+                self.agent.currentCitizenIndex = i
+                self.agent.setTowers(self.agent.population[i])
 
                 # bool: visualMode, bool: trainingMode, Agent: agent
                 game = Game(self.visualMode, self.trainingMode, self.agent)

@@ -58,7 +58,11 @@ class Game:
         # game stats
         self.win.set_alpha(None)
         self.enemies = []
-        self.towers = [City((1180, 230))]
+        # set current agents towers   
+        #   entry point for the AIs
+        if self.agent != None:
+            self.towers = self.agent.currentTowers
+        self.towers.append(City((1180, 230)))
         self.towerGrid = [] #Holds all possible locations for a tower to be placed, and whether one is there or not
         self.score = 0
         self.health = 200
@@ -105,8 +109,9 @@ class Game:
         while run == True and playerHasQuit == False:
             if self.trainingMode:
                 clock.tick(FPS)
-
+            
             self.spawnEnemies()
+            # left this in here training mode or not in case we are viewing the AI for a round and want to quit
             playerHasQuit = self.handleEvents()
             self.towerHealthCheck()
             self.towersAttack()
@@ -439,15 +444,22 @@ class Game:
 
 
     def gameover(self):
-        ''' I can't for the life of me get this to be displayed'''
-        self.win.blit(self.gameoverImage, (0, 0))
-        pygame.display.update()
-        print('Total Enemies Killed: ' + str(self.totalEnemiesKilled))
-        print('Final Level:          ' + str(self.level))
-        print('Final Score:          ' + str(self.score))
-        print('Towers Intact:        ' + str(len(self.towers)))
+        if self.visualMode:
+            ''' I can't for the life of me get this to be displayed'''
+            self.win.blit(self.gameoverImage, (0, 0))
+            pygame.display.update()
+            print('Total Enemies Killed: ' + str(self.totalEnemiesKilled))
+            print('Final Level:          ' + str(self.level))
+            print('Final Score:          ' + str(self.score))
+            print('Towers Intact:        ' + str(len(self.towers)))
+        self.agent.fitnessScores.append(self.score)
+        self.agent.gameScores.append(self.score)
+        self.agent.enemiesKilled.append(self.totalEnemiesKilled)
+        self.agent.towersRemaining.append(len(self.towers))
+        self.agent.earnings.append(self.wallet.coins)
+        
 
-
+    
     # plays our awesome RenFair music
     def startBgMusic(self):
         if PLAY_BG_MUSIC and self.visualMode:
