@@ -81,7 +81,7 @@ class Game:
         self.clicks = []
 
         #Level & Spawn
-        self.level = 9
+        self.level = 1
         self.enemiesSpawnedThisLevel = 0
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = self.numEnemiesPerLevel
@@ -89,6 +89,10 @@ class Game:
         self.spawnChance = 0.5
         self.enemySpawnProbs = []
         self.showPathBounds = False
+
+        if STARTING_LEVEL > 1:
+            for i in range(1, STARTING_LEVEL):
+                self.nextLevel()
 
         #Fonts
         self.uiFont = pygame.font.SysFont('lucidagrandettc', 24)
@@ -117,6 +121,7 @@ class Game:
             self.towerHealthCheck()
             self.towersAttack()
             self.enemiesAttack()
+            self.enemiesMove()
             self.removeEnemies()
             run = self.isAlive()
 
@@ -155,6 +160,10 @@ class Game:
         for enemy in self.enemies:
             if isinstance(enemy, AttackingEnemy):
                 self.towers = enemy.attack(self.towers)
+
+    def enemiesMove(self):
+        for enemy in self.enemies:
+            enemy.move()
 
 
     ''' Handle keyboard and mouse events '''
@@ -226,34 +235,36 @@ class Game:
             if shouldSpawn <= self.spawnChance:
                 #Pick an enemy to spawn based on their probabilities
                 randVerticalOffset = random.randint(-Y_MAX_OFFSET, (Y_MAX_OFFSET - int((Y_MAX_OFFSET / 2))))
-                enemyToSpawn = np.random.choice(ENEMY_INDICES, 1, self.enemySpawnProbs)
+                enemyToSpawn = np.random.choice(ENEMY_INDICES, 1, p=self.enemySpawnProbs)
                 newEnemy = ENEMY_TYPES[enemyToSpawn[0]](randVerticalOffset)
-                self.enemiesSpawnedThisLevel += 1
-                self.updateEnemyHealth()
-                self.updateEnemyWalkingSpeed()
-                newEnemy.health += self.addedHealth
-                newEnemy.startingHealth = newEnemy.health
-                newEnemy.velocity += self.addedSpeed
+
                 self.enemies.append(newEnemy)
         else:
-            #New Level
-            self.level += 1
-            self.enemiesSpawnedThisLevel = 0
-            #Increase chance to spawn an enemy by a percentage of the last spawn chance
-            self.spawnChance += GLOBAL_SPAWN_PROB_INC * self.spawnChance
-            self.numEnemiesPerLevel += ENEMY_PROB_INC * self.numEnemiesPerLevel
-            self.remainingEnemies = self.numEnemiesPerLevel
-            self.updateSpawnProbabilities()
+            self.nextLevel()
 
-            #Increase spawn chances for each enemy
-            for enemy in self.enemies:
-                newSpawnChance = enemy.spawnChance + ENEMY_SPAWN_INC
-                #Check if we've maxed out spawn limit
-                if newSpawnChance < enemy.spawnChanceLimit:
-                    enemy.spawnChance = newSpawnChance
-                else:
-                    enemy.spawnChance = enemy.spawnChanceLimit
 
+    def nextLevel(self):
+        #New Level
+        self.level += 1
+        self.enemiesSpawnedThisLevel = 0
+        #Increase chance to spawn an enemy by a percentage of the last spawn chance
+        self.spawnChance += GLOBAL_SPAWN_PROB_INC * self.spawnChance
+        self.numEnemiesPerLevel += ENEMY_PROB_INC * self.numEnemiesPerLevel
+        self.remainingEnemies = self.numEnemiesPerLevel
+        self.updateSpawnProbabilities()
+        #Increase enemy stats
+        self.enemiesSpawnedThisLevel += 1
+        self.updateEnemyHealth()
+        # self.updateEnemyWalkingSpeed()
+
+        #Increase spawn chances for each enemy
+        for enemy in ENEMY_TYPES:
+            newSpawnChance = enemy.spawnChance + ENEMY_SPAWN_INC
+            #Check if we've maxed out spawn limit
+            if newSpawnChance < enemy.spawnChanceLimit:
+                enemy.spawnChance = newSpawnChance
+            else:
+                enemy.spawnChance = enemy.spawnChanceLimit
 
     def draw(self, fps):
         '''
@@ -378,22 +389,28 @@ class Game:
 
     def updateSpawnProbabilities(self):
         ''' Initialized list of enemy spawn probabilities '''
-        for enemy in self.enemies:
-            self.enemySpawnProbs.append(enemy.spawnChance)
+        spawnChanceSum = 0
+        self.enemySpawnProbs.clear()
+        for enemy in ENEMY_TYPES:
+            spawnChanceSum += enemy.spawnChance
+        for enemy in ENEMY_TYPES:
+            self.enemySpawnProbs.append(enemy.spawnChance/spawnChanceSum)  #this guarantees that spawn probabilities sum to 1
 
 
     def updateEnemyWalkingSpeed(self):
         ''' Bumps up the enemy speed every 2 levels by 1 '''
         levelForIncrease = (self.level % NUMBER_LEVELS_SPEED_INCREASE) == 0
         if levelForIncrease:
-            self.addedSpeed += SPEED_INCREASE
+            for enemy in ENEMY_TYPES:
+                enemy.velocity += SPEED_INCREASE
 
 
     def updateEnemyHealth(self):
         ''' Bumps up the enemy health every 3 levels by 2 '''
         levelForIncrease = (self.level % NUMBER_LEVELS_HEALTH_INCREASE) == 0
         if levelForIncrease:
-            self.addedHealth += HEALTH_INCREASE
+            for enemy in ENEMY_TYPES:
+                enemy.startingHealth += HEALTH_INCREASE
 
 
     def getHealthColor(self):
@@ -466,3 +483,4 @@ class Game:
             randSong = random.randint(0, len(BG_MUSIC) - 1)
             pygame.mixer.music.load("../assets/music/background/" + BG_MUSIC[randSong])
             pygame.mixer.music.play(-1)
+

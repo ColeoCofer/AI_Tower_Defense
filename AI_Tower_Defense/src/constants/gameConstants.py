@@ -16,7 +16,7 @@ from towers.city import City
 from towers.igloo import Igloo
 
 #Fullscreen will make the game run waaaay better
-FULLSCREEN_MODE = False
+FULLSCREEN_MODE = True
 PLAY_BG_MUSIC = False        #Set false to turn music off
 SHOW_CLICKS = False   #If true will display dots where clicked, and print the coordinate in terminal
 SHOW_PATH_BOUNDS = True     #If true will display bounds to enemy path
@@ -47,6 +47,7 @@ ENEMY_PROB_INC = 0.20          #Percent increase number of enemies per level
 ENEMY_SPAWN_INC = 0.30         #Increments individual enemies spawn chances
 
 #Level increase constants
+STARTING_LEVEL = 10
 SPEED_INCREASE = 1
 HEALTH_INCREASE = 2
 NUMBER_LEVELS_HEALTH_INCREASE = 2
