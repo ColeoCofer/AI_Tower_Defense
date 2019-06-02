@@ -13,15 +13,15 @@ class KnightEgg(RangeProjectile):
         super().__init__(towerPosition, enemy, enemies)
         self.damage = 8                         # knights also do half this damage to the surroundings
         self.damageType = DamageType.melee      # knights go boom
-        self.reloadTime = 750                  # reload time long
+        self.reloadTime = 75                  # reload time long
         self.velocity = 100                     # knights are fast
         self.attackRadius = 40                  # radius to take secondary damage on
         self.detonationRange = 50
-        
+
         self.numImages = 5
         self.width = 50
         self.height = 50
-        self.attackAnimationDuration = 5000
+        self.attackAnimationDuration = 5
 
         #Load images
         for i in range(0, self.numImages):
@@ -31,12 +31,12 @@ class KnightEgg(RangeProjectile):
 
 
     # calulates the addtional surrounding damage
-    def explosiveDamage(self):
+    def explosiveDamage(self, ticks):
         for enemy in self.enemies:
             dist = (enemy.x - self.x) ** 2 + (enemy.y - self.y) ** 2
             #Use radius squared to avoid taking square roots of distance
             if dist <= self.attackRadius ** 2:
-                enemy.hit((self.damage / 2), self.damageType)
+                enemy.hit((self.damage / 2), self.damageType, ticks)
 
 
     # returns a residual animation

@@ -52,7 +52,7 @@ class Warrior(AttackingEnemy):
         self.images = self.walkingImages
 
     # the enemy attacks!!
-    def attack(self, enemies):
+    def attack(self, enemies, ticks):
         self.closeEnemies = enemies
 
         # only thawed enemies can attack
@@ -62,7 +62,6 @@ class Warrior(AttackingEnemy):
             Will find the closest one and attack it
             '''
             # Check if the tower is ready to attack again
-            ticks = pygame.time.get_ticks()
             if ticks >= self.canAttackTime:
                 attackableEnemies = []
                 i = 0
@@ -83,7 +82,7 @@ class Warrior(AttackingEnemy):
                     self.canAttackTime = ticks + projectileToFire.reloadTime
                     projectileToFire.attackAnimationStopTime = ticks + projectileToFire.attackAnimationDuration
                     projectileToFire.color = self.projectileColor
-                    projectileToFire.fire()
+                    projectileToFire.fire(ticks)
                     self.projectilesFired.append(projectileToFire)
                     self.images = self.attackingImages
 
@@ -91,7 +90,7 @@ class Warrior(AttackingEnemy):
 
 
     # draw one of many awesome attacking enemies
-    def draw(self, win):
+    def draw(self, win, ticks):
 
         #Since the attacking images have one more image than the walking images
         #If we are on the last attacking image, then we know we have finished the
@@ -123,17 +122,17 @@ class Warrior(AttackingEnemy):
         i = 0
         while i < len(self.projectilesFired):
             # check and make sure animation time hasn't lapsed
-            if self.projectilesFired[i].attackAnimationStopTime < pygame.time.get_ticks():
+            if self.projectilesFired[i].attackAnimationStopTime < ticks:
                 del self.projectilesFired[i]
             # TODO I think we may want to think about this. It currently is saying that a projectile has hit it's target
-            elif self.projectilesFired[i].draw(win) == True:
+            elif self.projectilesFired[i].draw(win, ticks) == True:
                 del self.projectilesFired[i]
             i += 1
 
         # draw health box, render sprite, and move sprite for next iteration
         self.drawHealthBox(win, centerX, centerY)
         win.blit(self.image, (centerX, centerY))
-        self.move()
+        self.move(ticks)
 
 
     # overrides base class version

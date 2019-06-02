@@ -11,7 +11,8 @@ class GeneticAgent:
         self.currentTowers       = []
         self.population          = []
         self.fitnessScores       = []
-        
+        self.currentFitnessScores = []
+
         self.gameScores          = []
         self.earnings            = []
         self.enemiesKilled       = []
@@ -19,9 +20,9 @@ class GeneticAgent:
 
         self.currentScore        = 0
         self.currentCitizenIndex = 0
-        
-        
-    
+
+
+
     # Creates an initial randomized population
     def initPopulation(self):
         for i in range(POPULATION_SIZE):

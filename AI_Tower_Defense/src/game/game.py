@@ -41,8 +41,7 @@ class Game:
         self.visualMode = visualMode
         self.trainingMode = trainingMode
         self.agent = agent
-        
-        
+
         if self.visualMode:
             self.startBgMusic()
 
@@ -50,16 +49,17 @@ class Game:
         self.width = WIN_WIDTH
         self.height = WIN_HEIGHT
 
-        if FULLSCREEN_MODE and not self.trainingMode:
-            self.win = pygame.display.set_mode((self.width, self.height), FULLSCREEN | DOUBLEBUF)
-        else:
-            if not self.trainingMode:
+        self.ticks = 0
+        if self.visualMode == True:
+            if FULLSCREEN_MODE:
+                self.win = pygame.display.set_mode((self.width, self.height), FULLSCREEN | DOUBLEBUF)
+            else:
                 self.win = pygame.display.set_mode((self.width, self.height))
 
         # game stats
         # self.win.set_alpha(None)
         self.enemies = []
-        # set current agents towers   
+        # set current agents towers
         #   entry point for the AIs
         if self.agent != None:
             self.towers = self.agent.currentTowers
@@ -107,26 +107,29 @@ class Game:
 
     def run(self):
         ''' Main game loop '''
-        clock = pygame.time.Clock()
+        # clock = pygame.time.Clock()
         run = True
         playerHasQuit = False
 
         while run == True and playerHasQuit == False:
-            if not (self.trainingMode):
-                clock.tick(FPS)
-            
+            # if self.trainingMode == False:
+            # clock.tick(FPS*2)
+            playerHasQuit = self.handleEvents()
+
+
             self.spawnEnemies()
             # left this in here training mode or not in case we are viewing the AI for a round and want to quit
-            playerHasQuit = self.handleEvents()
             self.towerHealthCheck()
             self.towersAttack()
             self.enemiesAttack()
-            self.enemiesMove()
+            self.enemiesMove(self.ticks)
             self.removeEnemies()
             run = self.isAlive()
 
             if self.visualMode:
-                self.draw(clock.get_fps())
+                self.draw()
+
+            self.ticks += 1
 
         self.gameover()
 
@@ -152,18 +155,18 @@ class Game:
     # cycles through all towers attack phase
     def towersAttack(self):
         for tower in self.towers:
-            self.enemies = tower.attack(self.enemies)
+            self.enemies = tower.attack(self.enemies, self.ticks)
 
 
     # cycles through any attacking enemies attack phase
     def enemiesAttack(self):
         for enemy in self.enemies:
             if isinstance(enemy, AttackingEnemy):
-                self.towers = enemy.attack(self.towers)
+                self.towers = enemy.attack(self.towers, self.ticks)
 
-    def enemiesMove(self):
+    def enemiesMove(self, ticks):
         for enemy in self.enemies:
-            enemy.move()
+            enemy.move(ticks)
 
 
     ''' Handle keyboard and mouse events '''
@@ -266,7 +269,7 @@ class Game:
             else:
                 enemy.spawnChance = enemy.spawnChanceLimit
 
-    def draw(self, fps):
+    def draw(self):
         '''
         Redraw objects onces per frame.
         Objects will be rendered sequentially,
@@ -281,17 +284,17 @@ class Game:
 
         #Render towers
         for tower in self.towers:
-            tower.draw(self.win)
+            tower.draw(self.win, self.ticks)
 
         #Render enemies
         for enemy in self.enemies:
-            enemy.draw(self.win)
+            enemy.draw(self.win, self.ticks)
 
         #Render coin animation
         self.wallet.draw(self.win)
 
         #Render UI Text Elements
-        self.displayTextUI(self.win, fps)
+        self.displayTextUI(self.win)
 
         self.menu.draw(self.win)
 
@@ -358,7 +361,7 @@ class Game:
                 position = (tower[0][0] + (TOWER_GRID_SIZE - GRID_DISPLAY_SIZE) / 2, tower[0][1] + (TOWER_GRID_SIZE - GRID_DISPLAY_SIZE) / 2)
                 self.win.blit(bgRect, position)
 
-    def displayTextUI(self, win, fps):
+    def displayTextUI(self, win, ):
         ''' Render UI elements above all other graphics '''
         #Info about enemies
         numEnemiesText = "Enemies: " + str(self.enemiesSpawnedThisLevel) + " of " + str(int(self.numEnemiesPerLevel))
@@ -469,18 +472,18 @@ class Game:
         print('Final Score:          ' + str(self.score))
         print('Towers Intact:        ' + str(len(self.towers)))
 
+        self.agent.currentFitnessScores.append(self.score)
         self.agent.fitnessScores.append(self.score)
         self.agent.gameScores.append(self.score)
         self.agent.enemiesKilled.append(self.totalEnemiesKilled)
         self.agent.towersRemaining.append(len(self.towers))
         self.agent.earnings.append(self.wallet.coins)
-        
 
-    
+
+
     # plays our awesome RenFair music
     def startBgMusic(self):
         if PLAY_BG_MUSIC and self.visualMode:
             randSong = random.randint(0, len(BG_MUSIC) - 1)
             pygame.mixer.music.load("../assets/music/background/" + BG_MUSIC[randSong])
             pygame.mixer.music.play(-1)
-

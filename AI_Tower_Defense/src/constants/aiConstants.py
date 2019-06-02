@@ -18,7 +18,8 @@ N_EPISODES     = 50000
 M_STEPS        = 500
 
 # GA constants
-POPULATION_SIZE = 6              # might need to be a multiple of 5 
+FITTEST_POPULATION_FRACTION = 5                   # Take 1/5th of the population size for survival of the fittest
+POPULATION_SIZE = FITTEST_POPULATION_FRACTION * 2 # Must be a multiple of FITTEST_POPULATION_FRACTION
 MAX_GENERATIONS = 50
 MUTATION_PCT = 0.05
 SURVIVAL_OF_THE_FITTEST = True
