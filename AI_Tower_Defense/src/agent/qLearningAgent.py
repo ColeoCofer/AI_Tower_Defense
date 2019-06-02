@@ -1,5 +1,8 @@
-from constants.gameConstants import *
 import numpy as np
+
+from constants.gameConstants import *
+from constants.aiConstants import *
+
 
 class Qdata:
 

@@ -15,7 +15,7 @@ class QLearning:
         self.epsilon      = EPSILON
 
         self.trainingMode = False
-        self.visualMode   = False
+        self.visualMode   = True
 
     def run(self):
         self.agent.initTowers()
@@ -27,11 +27,11 @@ class QLearning:
                     self.epsilon -= EPSILON_STEP
 
             for M in range(M_STEPS):
-                # Robby makes a move using epsilon-greedy
-                robby, reward = nextAction(epsilon, Qmatrix, robby, board, actionTax)
-                # Update the Q-matrix after each action
-                if trainingModeOn:
-                    Qmatrix = updateQmatrix(eta, gamma, Qmatrix, robby, reward, robbiesOldState, robbiesOldPosition)
+                # # Robby makes a move using epsilon-greedy
+                # robby, reward = nextAction(epsilon, Qmatrix, robby, board, actionTax)
+                # # Update the Q-matrix after each action
+                # if trainingModeOn:
+                #     Qmatrix = updateQmatrix(eta, gamma, Qmatrix, robby, reward, robbiesOldState, robbiesOldPosition)
 
 
                 # bool: visualMode, bool: trainingMode, Agent: agent

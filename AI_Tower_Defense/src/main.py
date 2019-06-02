@@ -1,7 +1,10 @@
 import pygame
+
 from game.game import Game
 from experiment.qLearning import QLearning
 from agent.qLearningAgent import QLearningAgent
+
+from constants.gameConstants import *
 
 def main():
     ''' Entry point for game '''
@@ -11,10 +14,12 @@ def main():
     pygame.mixer.init()
     pygame.display.set_caption("AI Tower Defense")
 
-    qAgent = QLearningAgent()
-    qLearning = QLearning(qAgent)
+    # qAgent = QLearningAgent()
+    # qLearning = QLearning(qAgent)
 
-    qLearning.run()
+    # qLearning.run()
+
+    
 
 
 
