@@ -75,7 +75,7 @@ class Warrior(AttackingEnemy):
                     self.canAttackTime = ticks + projectileToFire.reloadTime
                     projectileToFire.attackAnimationStopTime = ticks + projectileToFire.attackAnimationDuration
                     projectileToFire.color = self.projectileColor
-                    projectileToFire.fire()
+                    projectileToFire.fire(ticks)
                     self.projectilesFired.append(projectileToFire)
                     self.images = self.attackingImages
 
@@ -118,7 +118,7 @@ class Warrior(AttackingEnemy):
             if self.projectilesFired[i].attackAnimationStopTime < ticks:
                 del self.projectilesFired[i]
             # TODO I think we may want to think about this. It currently is saying that a projectile has hit it's target
-            elif self.projectilesFired[i].draw(win) == True:
+            elif self.projectilesFired[i].draw(win, ticks) == True:
                 del self.projectilesFired[i]
             i += 1
 

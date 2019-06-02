@@ -162,4 +162,4 @@ class Enemy:
         self.health = self.health - damage
         if damageType == DamageType.ice:
             self.frozen = True
-            self.frozenDuration = ticks + 300
+            self.frozenDuration = ticks + 3

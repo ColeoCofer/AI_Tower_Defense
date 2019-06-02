@@ -16,7 +16,7 @@ class AttackingEnemy(Enemy):
         self.projectileColor = (155, 155, 155)
         self.closeEnemies = []
 
-        self.attackAnimationDuration = 200
+        self.attackAnimationDuration = 2
         self.attackAnimationTimeStamp = 0
 
     # the enemy attacks!!
@@ -85,7 +85,7 @@ class AttackingEnemy(Enemy):
             if self.projectilesFired[i].attackAnimationStopTime < ticks:
                 del self.projectilesFired[i]
             # TODO I think we may want to think about this. It currently is saying that a projectile has hit it's target
-            elif self.projectilesFired[i].draw(win) == True:
+            elif self.projectilesFired[i].draw(win, ticks) == True:
                 del self.projectilesFired[i]
             i += 1
 

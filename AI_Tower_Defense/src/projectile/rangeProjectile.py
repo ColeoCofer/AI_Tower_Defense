@@ -72,14 +72,14 @@ class RangeProjectile(Projectile):
     def didHitEnemy(self, distance, ticks):
         if distance < self.detonationRange:
             self.explosiveDamage(ticks)
-            self.resetRangeProjectile()
+            self.resetRangeProjectile(ticks)
             # TODO I think we should be returning something for informative
             return True
 
 
     # reset the center to the source tower if we hit the enemy
-    def resetRangeProjectile(self):
-        self.targetEnemy.hit(self.damage, self.damageType)
+    def resetRangeProjectile(self, ticks):
+        self.targetEnemy.hit(self.damage, self.damageType, ticks)
         self.x = self.towerPosition[0]
         self.y = self.towerPosition[1]
 

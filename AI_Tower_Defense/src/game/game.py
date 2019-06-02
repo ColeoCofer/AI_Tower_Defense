@@ -81,7 +81,7 @@ class Game:
         self.clicks = []
 
         #Level & Spawn
-        self.level = 9
+        self.level = 1
         self.enemiesSpawnedThisLevel = 0
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = self.numEnemiesPerLevel

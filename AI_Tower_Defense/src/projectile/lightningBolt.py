@@ -12,7 +12,7 @@ class LightningBolt(RangeProjectile):
         super().__init__(towerPosition, enemy, enemies)
         self.damage = 7                             # do a lot of damage but slow reload
         self.damageType = DamageType.lightning
-        self.reloadTime = 250
+        self.reloadTime = 25
         self.velocity = 80                     # cannonballs are fast
         self.detonationRange = 30
 
@@ -20,7 +20,7 @@ class LightningBolt(RangeProjectile):
         self.width = 80
         self.height = 80
         self.animationSpeed = 2
-        self.attackAnimationDuration = 500
+        self.attackAnimationDuration = 5
 
         #Load images
         for i in range(1, self.numImages):

@@ -27,7 +27,7 @@ class Projectile:
         self.damage = 1
         self.damageType = None
         self.color = (100, 100, 100)
-        self.reloadTime = 100
+        self.reloadTime = 10
         self.velocity = 0
 
         self.images = []
@@ -37,7 +37,7 @@ class Projectile:
         self.animationSpeed = 3
         self.animationCount = 0
         self.attackAnimationStopTime = 0
-        self.attackAnimationDuration = 200
+        self.attackAnimationDuration = 2
 
 
     # fires a projectile
@@ -55,5 +55,5 @@ class Projectile:
 
 
     # draw base class stub
-    def draw(self, win):
+    def draw(self, win, ticks):
         return
