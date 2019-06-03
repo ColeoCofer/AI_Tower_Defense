@@ -2,7 +2,7 @@ import pygame
 
 from game.game import Game
 from experiment.qLearning import QLearning
-from experiment.geneticAlgorithm import GeneticAlgorithm
+from experiment.geneticAlgorithm import GeneticAlgorithm, GeneticAlgorithm2
 from agent.qLearningAgent import QLearningAgent
 from agent.geneticAgent import GeneticAgent
 
@@ -24,6 +24,9 @@ def main():
 
     gaAgent = GeneticAgent()
     gaAlgo = GeneticAlgorithm(gaAgent)
+    # gaAgent = GeneticAgent()
+    # gaAlgo = GeneticAlgorithm2(gaAgent)
+
     gaAlgo.run()
 
     pygame.quit()

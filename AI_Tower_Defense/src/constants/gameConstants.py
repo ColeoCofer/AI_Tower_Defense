@@ -34,8 +34,8 @@ TOWER_GRID_SIZE = 64
 # Smaller dark spot when manually placing the towers
 GRID_DISPLAY_SIZE = 45
 
-TRAINING_MODE = False  #If true will uncap framerates
-VISUAL_MODE = True     #Set false to stop rendering
+TRAINING_MODE = True  #If true will uncap framerates
+VISUAL_MODE = False     #Set false to stop rendering
 FPS = 60
 
 #Player

@@ -40,7 +40,6 @@ class Game:
     def __init__(self, visualMode, trainingMode, towers, dataStore):
         self.visualMode = visualMode
         self.trainingMode = trainingMode
-        # self.agent = agent
         self.dataStore = dataStore
 
         if self.visualMode:
@@ -91,7 +90,7 @@ class Game:
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = self.numEnemiesPerLevel
         self.totalEnemiesKilled = 0
-        self.spawnChance = 0.05                            # this can be throttled for testing
+        self.spawnChance = 0.1                            # this can be throttled for testing
         self.enemySpawnProbs = []
         self.showPathBounds = False
 
@@ -213,15 +212,13 @@ class Game:
 
     ''' Removes enemies that have walked off screen'''
     def removeEnemies(self):
-        # print('Enemies: ' + str(len(self.enemies)))
+        
         for enemy in self.enemies:
             if enemy.x > WIN_WIDTH:
                 self.health -= enemy.startingHealth
 
             
             if enemy.health <= 0:
-                # print('\nEnemy health: ' + str(enemy.health))
-                # print('Enemy starting health: ' + str(enemy.startingHealth) + '\n')
                 self.score += enemy.startingHealth
                 self.wallet.coins += enemy.coinReward
 
@@ -229,6 +226,8 @@ class Game:
                 self.enemies.remove(enemy)
                 self.totalEnemiesKilled += 1
                 self.remainingEnemies -= 1
+
+        # print(self.score)
 
 
     def spawnEnemies(self):
@@ -462,22 +461,20 @@ class Game:
 
 
     def gameover(self):
-        if self.visualMode:
-            ''' I can't for the life of me get this to be displayed'''
-            self.win.blit(self.gameoverImage, (0, 0))
-            pygame.display.update()
+
         print('\nTotal Enemies Killed: ' + str(self.totalEnemiesKilled))
         print('Final Level:          ' + str(self.level))
         print('Final Score:          ' + str(self.score))
         print('Towers Intact:        ' + str(len(self.towers)))
         print('Coins:                ' + str(self.wallet.coins))
 
-        self.dataStore.currentFitnessScores = self.score
-        self.dataStore.fitnessScores = self.score
-        self.dataStore.gameScores = self.score
-        self.dataStore.enemiesKilled = self.totalEnemiesKilled
-        self.dataStore.towersRemaining = len(self.towers)
-        self.dataStore.earnings = self.wallet.coins
+        if self.dataStore != None:
+            self.dataStore.currentFitnessScores = self.score
+            self.dataStore.fitnessScores = self.score
+            self.dataStore.gameScores = self.score
+            self.dataStore.enemiesKilled = self.totalEnemiesKilled
+            self.dataStore.towersRemaining = len(self.towers)
+            self.dataStore.earnings = self.wallet.coins
 
 
 

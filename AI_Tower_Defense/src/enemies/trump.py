@@ -9,13 +9,6 @@ from .attackingEnemy import AttackingEnemy
 
 class Trump(AttackingEnemy):
 
-    spawnChance = 0.01
-    spawnChanceLimit = 0.04
-    startingHealth = 50                        # Trump is hard to kill
-    coinReward = 100
-    attackRadius = 125
-    velocity = 7  #random.randint(3, 6)            # Trump is super slow
-
     def __init__(self, yOffset):
         super().__init__(yOffset)
         self.startingHealth = 50                        # Trump is hard to kill
