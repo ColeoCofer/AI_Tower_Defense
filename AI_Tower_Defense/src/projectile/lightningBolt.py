@@ -7,20 +7,20 @@ from animations.disintegrate import Disintegrate
 
 
 class LightningBolt(RangeProjectile):
-
+    
     def __init__(self, towerPosition, enemy, enemies):
         super().__init__(towerPosition, enemy, enemies)
         self.damage = 7                             # do a lot of damage but slow reload
         self.damageType = DamageType.lightning
-        self.reloadTime = 25
+        self.reloadTime = 2500
         self.velocity = 80                     # cannonballs are fast
         self.detonationRange = 30
-
+        
         self.numImages = 14
         self.width = 80
         self.height = 80
         self.animationSpeed = 2
-        self.attackAnimationDuration = 5
+        self.attackAnimationDuration = 5000
 
         #Load images
         for i in range(1, self.numImages):
