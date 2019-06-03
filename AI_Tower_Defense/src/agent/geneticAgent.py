@@ -11,7 +11,7 @@ class GeneticAgent:
         self.currentTowers       = []
         self.population          = []
         self.fitnessScores       = []
-        self.currentFitnessScores = []
+        # self.currentFitnessScores = []
 
         self.gameScores          = []
         self.earnings            = []

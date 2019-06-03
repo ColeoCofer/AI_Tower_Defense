@@ -14,12 +14,12 @@ from game.game import Game
 class DataStore:
 
     def __init__(self):
-        self.currentFitnessScores = []
-        self.fitnessScores = []
-        self.gameScores = []
-        self.enemiesKilled = []
-        self.towersRemaining = []
-        self.earnings = []
+        # self.currentFitnessScores = []
+        self.fitnessScores = 0
+        self.gameScores = 0
+        self.enemiesKilled = 0
+        self.towersRemaining = 0
+        self.earnings = 0
 
 class GeneticAlgorithm:
 
@@ -28,6 +28,7 @@ class GeneticAlgorithm:
         self.trainingMode = False
         self.visualMode   = True
         self.dataStores = []
+        # self.fitnessScores = np.zeros((POPULATIONPOPULATION_SIZE)
         self.towersForGeneration = []
 
 
@@ -40,6 +41,8 @@ class GeneticAlgorithm:
 
         gameCount = 0
         for generation in range(MAX_GENERATIONS):
+
+            self.dataStores = []
 
             # play all of the games for each member of the population
             for i in range(POPULATION_SIZE):
@@ -75,6 +78,11 @@ class GeneticAlgorithm:
                 # fitnessPlot.append(self.agent.fitnessScores[i])
 
                 # pygame.quit()
+            newFitnessScores = []
+            for data in self.dataStores:
+                newFitnessScores.append(data.fitnessScores)
+
+            self.agent.fitnessScores = newFitnessScores    
 
             self.normalizeFitnessOfPopulation()
 
@@ -89,7 +97,7 @@ class GeneticAlgorithm:
 
             gameCount += 1
 
-            self.agent.currentFitnessScores = []
+            # self.agent.currentFitnessScores = []
 
 
         #printGraph(fitnessPlot, populationSize)
@@ -126,9 +134,9 @@ class GeneticAlgorithm:
     def normalizeFitnessOfPopulation(self):
         populationSize = len(self.agent.population)
 
-        sumOfFitnessScores = sum(self.agent.currentFitnessScores)
-        for i in range(len(self.agent.currentFitnessScores)):
-            self.agent.currentFitnessScores[i] /= sumOfFitnessScores
+        sumOfFitnessScores = sum(self.agent.fitnessScores)
+        for i in range(len(self.agent.fitnessScores)):
+            self.agent.fitnessScores[i] /= sumOfFitnessScores
         # self.agent.currentFitnessScores /= sumOfFitnessScores
         averageFitnessScore = sumOfFitnessScores / populationSize
 
@@ -182,11 +190,13 @@ class GeneticAlgorithm:
                                 break
 
             newPopulation.append(citizen)
+
         self.agent.population = newPopulation
 
 
     # randomly generates a new population to subject to crossover based on their fitness score ratio to the whole
     def selectPopulationForCrossover(self):
+        print(self.agent.fitnessScores)
         newPopulation = list()
         populationSize = len(self.agent.population)
         
@@ -199,19 +209,19 @@ class GeneticAlgorithm:
 
         # translate fitness scores to ranges between 0.0-1.0 to select from randomly
         if SURVIVAL_OF_THE_FITTEST:
-            print(f"Fitness scores: {self.dataStores.currentFitnessScores}")
-            fitParents = np.argpartition(self.dataStores.currentFitnessScores, -n)[-n:]
+            # print(f"Fitness scores: {self.dataStores.currentFitnessScores}")
+            fitParents = np.argpartition(self.agent.fitnessScores, -n)[-n:]
             i = 0
             while i < (populationSize * populationMultiplier):
                 for fitParent in fitParents:
-                    print(f"Current fit parent: {fitParent}")
+                    # print(f"Current fit parent: {fitParent}")
                     newPopulation.append(self.agent.population[fitParent])
                 i += n
 
         else:
             # partition the fitness scores into buckets, thats why it is skipping the first index
             for i in range(1, populationSize):
-                self.agent.currentFitnessScores[i] += self.agent.currentFitnessScores[i-1]
+                self.agent.fitnessScores[i] += self.agent.fitnessScores[i-1]
 
 
             # randomly pick new members for the population based on their fitness probabilities
@@ -219,7 +229,7 @@ class GeneticAlgorithm:
                 index = 0
                 current = rand.random()
                 for j in range(populationSize):
-                    if current <= self.agent.currentFitnessScores[j]:
+                    if current <= self.agent.fitnessScores[j]:
                         index = j
                         break
                 newPopulation.append(self.agent.population[index])

@@ -472,12 +472,12 @@ class Game:
         print('Towers Intact:        ' + str(len(self.towers)))
         print('Coins:                ' + str(self.wallet.coins))
 
-        self.dataStore.currentFitnessScores.append(self.score)
-        self.dataStore.fitnessScores.append(self.score)
-        self.dataStore.gameScores.append(self.score)
-        self.dataStore.enemiesKilled.append(self.totalEnemiesKilled)
-        self.dataStore.towersRemaining.append(len(self.towers))
-        self.dataStore.earnings.append(self.wallet.coins)
+        self.dataStore.currentFitnessScores = self.score
+        self.dataStore.fitnessScores = self.score
+        self.dataStore.gameScores = self.score
+        self.dataStore.enemiesKilled = self.totalEnemiesKilled
+        self.dataStore.towersRemaining = len(self.towers)
+        self.dataStore.earnings = self.wallet.coins
 
 
 
