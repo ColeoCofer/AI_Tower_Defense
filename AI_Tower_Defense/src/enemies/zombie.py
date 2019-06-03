@@ -7,12 +7,6 @@ from projectile.projectile import DamageType
 
 class Zombie(Enemy):
 
-    # spawnChance = 0.6
-    # spawnChanceLimit = 0.7
-    # startingHealth = 40                         # zombies are tough to kill
-    # coinReward = 20
-    # velocity = 7  #random.randint(2, 5)        # zombies are slow as hell
-
     def __init__(self, yOffset):
         super().__init__(yOffset)
         self.startingHealth = 40                         # zombies are tough to kill

@@ -22,7 +22,7 @@ class Trump(AttackingEnemy):
         self.health = self.startingHealth
         self.coinReward = 100
         self.attackRadius = 125
-        self.velocity = random.randint(3, 6)            # Trump is super slow
+        self.velocity = random.randint(5, 8)            # Trump is super slow
         self.weaknesses.append(DamageType.lazer)
         self.weaknesses.append(DamageType.fire)
         self.weaknesses.append(DamageType.poison)

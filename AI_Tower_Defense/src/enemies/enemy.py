@@ -8,12 +8,6 @@ from constants.animationConstants import *
 # enemy base class
 class Enemy:
 
-    # startingHealth = 5
-    # coinReward = 20
-    # spawnChance = 0.5        #Default starting chance of being spawned
-    # spawnChanceLimit = 0.8   #Maximum limit that an enemy's spawn chance will be
-    # velocity = 5
-
     def __init__(self, yOffset):
         self.startingHealth = 5
         self.health = self.startingHealth

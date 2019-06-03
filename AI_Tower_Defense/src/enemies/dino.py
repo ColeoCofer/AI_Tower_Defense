@@ -7,16 +7,11 @@ from .enemy import Enemy
 
 class Dino(Enemy):
 
-    # spawnChance = 0.4
-    # spawnChanceLimit = 0.8
-    # startingHealth = 20                             # Dino's are tough
-    # velocity = 16  # random.randint(5, 8)            # Dino's are slow
-
     def __init__(self, yOffset):
         super().__init__(yOffset)
         self.startingHealth = 20                             # Dino's are tough
         self.health = self.startingHealth
-        self.velocity = random.randint(15, 18)            # Dino's are slow
+        self.velocity = random.randint(13, 16)            # Dino's are slow
         self.weaknesses.append(DamageType.lazer)
         self.weaknesses.append(DamageType.fire)
         self.weaknesses.append(DamageType.poison)

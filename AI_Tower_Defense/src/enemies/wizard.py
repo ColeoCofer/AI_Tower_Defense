@@ -9,12 +9,6 @@ from .attackingEnemy import AttackingEnemy
 
 class Wizard(AttackingEnemy):
 
-    # spawnChance = 0.4
-    # spawnChanceLimit = 0.7
-    # startingHealth = 12                         # wizards are kind of squishy
-    # coinReward = 25
-    # velocity = 12  #random.randint(9, 13)       # wizards are fast as hell
-
     def __init__(self, yOffset):
         super().__init__(yOffset)
         self.startingHealth = 12                         # wizards are kind of squishy
