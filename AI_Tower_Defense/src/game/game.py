@@ -204,7 +204,6 @@ class Game:
                 if SHOW_CLICKS:
                     self.clicks.append(mousePosition)
                     print(self.clicks)
-                    
                 return False
 
         return False
