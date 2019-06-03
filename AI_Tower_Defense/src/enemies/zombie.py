@@ -7,18 +7,18 @@ from projectile.projectile import DamageType
 
 class Zombie(Enemy):
 
-    spawnChance = 0.6
-    spawnChanceLimit = 0.7
-    startingHealth = 40                         # zombies are tough to kill
-    coinReward = 20
-    velocity = 7  #random.randint(2, 5)        # zombies are slow as hell
+    # spawnChance = 0.6
+    # spawnChanceLimit = 0.7
+    # startingHealth = 40                         # zombies are tough to kill
+    # coinReward = 20
+    # velocity = 7  #random.randint(2, 5)        # zombies are slow as hell
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        # self.startingHealth = 40                         # zombies are tough to kill
-        # self.coinReward = 20
+        self.startingHealth = 40                         # zombies are tough to kill
+        self.coinReward = 20
         self.health = self.startingHealth
-        # self.velocity = random.randint(2, 5)        # zombies are slow as hell
+        self.velocity = random.randint(5, 8)        # zombies are slow as hell
         self.weaknesses.append(DamageType.fire)     # zombies are only weak to fire, exploding, ice, and super weak to fire
         self.weaknesses.append(DamageType.lazer)
         self.superWeakness = DamageType.fire
@@ -27,8 +27,8 @@ class Zombie(Enemy):
         self.numImages = 4
         self.healthBarYOffset = 30
 
-        # self.spawnChance = 0.6
-        # self.spawnChanceLimit = 0.7
+        self.spawnChance = 0.6
+        self.spawnChanceLimit = 0.7
 
         #Load animation images
         for i in range(self.numImages):

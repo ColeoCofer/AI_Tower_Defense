@@ -4,27 +4,22 @@ import os
 from projectile.projectile import DamageType
 from constants.animationConstants import *
 
-# startingHealth = 0
-# coinReward = 20
-# spawnChance = 0.5        #Default starting chance of being spawned
-# spawnChanceLimit = 0.8   #Maximum limit that an enemy's spawn chance will be
-# velocity = 0
 
 # enemy base class
 class Enemy:
 
-    startingHealth = 5
-    coinReward = 20
-    spawnChance = 0.5        #Default starting chance of being spawned
-    spawnChanceLimit = 0.8   #Maximum limit that an enemy's spawn chance will be
-    velocity = 5
+    # startingHealth = 5
+    # coinReward = 20
+    # spawnChance = 0.5        #Default starting chance of being spawned
+    # spawnChanceLimit = 0.8   #Maximum limit that an enemy's spawn chance will be
+    # velocity = 5
 
     def __init__(self, yOffset):
-        # self.startingHealth = startingHealth
+        self.startingHealth = 5
         self.health = self.startingHealth
         self.levelHealth = 0
-        # self.coinReward = coinReward
-        # self.velocity = 0
+        self.coinReward = 5
+        self.velocity = 0
         self.weaknesses = [DamageType.ice, DamageType.exploding, DamageType.melee]      # all creatures are weak to ice, explosions, and melee
         self.superWeakness = None   # will cause an enemy to lose 2x damage when projectile damage is the same
         self.frozen = False
@@ -44,8 +39,8 @@ class Enemy:
         self.yOffset = yOffset
 
         #Spawn
-        # self.spawnChance = 0.5        #Default starting chance of being spawned
-        # self.spawnChanceLimit = 0.8   #Maximum limit that an enemy's spawn chance will be
+        self.spawnChance = 0.5        #Default starting chance of being spawned
+        self.spawnChanceLimit = 0.8   #Maximum limit that an enemy's spawn chance will be
 
         # default snowman animation
         self.snowman = pygame.transform.scale(pygame.image.load(os.path.join("../assets/enemy/snowman", "snowman.png")), (self.width, self.height))

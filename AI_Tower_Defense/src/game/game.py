@@ -164,6 +164,7 @@ class Game:
             if isinstance(enemy, AttackingEnemy):
                 self.towers = enemy.attack(self.towers, self.ticks)
 
+
     def enemiesMove(self, ticks):
         for enemy in self.enemies:
             enemy.move(ticks)
@@ -203,6 +204,7 @@ class Game:
                 if SHOW_CLICKS:
                     self.clicks.append(mousePosition)
                     print(self.clicks)
+                    
                 return False
 
         return False
@@ -265,12 +267,21 @@ class Game:
         self.updateEnemyWalkingSpeed()
 
         #Increase spawn chances for each enemy
-        for enemy in ENEMY_TYPES:
-            newSpawnChance = enemy.spawnChance + ENEMY_SPAWN_INC
-            #Check if we've maxed out spawn limit
-            if newSpawnChance < enemy.spawnChanceLimit:
-                enemy.spawnChance = newSpawnChance
-            else:
+        # for enemy in ENEMY_TYPES:
+        #     newSpawnChance = enemy.spawnChance + ENEMY_SPAWN_INC
+        #     #Check if we've maxed out spawn limit
+        #     if newSpawnChance < enemy.spawnChanceLimit:
+        #         enemy.spawnChance = newSpawnChance
+        #     else:
+        #         enemy.spawnChance = enemy.spawnChanceLimit
+
+        #Increase spawn chances for each enemy	
+        for enemy in self.enemies:	
+            newSpawnChance = enemy.spawnChance + ENEMY_SPAWN_INC	
+            #Check if we've maxed out spawn limit	
+            if newSpawnChance < enemy.spawnChanceLimit:	
+                enemy.spawnChance = newSpawnChance	
+            else:	
                 enemy.spawnChance = enemy.spawnChanceLimit
 
     def draw(self):
@@ -394,30 +405,49 @@ class Game:
         self.win.blit(surface, position)
 
 
+    # def updateSpawnProbabilities(self):
+    #     ''' Initialized list of enemy spawn probabilities '''
+    #     spawnChanceSum = 0
+    #     self.enemySpawnProbs.clear()
+    #     for enemy in ENEMY_TYPES:
+    #         spawnChanceSum += enemy.spawnChance
+    #     for enemy in ENEMY_TYPES:
+    #         self.enemySpawnProbs.append(enemy.spawnChance / spawnChanceSum)  #this guarantees that spawn probabilities sum to 1
+
+
+    # def updateEnemyWalkingSpeed(self):
+    #     ''' Bumps up the enemy speed every 2 levels by 1 '''
+    #     levelForIncrease = (self.level % NUMBER_LEVELS_SPEED_INCREASE) == 0
+    #     if levelForIncrease:
+    #         for enemy in ENEMY_TYPES:
+    #             enemy.velocity += SPEED_INCREASE
+
+
+    # def updateEnemyHealth(self):
+    #     ''' Bumps up the enemy health every 3 levels by 2 '''
+    #     levelForIncrease = (self.level % NUMBER_LEVELS_HEALTH_INCREASE) == 0
+    #     if levelForIncrease:
+    #         for enemy in ENEMY_TYPES:
+    #             enemy.startingHealth += HEALTH_INCREASE
+
     def updateSpawnProbabilities(self):
         ''' Initialized list of enemy spawn probabilities '''
-        spawnChanceSum = 0
-        self.enemySpawnProbs.clear()
-        for enemy in ENEMY_TYPES:
-            spawnChanceSum += enemy.spawnChance
-        for enemy in ENEMY_TYPES:
-            self.enemySpawnProbs.append(enemy.spawnChance/spawnChanceSum)  #this guarantees that spawn probabilities sum to 1
+        for enemy in self.enemies:
+            self.enemySpawnProbs.append(enemy.spawnChance)
 
 
     def updateEnemyWalkingSpeed(self):
         ''' Bumps up the enemy speed every 2 levels by 1 '''
         levelForIncrease = (self.level % NUMBER_LEVELS_SPEED_INCREASE) == 0
         if levelForIncrease:
-            for enemy in ENEMY_TYPES:
-                enemy.velocity += SPEED_INCREASE
+            self.addedSpeed += SPEED_INCREASE
 
 
     def updateEnemyHealth(self):
         ''' Bumps up the enemy health every 3 levels by 2 '''
         levelForIncrease = (self.level % NUMBER_LEVELS_HEALTH_INCREASE) == 0
         if levelForIncrease:
-            for enemy in ENEMY_TYPES:
-                enemy.startingHealth += HEALTH_INCREASE
+            self.addedHealth += HEALTH_INCREASE
 
 
     def getHealthColor(self):
