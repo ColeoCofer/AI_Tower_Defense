@@ -11,7 +11,7 @@ class FakeTanSpray(Projectile):
         self.damage = 3                        # fake news does a lot of damage
         self.damageType = DamageType.fakeNews
         self.color = (200, 100, 50)
-        self.reloadTime = 12                   # it can be spread quickly
+        self.reloadTime = 1250                  # it can be spread quickly
         self.velocity = 15                      # it travels fast
 
         self.width = 97
@@ -20,9 +20,9 @@ class FakeTanSpray(Projectile):
         self.image = pygame.image.load("../assets/projectiles/fakenews/fakenews.png")
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.images.append(self.image)
-        self.attackAnimationDuration = 4
+        self.attackAnimationDuration = 400
 
-    def draw(self, win, ticks):
+    def draw(self, win):
         ''' Draws the enemy with given images '''
         numImages = len(self.images)
         self.image = self.images[self.animationCount // self.animationSpeed]

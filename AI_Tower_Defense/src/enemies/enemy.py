@@ -4,24 +4,18 @@ import os
 from projectile.projectile import DamageType
 from constants.animationConstants import *
 
-startingHealth = 0
-coinReward = 20
-spawnChance = 0.5        #Default starting chance of being spawned
-spawnChanceLimit = 0.8   #Maximum limit that an enemy's spawn chance will be
-velocity = 0
-
 # enemy base class
 class Enemy:
 
-    # startingHealth = 0
-    # coinReward = 20
-    # spawnChance = 0.5        #Default starting chance of being spawned
-    # spawnChanceLimit = 0.8   #Maximum limit that an enemy's spawn chance will be
-    # velocity = 0
+    startingHealth = 0
+    coinReward = 20
+    spawnChance = 0.5        #Default starting chance of being spawned
+    spawnChanceLimit = 0.8   #Maximum limit that an enemy's spawn chance will be
+    velocity = 0
 
     def __init__(self, yOffset):
         # self.startingHealth = 0
-        self.health = startingHealth
+        self.health = self.startingHealth
         self.levelHealth = 0
         # self.coinReward = 20
         # self.velocity = 0
@@ -56,9 +50,9 @@ class Enemy:
         self.x = self.path[0][0]
         self.y = self.path[0][1]
         self.path.append((1250 + (self.width * 2), self.path[-1][1]))
+        
 
-
-    def draw(self, win, ticks):
+    def draw(self, win):
         # if the enemy is frozen display snowman
         if self.frozen:
             self.image = self.snowman
@@ -106,9 +100,9 @@ class Enemy:
         return False
 
 
-    def move(self, ticks):
+    def move(self):
         if self.frozen:
-            if self.frozenDuration < ticks:
+            if self.frozenDuration < pygame.time.get_ticks():
                 self.frozen = False
         else:
             '''
@@ -167,11 +161,11 @@ class Enemy:
                 self.pathIndex += 1
 
 
-    def hit(self, damage, damageType, ticks):
+    def hit(self, damage, damageType):
         ''' Returns true if the enemy died and subtracts damage from its health '''
         if damageType == self.superWeakness:
             damage *= 2
         self.health = self.health - damage
         if damageType == DamageType.ice:
             self.frozen = True
-            self.frozenDuration = ticks + 3
+            self.frozenDuration = pygame.time.get_ticks() + 3000
