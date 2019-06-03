@@ -86,7 +86,7 @@ class Game:
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = self.numEnemiesPerLevel
         self.totalEnemiesKilled = 0
-        self.spawnChance = 0.5
+        self.spawnChance = 0.8                            # this can be throttled for testing
         self.enemySpawnProbs = []
         self.showPathBounds = False
 
@@ -210,11 +210,15 @@ class Game:
 
     ''' Removes enemies that have walked off screen'''
     def removeEnemies(self):
+        # print('Enemies: ' + str(len(self.enemies)))
         for enemy in self.enemies:
             if enemy.x > WIN_WIDTH:
                 self.health -= enemy.startingHealth
 
+            
             if enemy.health <= 0:
+                # print('\nEnemy health: ' + str(enemy.health))
+                # print('Enemy starting health: ' + str(enemy.startingHealth) + '\n')
                 self.score += enemy.startingHealth
                 self.wallet.coins += enemy.coinReward
 
@@ -258,7 +262,7 @@ class Game:
         #Increase enemy stats
         self.enemiesSpawnedThisLevel += 1
         self.updateEnemyHealth()
-        # self.updateEnemyWalkingSpeed()
+        self.updateEnemyWalkingSpeed()
 
         #Increase spawn chances for each enemy
         for enemy in ENEMY_TYPES:
@@ -370,7 +374,7 @@ class Game:
 
         self.displayText("Level: " + str(self.level), ((numEnemiesPosition[0] , numEnemiesPosition[1] - 25)), self.uiFont, WHITE)
 
-        self.displayText("Total Enemies Destroyed: " + str(self.totalEnemiesKilled), ((numEnemiesPosition[0] , numEnemiesPosition[1] - 50)), self.uiFont, WHITE)
+        self.displayText("Dead: " + str(self.totalEnemiesKilled), ((numEnemiesPosition[0] , numEnemiesPosition[1] - 50)), self.uiFont, WHITE)
 
         #Health
         healthText = "Health: " + str(int(self.health))
@@ -471,6 +475,7 @@ class Game:
         print('Final Level:          ' + str(self.level))
         print('Final Score:          ' + str(self.score))
         print('Towers Intact:        ' + str(len(self.towers)))
+        print('Coins:                ' + str(self.wallet.coins))
 
         self.agent.currentFitnessScores.append(self.score)
         self.agent.fitnessScores.append(self.score)

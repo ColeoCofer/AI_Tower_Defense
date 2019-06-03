@@ -11,7 +11,7 @@ class Dragon(Enemy):
     spawnChanceLimit = 0.9
     startingHealth = 14                               # dragons have medium health
     coinReward = 30
-    velocity = 10  #random.randint(8, 12)             # dragons are pretty fast
+    velocity = 20  #random.randint(8, 12)             # dragons are pretty fast
 
     def __init__(self, yOffset):
         super().__init__(yOffset)

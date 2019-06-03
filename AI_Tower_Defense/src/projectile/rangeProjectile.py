@@ -15,6 +15,9 @@ class RangeProjectile(Projectile):
         super().__init__(towerPosition, enemy, enemies)
         self.animationCount = 0
         self.detonationRange = 0
+        self.attackAnimationDuration = 15
+        self.attackRadius = 60                  # radius to take secondary damage on
+        self.detonationRange = 75
 
 
     # only checks for weaknesses, ranges weapons only explode on contact so that is handled elsewhere

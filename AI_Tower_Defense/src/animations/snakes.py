@@ -9,7 +9,7 @@ class Snakes(Animation):
         self.numImages = 10
         self.width = 50
         self.height = 50
-        self.attackAnimationDuration = 2500
+        self.attackAnimationDuration = 25
         self.animationSpeed = 3
         self.animationCount = 0
         self.velocity = 0           

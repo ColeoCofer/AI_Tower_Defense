@@ -13,7 +13,7 @@ class Wizard(AttackingEnemy):
     spawnChanceLimit = 0.7
     startingHealth = 12                         # wizards are kind of squishy
     coinReward = 25
-    velocity = 10  #random.randint(9, 13)       # wizards are fast as hell
+    velocity = 12  #random.randint(9, 13)       # wizards are fast as hell
 
     def __init__(self, yOffset):
         super().__init__(yOffset)

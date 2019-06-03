@@ -10,7 +10,7 @@ class Dino(Enemy):
     spawnChance = 0.4
     spawnChanceLimit = 0.8
     startingHealth = 20                             # Dino's are tough
-    velocity = 6  # random.randint(5, 8)            # Dino's are slow
+    velocity = 16  # random.randint(5, 8)            # Dino's are slow
 
     def __init__(self, yOffset):
         super().__init__(yOffset)

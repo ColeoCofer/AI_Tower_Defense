@@ -9,7 +9,7 @@ class Knight(Animation):
         self.numImages = 10
         self.width = 70
         self.height = 70
-        self.attackAnimationDuration = 2500
+        self.attackAnimationDuration = 25
         self.animationSpeed = 3
         self.animationCount = 0
         self.velocity = 0           

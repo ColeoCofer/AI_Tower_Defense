@@ -9,7 +9,7 @@ class Explosion(Animation):
         self.numImages = 8
         self.width = 100
         self.height = 100
-        self.attackAnimationDuration = 1000
+        self.attackAnimationDuration = 15
         self.animationSpeed = 3
         self.animationCount = 0
         self.velocity = 0           # explosions are stationary

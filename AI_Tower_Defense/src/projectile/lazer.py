@@ -11,11 +11,8 @@ class Lazer(Projectile):
         self.damage = 2                         # lazers do medium damage and fire quickly
         self.damageType = DamageType.lazer
         self.color = (200, 100, 50)
-        self.reloadTime = 20
+        self.reloadTime = 4
         self.velocity = 5
-        # self.towerWidth = towerPosition[2]
-        # self.towerHeight = towerPosition[3]
-        # self.towerCenter = (self.towerPosition[0] + (self.towerWidth / 2), self.towerPosition[0] + (self.towerHeight / 2))
 
 
     # draws a simple line

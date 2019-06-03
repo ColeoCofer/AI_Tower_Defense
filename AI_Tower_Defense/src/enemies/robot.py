@@ -13,7 +13,7 @@ class Robot(AttackingEnemy):
     spawnChance = 0.4
     spawnChanceLimit = 0.85
     startingHealth = 25                             # robots are tough
-    velocity = 6  #random.randint(5, 8)            # robots are slow
+    velocity = 16  #random.randint(5, 8)            # robots are slow
 
     def __init__(self, yOffset):
         super().__init__(yOffset)

@@ -14,7 +14,7 @@ class Trump(AttackingEnemy):
     startingHealth = 50                        # Trump is hard to kill
     coinReward = 100
     attackRadius = 125
-    velocity = 4  #random.randint(3, 6)            # Trump is super slow
+    velocity = 7  #random.randint(3, 6)            # Trump is super slow
 
     def __init__(self, yOffset):
         super().__init__(yOffset)

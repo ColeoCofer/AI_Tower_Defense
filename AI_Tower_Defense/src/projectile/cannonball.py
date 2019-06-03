@@ -11,17 +11,15 @@ class Cannonball(RangeProjectile):
 
     def __init__(self, towerPosition, enemy, enemies):
         super().__init__(towerPosition, enemy, enemies)
-        self.damage = 4                         # cannonballs also do half this damage to the surroundings
+        self.damage = 8                         # cannonballs also do half this damage to the surroundings
         self.damageType = DamageType.exploding  # cannonballs go boom
-        self.reloadTime = 30                  # reload time long
+        self.reloadTime = 30                    # reload time long
         self.velocity = 100                     # cannonballs are fast
-        self.attackRadius = 40                  # radius to take secondary damage on
-        self.detonationRange = 50
+        
 
         self.numImages = 5
         self.width = 30
         self.height = 30
-        self.attackAnimationDuration = 5
         self.attackSound = pygame.mixer.Sound("../assets/sounds/cannonShot.flac")
         self.attackSound.set_volume(0.15)
 

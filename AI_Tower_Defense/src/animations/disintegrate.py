@@ -9,7 +9,7 @@ class Disintegrate(Animation):
         self.numImages = 9
         self.width = 100
         self.height = 100
-        self.attackAnimationDuration = 1500
+        self.attackAnimationDuration = 15
         self.animationSpeed = 2
         self.animationCount = 0
         self.velocity = 0           # explosions are stationary

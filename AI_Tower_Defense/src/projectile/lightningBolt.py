@@ -14,13 +14,11 @@ class LightningBolt(RangeProjectile):
         self.damageType = DamageType.lightning
         self.reloadTime = 25
         self.velocity = 80                     # cannonballs are fast
-        self.detonationRange = 30
 
         self.numImages = 14
         self.width = 80
         self.height = 80
         self.animationSpeed = 2
-        self.attackAnimationDuration = 5
 
         #Load images
         for i in range(1, self.numImages):

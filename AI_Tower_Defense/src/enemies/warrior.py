@@ -14,7 +14,7 @@ class Warrior(AttackingEnemy):
     startingHealth = 16
     attackRadius = 30
     coinReward = 50
-    velocity = 8  #random.randint(7,10)            # warriors are pretty fast
+    velocity = 18  #random.randint(7,10)            # warriors are pretty fast
 
     def __init__(self, yOffset):
         super().__init__(yOffset)

@@ -9,16 +9,14 @@ class Fireball(RangeProjectile):
 
     def __init__(self, towerPosition, enemy, enemies):
         super().__init__(towerPosition, enemy, enemies)
-        self.damage = 2                   # fire doesn't do a lot of damage
+        self.damage = 4                   # fire doesn't do a lot of damage
         self.damageType = DamageType.fire
         self.reloadTime = 10
         self.velocity = 100
-        self.attackRadius = 40
-        self.detonationRange = 30
+
         self.numImages = 8
         self.width = 30
         self.height = 30
-        self.attackAnimationDuration = 5
         self.attackSound = pygame.mixer.Sound("../assets/sounds/fire.wav")
         self.attackSound.set_volume(0.15)
 
