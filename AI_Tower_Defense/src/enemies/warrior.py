@@ -9,20 +9,13 @@ from .attackingEnemy import AttackingEnemy
 
 class Warrior(AttackingEnemy):
 
-    spawnChance = 0.3
-    spawnChanceLimit = 0.9
-    startingHealth = 16
-    attackRadius = 30
-    coinReward = 50
-    velocity = 8  #random.randint(7,10)            # warriors are pretty fast
-
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        # self.startingHealth = 16
-        # self.attackRadius = 30
-        # self.coinReward = 50
+        self.startingHealth = 16
+        self.attackRadius = 30
+        self.coinReward = 50
         self.health = self.startingHealth
-        # self.velocity = random.randint(7,10)            # warriors are pretty fast
+        self.velocity = random.randint(7,10)            # warriors are pretty fast
         self.weaknesses.append(DamageType.fire)
         self.weaknesses.append(DamageType.lightning)
         self.weaknesses.append(DamageType.poison)
@@ -37,8 +30,8 @@ class Warrior(AttackingEnemy):
         self.isAttacking = False
         self.animationSpeed = 2
 
-        # self.spawnChance = 0.3
-        # self.spawnChanceLimit = 0.9
+        self.spawnChance = 0.3
+        self.spawnChanceLimit = 0.9
 
         #Load images
         for i in range(0, self.numImages):
@@ -52,7 +45,7 @@ class Warrior(AttackingEnemy):
         self.images = self.walkingImages
 
     # the enemy attacks!!
-    def attack(self, enemies):
+    def attack(self, enemies, win):
         self.closeEnemies = enemies
 
         # only thawed enemies can attack
