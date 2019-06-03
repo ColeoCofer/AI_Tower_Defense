@@ -13,16 +13,16 @@ class Barrel(RangeProjectile):
         super().__init__(towerPosition, enemy, enemies)
         self.damage = 8                         # barrels also do half this damage to the surroundings
         self.damageType = DamageType.poison     # barrels have snakes
-        self.reloadTime = 3000                  # reload time long
+        self.reloadTime = 30                  # reload time long
         self.velocity = 100                     # barrels are fast
         self.attackRadius = 30                  # radius to take secondary damage on
         self.detonationRange = 30
-        
+
         self.numImages = 4
         self.width = 40
         self.height = 40
         self.animationSpeed = 5
-        self.attackAnimationDuration = 5000
+        self.attackAnimationDuration = 5
 
         #Load images
         for i in range(0, self.numImages):
@@ -32,12 +32,12 @@ class Barrel(RangeProjectile):
 
 
     # calulates the addtional surrounding damage
-    def explosiveDamage(self):
+    def explosiveDamage(self, ticks):
         for enemy in self.enemies:
             dist = (enemy.x - self.x) ** 2 + (enemy.y - self.y) ** 2
             #Use radius squared to avoid taking square roots of distance
             if dist <= self.attackRadius ** 2:
-                enemy.hit((self.damage / 2), self.damageType)
+                enemy.hit((self.damage / 2), self.damageType, ticks)
 
 
     # returns a residual animation

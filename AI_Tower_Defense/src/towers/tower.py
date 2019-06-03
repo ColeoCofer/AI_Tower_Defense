@@ -35,7 +35,7 @@ class Tower:
 
 
     # launches a tower attacking round
-    def attack(self, enemies, win):
+    def attack(self, enemies, ticks):
         '''
         Looks for enemies within it's attack radius
         Will find the closest one and attack it
@@ -43,7 +43,8 @@ class Tower:
         self.closeEnemies = enemies
 
         #Check if the tower is ready to attack again
-        ticks = pygame.time.get_ticks()
+        # ticks = pygame.time.get_ticks()
+
         if ticks >= self.attackCooldownTime:
             attackableEnemies = []
             i = 0
@@ -62,10 +63,12 @@ class Tower:
                 projectileToFire = self.loadProjectile(enemies[closestEnemyIndex])
                 projectileToFire.enemies = enemies
                 self.attackCooldownTime = ticks + projectileToFire.reloadTime
-                projectileToFire.attackAnimationStopTime = ticks + projectileToFire.attackAnimationDuration
-                projectileToFire.color = self.projectileColor
-                projectileToFire.fire()
-                self.projectilesFired.append(projectileToFire)
+                targetAcquired = projectileToFire.fire(ticks)
+                if targetAcquired:
+                    projectileToFire.attackAnimationStopTime = ticks + projectileToFire.attackAnimationDuration
+                    projectileToFire.color = self.projectileColor
+                    self.projectilesFired.append(projectileToFire)
+
 
         return enemies
 
@@ -84,7 +87,7 @@ class Tower:
 
 
     # draw the tower and any of its projectiles/animations
-    def draw(self, win):
+    def draw(self, win, ticks):
         ''' Render the tower to the map '''
         centerX = self.x - (self.width / 2)
         centerY = self.y - (self.height / 2)
@@ -93,13 +96,13 @@ class Tower:
         # cycle through the prpjectiles in our magazine
         while i < len(self.projectilesFired):
             # check and make sure animation time hasn't lapsed
-            if self.projectilesFired[i].attackAnimationStopTime < pygame.time.get_ticks():
+            if self.projectilesFired[i].attackAnimationStopTime < ticks:
                 del self.projectilesFired[i]
                 continue
             # TODO I think we may want to think about this. It currently is saying that a projectile has hit it's target
-            if self.projectilesFired[i].draw(win) == True:
+            if self.projectilesFired[i].draw(win, ticks) == True:
                 # replace the projectile with its final animation in the same postion
-                self.addAnimationToQueue(self.projectilesFired[i])
+                self.addAnimationToQueue(self.projectilesFired[i], ticks)
                 del self.projectilesFired[i]
             i += 1
 
@@ -109,7 +112,7 @@ class Tower:
         while j < len(self.animations):
             self.animations[j].draw(win)
             # remove any animations that have exceeded their durations
-            if self.animations[j].attackAnimationStopTime < pygame.time.get_ticks():
+            if self.animations[j].attackAnimationStopTime < ticks:
                 del self.animations[j]
             j += 1
                 # continue
@@ -120,7 +123,7 @@ class Tower:
 
 
     # this is called when an enemy has hit a tower to reduce the towers health
-    def hit(self, damage, damageType):
+    def hit(self, damage, damageType, ticks):
         self.health = self.health - damage
 
 
@@ -130,7 +133,7 @@ class Tower:
 
 
     # adds an animation for a projectile that has reached its target to the queue
-    def addAnimationToQueue(self, projectile):
+    def addAnimationToQueue(self, projectile, ticks):
         animation = projectile.finalAnimation(projectile.enemyStartingPosition)
-        animation.attackAnimationStopTime = pygame.time.get_ticks() + animation.attackAnimationDuration
+        animation.attackAnimationStopTime = ticks + animation.attackAnimationDuration
         self.animations.append(animation)

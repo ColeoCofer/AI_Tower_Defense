@@ -11,7 +11,7 @@ class Lazer(Projectile):
         self.damage = 2                         # lazers do medium damage and fire quickly
         self.damageType = DamageType.lazer
         self.color = (200, 100, 50)
-        self.reloadTime = 200
+        self.reloadTime = 20
         self.velocity = 5
         # self.towerWidth = towerPosition[2]
         # self.towerHeight = towerPosition[3]
@@ -19,7 +19,7 @@ class Lazer(Projectile):
 
 
     # draws a simple line
-    def draw(self, win):
+    def draw(self, win, ticks):
         newColor = []
         for channel in self.color:
             newColor.append(channel + random.randint(-50, 50))

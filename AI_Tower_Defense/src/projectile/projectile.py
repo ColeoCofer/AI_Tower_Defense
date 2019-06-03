@@ -27,7 +27,7 @@ class Projectile:
         self.damage = 1
         self.damageType = None
         self.color = (100, 100, 100)
-        self.reloadTime = 1000
+        self.reloadTime = 10
         self.velocity = 0
 
         self.images = []
@@ -37,19 +37,23 @@ class Projectile:
         self.animationSpeed = 3
         self.animationCount = 0
         self.attackAnimationStopTime = 0
-        self.attackAnimationDuration = 200
+        self.attackAnimationDuration = 2
 
 
     # fires a projectile
-    def fire(self):
+    def fire(self, ticks):
         for weakness in self.targetEnemy.weaknesses:
             # skip if frozen
             if self.damageType == DamageType.ice and self.targetEnemy.frozen:
-                continue
+                return False
             # deal damage to enemy
             if self.damageType == weakness:
-                self.targetEnemy.hit(self.damage, self.damageType)
+                self.targetEnemy.hit(self.damage, self.damageType, ticks)
+                return True
+
+        return False
+
 
     # draw base class stub
-    def draw(self, win):
+    def draw(self, win, ticks):
         return
