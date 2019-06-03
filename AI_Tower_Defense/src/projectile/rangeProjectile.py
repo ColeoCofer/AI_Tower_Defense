@@ -18,16 +18,14 @@ class RangeProjectile(Projectile):
 
 
     # only checks for weaknesses, ranges weapons only explode on contact so that is handled elsewhere
-    def fire(self, ticks):
+    def fire(self):
         for weakness in self.targetEnemy.weaknesses:
             if self.damageType == weakness:
-                return True
-
-        return False
+                break
 
 
     # draw a ranged weapon
-    def draw(self, win, ticks):
+    def draw(self, win):
         ''' Draws the enemy with given images '''
         numImages = len(self.images)
         self.image = self.images[self.animationCount // self.animationSpeed]
@@ -44,11 +42,11 @@ class RangeProjectile(Projectile):
         centerY = self.y - (self.height / 2)
 
         win.blit(self.image, (centerX, centerY))
-        return self.move(ticks)
+        return self.move()
 
 
     # moves animation along
-    def move(self, ticks):
+    def move(self):
         x1, y1 = self.towerPosition[0], self.towerPosition[1]
         x2, y2 = self.enemyStartingPosition[0], self.enemyStartingPosition[1]
         targetX, targetY = self.targetEnemy.x, self.targetEnemy.y
@@ -65,27 +63,27 @@ class RangeProjectile(Projectile):
         self.x = self.x + dx
         self.y = self.y + dy
 
-        return self.didHitEnemy(ballEnemyDistance, ticks)
+        return self.didHitEnemy(ballEnemyDistance)
 
 
     # checks if we are close to enemy to do damage
-    def didHitEnemy(self, distance, ticks):
+    def didHitEnemy(self, distance):
         if distance < self.detonationRange:
-            self.explosiveDamage(ticks)
-            self.resetRangeProjectile(ticks)
+            self.explosiveDamage()
+            self.resetRangeProjectile()
             # TODO I think we should be returning something for informative
             return True
 
 
     # reset the center to the source tower if we hit the enemy
-    def resetRangeProjectile(self, ticks):
-        self.targetEnemy.hit(self.damage, self.damageType, ticks)
+    def resetRangeProjectile(self):
+        self.targetEnemy.hit(self.damage, self.damageType)
         self.x = self.towerPosition[0]
         self.y = self.towerPosition[1]
 
 
     # base class stub
-    def explosiveDamage(self, ticks):
+    def explosiveDamage(self):
         return
 
 

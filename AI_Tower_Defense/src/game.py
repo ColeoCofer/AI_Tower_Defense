@@ -4,7 +4,7 @@ import os
 import random
 import numpy as np
 
-import enemies.zombie
+from enemies.zombie import Zombie
 from enemies.dino import Dino
 from enemies.dragon import Dragon
 from enemies.robot import Robot
@@ -24,11 +24,22 @@ from towers.igloo import Igloo
 from ui.wallet import Wallet
 from ui.menu import Menu
 
-from agent.qLearningAgent import QLearningAgent
-
 from constants.gameConstants import *
 from constants.animationConstants import *
 
+
+def main():
+    ''' Entry point for game '''
+    #Setup Game
+    pygame.init()
+    pygame.font.init()
+    pygame.mixer.init()
+    startBgMusic()
+    pygame.display.set_caption("AI Tower Defense")
+
+    #Kick off main game loop
+    g = Game()
+    g.run()
 
 '''
 Setup initial window and settings.
@@ -37,33 +48,20 @@ Handles user events (keyboard, mouse, etc)
 Keeps track of score.
 '''
 class Game:
-    def __init__(self, visualMode, trainingMode, agent):
-        self.visualMode = visualMode
-        self.trainingMode = trainingMode
-        self.agent = agent
-
-        if self.visualMode:
-            self.startBgMusic()
-
+    def __init__(self):
         ''' Initial window setup '''
         self.width = WIN_WIDTH
         self.height = WIN_HEIGHT
 
-        self.ticks = 0
-        if self.visualMode == True:
-            if FULLSCREEN_MODE:
-                self.win = pygame.display.set_mode((self.width, self.height), FULLSCREEN | DOUBLEBUF)
-            else:
-                self.win = pygame.display.set_mode((self.width, self.height))
+        if FULLSCREEN_MODE:
+            self.win = pygame.display.set_mode((self.width, self.height), FULLSCREEN | DOUBLEBUF)
+        else:
+            self.win = pygame.display.set_mode((self.width, self.height))
 
         # game stats
-        # self.win.set_alpha(None)
-        self.enemies = []
-        # set current agents towers
-        #   entry point for the AIs
-        if self.agent != None:
-            self.towers = self.agent.currentTowers
-        self.towers.append(City((1180, 230)))
+        self.win.set_alpha(None)
+        self.enemies = [Zombie(0), Zombie(10)]
+        self.towers = [City((1180, 230))]
         self.towerGrid = [] #Holds all possible locations for a tower to be placed, and whether one is there or not
         self.score = 0
         self.health = 200
@@ -86,13 +84,9 @@ class Game:
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = self.numEnemiesPerLevel
         self.totalEnemiesKilled = 0
-        self.spawnChance = 0.5
+        self.spawnChance = 0.005
         self.enemySpawnProbs = []
         self.showPathBounds = False
-
-        if STARTING_LEVEL > 1:
-            for i in range(1, STARTING_LEVEL):
-                self.nextLevel()
 
         #Fonts
         self.uiFont = pygame.font.SysFont('lucidagrandettc', 24)
@@ -107,31 +101,27 @@ class Game:
 
     def run(self):
         ''' Main game loop '''
-        # clock = pygame.time.Clock()
+        clock = pygame.time.Clock()
         run = True
         playerHasQuit = False
 
         while run == True and playerHasQuit == False:
-            # if self.trainingMode == False:
-            # clock.tick(FPS*2)
-            playerHasQuit = self.handleEvents()
-
+            if TRAINING_MODE:
+                clock.tick(FPS)
 
             self.spawnEnemies()
-            # left this in here training mode or not in case we are viewing the AI for a round and want to quit
+            playerHasQuit = self.handleEvents()
             self.towerHealthCheck()
             self.towersAttack()
             self.enemiesAttack()
-            self.enemiesMove(self.ticks)
             self.removeEnemies()
             run = self.isAlive()
 
-            if self.visualMode:
-                self.draw()
-
-            self.ticks += 1
+            if VISUAL_MODE:
+                self.draw(clock.get_fps())
 
         self.gameover()
+        pygame.quit()
 
 
     # goes through and removes dead towers from the list
@@ -139,14 +129,12 @@ class Game:
         newTowers = []
         i = 0
         for i in range(len(self.towers)):
-            # add alive towers back into the list
             if self.towers[i].health > 0:
                 newTowers.append(self.towers[i])
-            # a dead tower was found, free up its tile
             else:
                 j = 0
                 for j in range(len(self.towerGrid)):
-                    if self.towerGrid[j][0][0] == (self.towers[i].position[0] - (TOWER_GRID_SIZE / 2)) and self.towerGrid[j][0][1] == (self.towers[i].position[1] - (TOWER_GRID_SIZE / 2)):
+                    if self.towerGrid[j][0] == self.towers[i].position:
                         self.towerGrid[j] = ((self.towerGrid[j][0], False))
 
         self.towers = newTowers
@@ -155,18 +143,14 @@ class Game:
     # cycles through all towers attack phase
     def towersAttack(self):
         for tower in self.towers:
-            self.enemies = tower.attack(self.enemies, self.ticks)
+            self.enemies = tower.attack(self.enemies, self.win)
 
 
     # cycles through any attacking enemies attack phase
     def enemiesAttack(self):
         for enemy in self.enemies:
             if isinstance(enemy, AttackingEnemy):
-                self.towers = enemy.attack(self.towers, self.ticks)
-
-    def enemiesMove(self, ticks):
-        for enemy in self.enemies:
-            enemy.move(ticks)
+                self.towers = enemy.attack(self.towers, self.win)
 
 
     ''' Handle keyboard and mouse events '''
@@ -238,38 +222,36 @@ class Game:
             if shouldSpawn <= self.spawnChance:
                 #Pick an enemy to spawn based on their probabilities
                 randVerticalOffset = random.randint(-Y_MAX_OFFSET, (Y_MAX_OFFSET - int((Y_MAX_OFFSET / 2))))
-                enemyToSpawn = np.random.choice(ENEMY_INDICES, 1, p=self.enemySpawnProbs)
+                enemyToSpawn = np.random.choice(ENEMY_INDICES, 1, self.enemySpawnProbs)
                 newEnemy = ENEMY_TYPES[enemyToSpawn[0]](randVerticalOffset)
-
+                self.enemiesSpawnedThisLevel += 1
+                self.updateEnemyHealth()
+                self.updateEnemyWalkingSpeed()
+                newEnemy.health += self.addedHealth
+                newEnemy.startingHealth = newEnemy.health
+                newEnemy.velocity += self.addedSpeed
                 self.enemies.append(newEnemy)
         else:
-            self.nextLevel()
+            #New Level
+            self.level += 1
+            self.enemiesSpawnedThisLevel = 0
+            #Increase chance to spawn an enemy by a percentage of the last spawn chance
+            self.spawnChance += GLOBAL_SPAWN_PROB_INC * self.spawnChance
+            self.numEnemiesPerLevel += ENEMY_PROB_INC * self.numEnemiesPerLevel
+            self.remainingEnemies = self.numEnemiesPerLevel
+            self.updateSpawnProbabilities()
+
+            #Increase spawn chances for each enemy
+            for enemy in self.enemies:
+                newSpawnChance = enemy.spawnChance + ENEMY_SPAWN_INC
+                #Check if we've maxed out spawn limit
+                if newSpawnChance < enemy.spawnChanceLimit:
+                    enemy.spawnChance = newSpawnChance
+                else:
+                    enemy.spawnChance = enemy.spawnChanceLimit
 
 
-    def nextLevel(self):
-        #New Level
-        self.level += 1
-        self.enemiesSpawnedThisLevel = 0
-        #Increase chance to spawn an enemy by a percentage of the last spawn chance
-        self.spawnChance += GLOBAL_SPAWN_PROB_INC * self.spawnChance
-        self.numEnemiesPerLevel += ENEMY_PROB_INC * self.numEnemiesPerLevel
-        self.remainingEnemies = self.numEnemiesPerLevel
-        self.updateSpawnProbabilities()
-        #Increase enemy stats
-        self.enemiesSpawnedThisLevel += 1
-        self.updateEnemyHealth()
-        # self.updateEnemyWalkingSpeed()
-
-        #Increase spawn chances for each enemy
-        for enemy in ENEMY_TYPES:
-            newSpawnChance = enemy.spawnChance + ENEMY_SPAWN_INC
-            #Check if we've maxed out spawn limit
-            if newSpawnChance < enemy.spawnChanceLimit:
-                enemy.spawnChance = newSpawnChance
-            else:
-                enemy.spawnChance = enemy.spawnChanceLimit
-
-    def draw(self):
+    def draw(self, fps):
         '''
         Redraw objects onces per frame.
         Objects will be rendered sequentially,
@@ -284,17 +266,17 @@ class Game:
 
         #Render towers
         for tower in self.towers:
-            tower.draw(self.win, self.ticks)
+            tower.draw(self.win)
 
         #Render enemies
         for enemy in self.enemies:
-            enemy.draw(self.win, self.ticks)
+            enemy.draw(self.win)
 
         #Render coin animation
         self.wallet.draw(self.win)
 
         #Render UI Text Elements
-        self.displayTextUI(self.win)
+        self.displayTextUI(self.win, fps)
 
         self.menu.draw(self.win)
 
@@ -361,7 +343,7 @@ class Game:
                 position = (tower[0][0] + (TOWER_GRID_SIZE - GRID_DISPLAY_SIZE) / 2, tower[0][1] + (TOWER_GRID_SIZE - GRID_DISPLAY_SIZE) / 2)
                 self.win.blit(bgRect, position)
 
-    def displayTextUI(self, win, ):
+    def displayTextUI(self, win, fps):
         ''' Render UI elements above all other graphics '''
         #Info about enemies
         numEnemiesText = "Enemies: " + str(self.enemiesSpawnedThisLevel) + " of " + str(int(self.numEnemiesPerLevel))
@@ -392,28 +374,22 @@ class Game:
 
     def updateSpawnProbabilities(self):
         ''' Initialized list of enemy spawn probabilities '''
-        spawnChanceSum = 0
-        self.enemySpawnProbs.clear()
-        for enemy in ENEMY_TYPES:
-            spawnChanceSum += enemy.spawnChance
-        for enemy in ENEMY_TYPES:
-            self.enemySpawnProbs.append(enemy.spawnChance/spawnChanceSum)  #this guarantees that spawn probabilities sum to 1
+        for enemy in self.enemies:
+            self.enemySpawnProbs.append(enemy.spawnChance)
 
 
     def updateEnemyWalkingSpeed(self):
         ''' Bumps up the enemy speed every 2 levels by 1 '''
         levelForIncrease = (self.level % NUMBER_LEVELS_SPEED_INCREASE) == 0
         if levelForIncrease:
-            for enemy in ENEMY_TYPES:
-                enemy.velocity += SPEED_INCREASE
+            self.addedSpeed += SPEED_INCREASE
 
 
     def updateEnemyHealth(self):
         ''' Bumps up the enemy health every 3 levels by 2 '''
         levelForIncrease = (self.level % NUMBER_LEVELS_HEALTH_INCREASE) == 0
         if levelForIncrease:
-            for enemy in ENEMY_TYPES:
-                enemy.startingHealth += HEALTH_INCREASE
+            self.addedHealth += HEALTH_INCREASE
 
 
     def getHealthColor(self):
@@ -433,7 +409,6 @@ class Game:
     def isAlive(self):
         return self.health > 0
 
-
     def initTowerGrid(self):
         '''
         Initializes tower grid based on hard coded values in TOWER_GRID
@@ -441,7 +416,6 @@ class Game:
         '''
         for location in TOWER_GRID:
             self.towerGrid.append((pygame.Rect(location, (TOWER_GRID_SIZE, TOWER_GRID_SIZE)), False))
-
 
     def showClicks(self):
         ''' Displays click locations and rectangles to assist with towerGrid placement and logs coordinates to terminal '''
@@ -461,29 +435,23 @@ class Game:
             bgRect.fill((0, 0, 200))
             self.win.blit(bgRect, (mousePosition[0], mousePosition[1]))
 
-
     def gameover(self):
-        if self.visualMode:
-            ''' I can't for the life of me get this to be displayed'''
-            self.win.blit(self.gameoverImage, (0, 0))
-            pygame.display.update()
-        print('\nTotal Enemies Killed: ' + str(self.totalEnemiesKilled))
+        ''' I can't for the life of me get this to be displayed'''
+        self.win.blit(self.gameoverImage, (0, 0))
+        pygame.display.update()
+        print('Total Enemies Killed: ' + str(self.totalEnemiesKilled))
         print('Final Level:          ' + str(self.level))
         print('Final Score:          ' + str(self.score))
         print('Towers Intact:        ' + str(len(self.towers)))
 
-        self.agent.currentFitnessScores.append(self.score)
-        self.agent.fitnessScores.append(self.score)
-        self.agent.gameScores.append(self.score)
-        self.agent.enemiesKilled.append(self.totalEnemiesKilled)
-        self.agent.towersRemaining.append(len(self.towers))
-        self.agent.earnings.append(self.wallet.coins)
+
+# plays our awesome RenFair music
+def startBgMusic():
+    if PLAY_BG_MUSIC:
+        randSong = random.randint(0, len(BG_MUSIC) - 1)
+        pygame.mixer.music.load("../assets/music/background/" + BG_MUSIC[randSong])
+        pygame.mixer.music.play(-1)
 
 
-
-    # plays our awesome RenFair music
-    def startBgMusic(self):
-        if PLAY_BG_MUSIC and self.visualMode:
-            randSong = random.randint(0, len(BG_MUSIC) - 1)
-            pygame.mixer.music.load("../assets/music/background/" + BG_MUSIC[randSong])
-            pygame.mixer.music.play(-1)
+if __name__ == "__main__":
+    main()

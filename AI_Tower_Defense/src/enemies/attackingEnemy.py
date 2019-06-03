@@ -16,11 +16,11 @@ class AttackingEnemy(Enemy):
         self.projectileColor = (155, 155, 155)
         self.closeEnemies = []
 
-        self.attackAnimationDuration = 2
+        self.attackAnimationDuration = 200
         self.attackAnimationTimeStamp = 0
 
     # the enemy attacks!!
-    def attack(self, enemies, ticks):
+    def attack(self, enemies, win):
         self.closeEnemies = enemies
 
         # only thawed enemies can attack
@@ -30,6 +30,7 @@ class AttackingEnemy(Enemy):
             Will find the closest one and attack it
             '''
             # Check if the tower is ready to attack again
+            ticks = pygame.time.get_ticks()
             if ticks >= self.canAttackTime:
                 attackableEnemies = []
                 i = 0
@@ -50,14 +51,14 @@ class AttackingEnemy(Enemy):
                     self.canAttackTime = ticks + projectileToFire.reloadTime
                     projectileToFire.attackAnimationStopTime = ticks + projectileToFire.attackAnimationDuration
                     projectileToFire.color = self.projectileColor
-                    projectileToFire.fire(ticks)
+                    projectileToFire.fire()
                     self.projectilesFired.append(projectileToFire)
 
         return enemies
 
 
     # draw one of many awesome attacking enemies
-    def draw(self, win, ticks):
+    def draw(self, win):
         # check to see if enemy is frozen so as to display a snowman
         if self.frozen:
             self.image = self.snowman
@@ -82,17 +83,17 @@ class AttackingEnemy(Enemy):
         i = 0
         while i < len(self.projectilesFired):
             # check and make sure animation time hasn't lapsed
-            if self.projectilesFired[i].attackAnimationStopTime < ticks:
+            if self.projectilesFired[i].attackAnimationStopTime < pygame.time.get_ticks():
                 del self.projectilesFired[i]
             # TODO I think we may want to think about this. It currently is saying that a projectile has hit it's target
-            elif self.projectilesFired[i].draw(win, ticks) == True:
+            elif self.projectilesFired[i].draw(win) == True:
                 del self.projectilesFired[i]
             i += 1
 
         # draw health box, render sprite, and move sprite for next iteration
         self.drawHealthBox(win, centerX, centerY)
         win.blit(self.image, (centerX, centerY))
-        self.move(ticks)
+        self.move()
 
 
     # parent stub for loading projectiles

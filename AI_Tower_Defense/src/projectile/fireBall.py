@@ -11,14 +11,14 @@ class Fireball(RangeProjectile):
         super().__init__(towerPosition, enemy, enemies)
         self.damage = 2                   # fire doesn't do a lot of damage
         self.damageType = DamageType.fire
-        self.reloadTime = 10
+        self.reloadTime = 1000
         self.velocity = 100
         self.attackRadius = 40
         self.detonationRange = 30
         self.numImages = 8
         self.width = 30
         self.height = 30
-        self.attackAnimationDuration = 5
+        self.attackAnimationDuration = 5000
         self.attackSound = pygame.mixer.Sound("../assets/sounds/fire.wav")
         self.attackSound.set_volume(0.15)
 
@@ -33,16 +33,12 @@ class Fireball(RangeProjectile):
         return Explosion(position)
 
     # fires a projectile
-    def fire(self, ticks):
+    def fire(self):
         for weakness in self.targetEnemy.weaknesses:
             # skip if frozen
             if self.damageType == DamageType.ice and self.targetEnemy.frozen:
-                return False
+                continue
             # deal damage to enemy
             if self.damageType == weakness:
-                # if not (self.trainingMode):
-                #     self.attackSound.play()
-                self.targetEnemy.hit(self.damage, self.damageType, ticks)
-                return True
-
-        return False
+                self.attackSound.play()
+                self.targetEnemy.hit(self.damage, self.damageType)

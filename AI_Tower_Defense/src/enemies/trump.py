@@ -9,25 +9,18 @@ from .attackingEnemy import AttackingEnemy
 
 class Trump(AttackingEnemy):
 
-    spawnChance = 0.01
-    spawnChanceLimit = 0.04
-    startingHealth = 50                        # Trump is hard to kill
-    coinReward = 100
-    attackRadius = 125
-    velocity = 4  #random.randint(3, 6)            # Trump is super slow
-
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        # self.startingHealth = 50                        # Trump is hard to kill
+        self.startingHealth = 40                        # Trump is hard to kill
         self.health = self.startingHealth
-        # self.coinReward = 100
-        # self.attackRadius = 125
-        # self.velocity = random.randint(3, 6)            # Trump is super slow
+        self.coinReward = 100
+        self.attackRadius = 125
+        self.velocity = random.randint(3, 6)            # Trump is super slow
         self.weaknesses.append(DamageType.lazer)
         self.weaknesses.append(DamageType.fire)
         self.weaknesses.append(DamageType.poison)
         self.weaknesses.append(DamageType.lightning)    # Trump is weak to EVERYTHING
-        self.superWeakness = DamageType.poison            # and super weak to fire
+        self.superWeakness = DamageType.fire            # and super weak to fire
 
         self.healthBarYOffset = 15
         self.width = 100
@@ -36,8 +29,8 @@ class Trump(AttackingEnemy):
         self.numImages = 2
         self.animationSpeed = 10
 
-        # self.spawnChance = 0.01
-        # self.spawnChanceLimit = 0.04
+        self.spawnChance = 0.01
+        self.spawnChanceLimit = 0.04
 
         #Load images
         for i in range(0, self.numImages):
