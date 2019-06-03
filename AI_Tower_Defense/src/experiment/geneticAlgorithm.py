@@ -2,6 +2,8 @@ import random as rand
 import numpy as np
 import matplotlib.pyplot as plt
 import pygame
+from joblib import Parallel, delayed
+
 
 from constants.aiConstants import *
 from constants.gameConstants import *
@@ -9,25 +11,43 @@ from agent.geneticAgent import GeneticAgent
 from game.game import Game
 
 
+class DataStore:
+
+    def __init__(self):
+        self.currentFitnessScores = []
+        self.fitnessScores = []
+        self.gameScores = []
+        self.enemiesKilled = []
+        self.towersRemaining = []
+        self.earnings = []
+
 class GeneticAlgorithm:
 
     def __init__(self, agent):
         self.agent = agent
         self.trainingMode = False
         self.visualMode   = True
+        self.dataStores = []
+        self.towersForGeneration = []
 
 
     def run(self):
         self.agent.initPopulation()
         fitnessPlot = []
 
+        self.trainingMode = True
+        self.visualMode = False
+
         gameCount = 0
         for generation in range(MAX_GENERATIONS):
 
-
             # play all of the games for each member of the population
             for i in range(POPULATION_SIZE):
-
+                # print(str(i))
+                # print(len(self.agent.population))
+                # self.agent.currentCitizenIndex = i
+                self.towersForGeneration.append(self.agent.setTowers(self.agent.population[i]))
+                self.dataStores.append(DataStore())
                 #Setup Game
                 # pygame.init()
                 # pygame.font.init()
@@ -42,17 +62,17 @@ class GeneticAlgorithm:
                 #     self.trainingMode = True
                 #     self.visualMode = False
 
-                self.trainingMode = True
-                self.visualMode = True
+                
+            # print(len(self.towersForGeneration))
+                # # bool: visualMode, bool: trainingMode, Agent: agent
+                # game = Game(self.visualMode, self.trainingMode, self.agent)
+            # for tower in self.towersForGeneration:
+            #     print(type(tower))
+             
+                # game.run()
+            self.dataStore = Parallel(n_jobs=-1, verbose=0, backend="threading")(map(delayed(self.runGame), self.towersForGeneration, self.dataStores))
 
-                self.agent.currentCitizenIndex = i
-                self.agent.setTowers(self.agent.population[i])
-
-                # bool: visualMode, bool: trainingMode, Agent: agent
-                game = Game(self.visualMode, self.trainingMode, self.agent)
-                game.run()
-
-                fitnessPlot.append(self.agent.fitnessScores[i])
+                # fitnessPlot.append(self.agent.fitnessScores[i])
 
                 # pygame.quit()
 
@@ -75,6 +95,12 @@ class GeneticAlgorithm:
         #printGraph(fitnessPlot, populationSize)
 
         return
+
+
+    def runGame(self, towers, dataStore):
+        # bool: visualMode, bool: trainingMode, Agent: agent
+        game = Game(self.visualMode, self.trainingMode, towers, dataStore)
+        return game.run()
 
 
     # print the average fitness graph
@@ -163,6 +189,7 @@ class GeneticAlgorithm:
     def selectPopulationForCrossover(self):
         newPopulation = list()
         populationSize = len(self.agent.population)
+        
         # this will take the best 20% of the population for survival of the fittest
         n = populationSize // FITTEST_POPULATION_FRACTION
         if NUMBER_OF_CHILDREN == 1:
@@ -172,8 +199,8 @@ class GeneticAlgorithm:
 
         # translate fitness scores to ranges between 0.0-1.0 to select from randomly
         if SURVIVAL_OF_THE_FITTEST:
-            print(f"Fitness scores: {self.agent.currentFitnessScores}")
-            fitParents = np.argpartition(self.agent.currentFitnessScores, -n)[-n:]
+            print(f"Fitness scores: {self.dataStores.currentFitnessScores}")
+            fitParents = np.argpartition(self.dataStores.currentFitnessScores, -n)[-n:]
             i = 0
             while i < (populationSize * populationMultiplier):
                 for fitParent in fitParents:

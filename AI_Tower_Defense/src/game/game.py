@@ -37,10 +37,11 @@ Handles user events (keyboard, mouse, etc)
 Keeps track of score.
 '''
 class Game:
-    def __init__(self, visualMode, trainingMode, agent):
+    def __init__(self, visualMode, trainingMode, towers, dataStore):
         self.visualMode = visualMode
         self.trainingMode = trainingMode
-        self.agent = agent
+        # self.agent = agent
+        self.dataStore = dataStore
 
         if self.visualMode:
             self.startBgMusic()
@@ -61,8 +62,12 @@ class Game:
         self.enemies = []
         # set current agents towers
         #   entry point for the AIs
-        if self.agent != None:
-            self.towers = self.agent.currentTowers
+        
+        # TODO WHY??
+        # if self.agent != None:
+        #     self.towers = self.agent.currentTowers
+
+        self.towers = towers
         self.towers.append(City((1180, 230)))
         self.towerGrid = [] #Holds all possible locations for a tower to be placed, and whether one is there or not
         self.score = 0
@@ -127,6 +132,8 @@ class Game:
             self.ticks += 1
 
         self.gameover()
+
+        return self.dataStore
 
 
     # goes through and removes dead towers from the list
@@ -465,12 +472,12 @@ class Game:
         print('Towers Intact:        ' + str(len(self.towers)))
         print('Coins:                ' + str(self.wallet.coins))
 
-        self.agent.currentFitnessScores.append(self.score)
-        self.agent.fitnessScores.append(self.score)
-        self.agent.gameScores.append(self.score)
-        self.agent.enemiesKilled.append(self.totalEnemiesKilled)
-        self.agent.towersRemaining.append(len(self.towers))
-        self.agent.earnings.append(self.wallet.coins)
+        self.dataStore.currentFitnessScores.append(self.score)
+        self.dataStore.fitnessScores.append(self.score)
+        self.dataStore.gameScores.append(self.score)
+        self.dataStore.enemiesKilled.append(self.totalEnemiesKilled)
+        self.dataStore.towersRemaining.append(len(self.towers))
+        self.dataStore.earnings.append(self.wallet.coins)
 
 
 

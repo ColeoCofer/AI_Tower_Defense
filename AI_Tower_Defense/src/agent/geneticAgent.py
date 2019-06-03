@@ -46,3 +46,5 @@ class GeneticAgent:
                 newTowerPosition = ((TOWER_GRID[i][0] + (TOWER_GRID_SIZE / 2), TOWER_GRID[i][1] + (TOWER_GRID_SIZE / 2)))
                 newTower = TOWER_TYPES[citizen[i]-1](newTowerPosition)
                 self.currentTowers.append(newTower)
+
+        return self.currentTowers
