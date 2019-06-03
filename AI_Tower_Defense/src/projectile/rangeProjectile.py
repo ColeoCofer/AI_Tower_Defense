@@ -21,9 +21,7 @@ class RangeProjectile(Projectile):
     def fire(self):
         for weakness in self.targetEnemy.weaknesses:
             if self.damageType == weakness:
-                return True
-
-        return False
+                break
 
 
     # draw a ranged weapon

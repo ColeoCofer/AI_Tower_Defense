@@ -7,16 +7,11 @@ from .enemy import Enemy
 
 class Dino(Enemy):
 
-    spawnChance = 0.4
-    spawnChanceLimit = 0.8
-    startingHealth = 20                             # Dino's are tough
-    velocity = 6  # random.randint(5, 8)            # Dino's are slow
-
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        # self.startingHealth = 20                             # Dino's are tough
+        self.startingHealth = 20                             # Dino's are tough
         self.health = self.startingHealth
-        # self.velocity = random.randint(5, 8)            # Dino's are slow
+        self.velocity = random.randint(5, 8)            # Dino's are slow
         self.weaknesses.append(DamageType.lazer)
         self.weaknesses.append(DamageType.fire)
         self.weaknesses.append(DamageType.poison)
@@ -28,8 +23,8 @@ class Dino(Enemy):
         self.healthBarYOffset = 15
         self.images = []
 
-        # self.spawnChance = 0.4
-        # self.spawnChanceLimit = 0.8
+        self.spawnChance = 0.4
+        self.spawnChanceLimit = 0.8
 
         #Load images
         for i in range(1, self.numImages):

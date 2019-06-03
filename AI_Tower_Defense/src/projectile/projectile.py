@@ -45,14 +45,10 @@ class Projectile:
         for weakness in self.targetEnemy.weaknesses:
             # skip if frozen
             if self.damageType == DamageType.ice and self.targetEnemy.frozen:
-                return False
+                continue
             # deal damage to enemy
             if self.damageType == weakness:
                 self.targetEnemy.hit(self.damage, self.damageType)
-                return True
-
-        return False
-            
 
     # draw base class stub
     def draw(self, win):
