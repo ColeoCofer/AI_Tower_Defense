@@ -174,6 +174,7 @@ class GeneticAlgorithm:
         while(i < populationSize):
             while True:
                 pivotPoint = self.getPivot()
+
                 child1 = np.concatenate((self.agent.population[i][:pivotPoint], self.agent.population[i+1][pivotPoint:])).tolist()
                 if NUMBER_OF_CHILDREN == 2:
                     child2 = np.concatenate((self.agent.population[i+1][:pivotPoint], self.agent.population[i][pivotPoint:])).tolist()

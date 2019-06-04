@@ -82,7 +82,7 @@ class Game:
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = self.numEnemiesPerLevel
         self.totalEnemiesKilled = 0
-        self.spawnChance = 0.0005                            # this can be throttled for testing
+        self.spawnChance = 0.05                            # this can be throttled for testing
         self.enemySpawnProbs = []
         self.showPathBounds = False
 

@@ -19,7 +19,7 @@ M_STEPS        = 500
 
 # GA constants
 FITTEST_POPULATION_FRACTION = 5                     # Take 1/5th of the population size for survival of the fittest
-POPULATION_SIZE = FITTEST_POPULATION_FRACTION * 1   # Must be a multiple of FITTEST_POPULATION_FRACTION
+POPULATION_SIZE = FITTEST_POPULATION_FRACTION * 2   # Must be a multiple of FITTEST_POPULATION_FRACTION, and divisible by 2
 MAX_GENERATIONS = 50
 MUTATION_PCT = 0.1
 SURVIVAL_OF_THE_FITTEST = True

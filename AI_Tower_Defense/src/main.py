@@ -15,7 +15,7 @@ GA_MODE        = True
 QLEARNING_MODE = False
 
 MANUAL_MODE    = False
-PARALLEL_MODE  = False
+PARALLEL_MODE  = True
 
 VISUAL_MODE    = False
 
@@ -44,6 +44,7 @@ def main():
                 gaAlgo = SerialGeneticAlgorithm(VISUAL_MODE, READ_FILE, SAVE_TO_DISK, PRINT_GRAPHS)     # Manual mode
 
             gaAlgo.run()
+
 
     pygame.quit()
 
