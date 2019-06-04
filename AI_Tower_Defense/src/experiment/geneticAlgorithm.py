@@ -10,7 +10,7 @@ from constants.gameConstants import *
 from agent.geneticAgent import GeneticAgent
 from game.game import Game
 
-READ_FILE = True
+READ_FILE = True      #Set true to continue training from a previously trained GA population
 PRINT_GRAPH = False
 
 class GameRecord:
@@ -100,7 +100,7 @@ class GeneticAlgorithm:
         return game.run()
 
     def saveData(self):
-        ''' Saves the last trained population so you can load it later and train more '''
+        ''' Saves the last trained population so you can load it later and continue training '''
         lastFitFile = open("lastfit_gen.txt","w")
 
         populationString = ''
@@ -116,6 +116,7 @@ class GeneticAlgorithm:
         averageScoresFile.close()
 
     def loadData(self):
+        ''' Loads previously saved trained population for GA so you can continue training '''
         populationFile = open("lastfit_gen.txt","r")
         fileLines = populationFile.readlines()
         populationList = []
