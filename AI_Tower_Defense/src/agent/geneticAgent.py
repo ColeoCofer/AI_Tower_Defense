@@ -40,10 +40,10 @@ class GeneticAgent:
 
         # iterate through the list representation of the towers
         for i in range(len(citizen)):
-            # if the current tile position is not blank in the string reprentation
+            # if the current tile position is not blank in the string representation
             #   place the corresonding tower in that position
             if citizen[i] != 0:
-                currentTower = citizen[i] - 1
+                currentTower = int(citizen[i]) - 1
                 newTowerPosition = ((TOWER_GRID[i][0] + (TOWER_GRID_SIZE / 2), TOWER_GRID[i][1] + (TOWER_GRID_SIZE / 2)))
                 newTower = TOWER_TYPES[currentTower](newTowerPosition)
                 self.currentTowers.append(newTower)
