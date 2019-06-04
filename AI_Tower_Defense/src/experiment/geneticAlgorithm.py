@@ -20,6 +20,7 @@ class DataStore:
         self.enemiesKilled = 0
         self.towersRemaining = 0
         self.earnings = 0
+        self.population = []
 
 class GeneticAlgorithm:
 
@@ -48,7 +49,7 @@ class GeneticAlgorithm:
 
             # play all of the games for each member of the population
             for i in range(POPULATION_SIZE):
-                
+
                 self.towersForGeneration.append(self.agent.setTowers(self.agent.population[i]))
                 self.dataStores.append(DataStore())
 
@@ -58,7 +59,7 @@ class GeneticAlgorithm:
             for data in newDataStores:
                 newFitnessScores.append(data.fitnessScores)
 
-            self.agent.fitnessScores = newFitnessScores    
+            self.agent.fitnessScores = newFitnessScores
 
             averageScore = self.normalizeFitnessOfPopulation()
             if averageScore > self.averageScoreMax:
@@ -80,7 +81,8 @@ class GeneticAlgorithm:
 
             self.agent.fitnessScores = []
 
-        if PRINT_GRAPH:
+        if PRINT_GRAPH or generation % 10 == 0:
+            self.saveData(generation)
             self.printGraph()
 
         return
@@ -90,6 +92,13 @@ class GeneticAlgorithm:
         # bool: visualMode, bool: trainingMode, Towers, DataStruct
         game = Game(self.visualMode, self.trainingMode, towers, dataStore)
         return game.run()
+
+    def saveData(self, generation):
+        ''' Appends best citizen seen so far into mostfit.txt '''
+        # mostFitFile = open("mostfit_gen_" + str(self.generation) + ".txt","a")
+        # for pop, fit in zip(self.agent.population, self.dataStores.)
+        #Store best of last ten
+        # mostFitFile.write()
 
 
     # print the average fitness graph
@@ -175,7 +184,7 @@ class GeneticAlgorithm:
     def selectPopulationForCrossover(self):
         newPopulation = list()
         populationSize = len(self.agent.population)
-        
+
         # this will take the best 20% of the population for survival of the fittest
         n = populationSize // FITTEST_POPULATION_FRACTION
         if NUMBER_OF_CHILDREN == 1:

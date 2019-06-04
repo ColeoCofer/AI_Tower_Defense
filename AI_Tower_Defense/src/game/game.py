@@ -203,12 +203,12 @@ class Game:
 
     ''' Removes enemies that have walked off screen'''
     def removeEnemies(self):
-        
+
         for enemy in self.enemies:
             if enemy.x > WIN_WIDTH:
                 self.health -= enemy.startingHealth
 
-            
+
             if enemy.health <= 0:
                 self.score += enemy.startingHealth
                 self.wallet.coins += enemy.coinReward
@@ -466,8 +466,16 @@ class Game:
             self.dataStore.enemiesKilled = self.totalEnemiesKilled
             self.dataStore.towersRemaining = len(self.towers)
             self.dataStore.earnings = self.wallet.coins
+            self.dataStore.population = self.getGATowerList()
 
-
+    def getGATowerList(self):
+        gaTowerList = []
+        for cell in self.towerGrid:
+            if cell[1] == True:
+                #No tower
+                gaTowerList.append(0)
+            else:
+                gaTowerList.append() #Towers might need an index in their class?
 
     # plays our awesome RenFair music
     def startBgMusic(self):
