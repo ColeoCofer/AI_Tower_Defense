@@ -30,12 +30,12 @@ class ParallelGeneticAlgorithm(GeneticAlgorithm):
             self.gameRecords = []
             self.towersForGeneration = []
 
-            # play all of the games for each member of the population
             # create a list of all of the populations tower arrangements, and a blank list of records to feed to the parallel call
             for i in range(POPULATION_SIZE):
                 self.towersForGeneration.append(self.agent.setTowers(self.agent.population[i]))
                 self.gameRecords.append(GameRecord())
 
+            # play all of the games for each member of the population
             # n_jobs=-1 means to ask for all of the processor cores
             self.gameRecords = Parallel(n_jobs=-1, verbose=0, backend="threading")(map(delayed(self.runGame), self.towersForGeneration, self.gameRecords))
 

@@ -26,19 +26,9 @@ class SerialGeneticAlgorithm(GeneticAlgorithm):
         else:
             self.agent.initPopulation()
 
-        # for i in range(POPULATION_SIZE):
-
-#                 self.trainingMode = True
-#                 self.visualMode = False
-
-#                 self.agent.currentCitizenIndex = i
-#                 self.agent.setTowers(self.agent.population[i])
-
-#                 # bool: visualMode, bool: trainingMode, Agent: agent
-#                 game = Game(self.visualMode, self.trainingMode, self.agent.currentTowers, None)
-#                 game.run()
-
         for generation in range(MAX_GENERATIONS):
+            self.gameRecords = []
+
             # play all of the games for each member of the population
             for i in range(POPULATION_SIZE):
                 self.agent.setTowers(self.agent.population[i])
@@ -49,24 +39,3 @@ class SerialGeneticAlgorithm(GeneticAlgorithm):
             self.postGameProcessing(generation)
 
         return
-
-
-    # # performs the crossover of pairs of parent states to start to generate new children
-    # def crossoverParents(self):
-    #     newPopulation = list()
-    #     populationSize = len(self.agent.population)
-
-    #     i = 0
-    #     while(i < populationSize):
-    #         pivotPoint = self.getPivot()
-
-    #         child1 = np.concatenate((self.agent.population[i][:pivotPoint], self.agent.population[i+1][pivotPoint:])).tolist()
-    #         newPopulation.append(child1)
-
-    #         if NUMBER_OF_CHILDREN == 2:
-    #             child2 = np.concatenate((self.agent.population[i+1][:pivotPoint], self.agent.population[i][pivotPoint:])).tolist()
-    #             newPopulation.append(child2)
-
-    #         i += 2
-
-    #     self.agent.population = newPopulation

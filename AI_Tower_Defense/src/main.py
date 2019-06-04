@@ -15,7 +15,7 @@ GA_MODE        = True
 QLEARNING_MODE = False
 
 MANUAL_MODE    = False
-PARALLEL_MODE  = True
+PARALLEL_MODE  = False
 
 VISUAL_MODE    = False
 
