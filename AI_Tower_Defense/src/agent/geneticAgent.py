@@ -11,7 +11,6 @@ class GeneticAgent:
         self.currentTowers       = []
         self.population          = []
         self.fitnessScores       = []
-        # self.currentFitnessScores = []
 
         self.gameScores          = []
         self.earnings            = []
@@ -38,6 +37,7 @@ class GeneticAgent:
 
     def setTowers(self, citizen):
         self.currentTowers = []
+
         # iterate through the list representation of the towers
         for i in range(len(citizen)):
             # if the current tile position is not blank in the string reprentation

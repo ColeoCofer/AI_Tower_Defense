@@ -9,6 +9,11 @@ from agent.geneticAgent import GeneticAgent
 
 from constants.gameConstants import *
 
+MANUAL_MODE = False
+PARALLEL_MODE = True
+GA_MODE = True
+QLEARNING_MODE = False
+
 def main():
     ''' Entry point for game '''
 
@@ -18,16 +23,18 @@ def main():
     pygame.mixer.init()
     pygame.display.set_caption("AI Tower Defense")
 
-    # bool: visualMode, bool: trainingMode, Agent: agent
-    # game = Game(True, False, None)
-    # game.run()
+    if GA_MODE:
+        if MANUAL_MODE:
+            game = Game(True, False, [], None)
+            game.run()
+        else:
+            gaAgent = GeneticAgent()
+            if PARALLEL_MODE:
+                gaAlgo = GeneticAlgorithm(gaAgent)      # Parallel mode
+            else:
+                gaAlgo = GeneticAlgorithm2(gaAgent)     # Manual mode
 
-    gaAgent = GeneticAgent()
-    gaAlgo = GeneticAlgorithm(gaAgent)
-    # gaAgent = GeneticAgent()
-    # gaAlgo = GeneticAlgorithm2(gaAgent)
-
-    gaAlgo.run()
+            gaAlgo.run()
 
     pygame.quit()
 

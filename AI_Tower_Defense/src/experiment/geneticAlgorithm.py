@@ -28,6 +28,7 @@ class GeneticAlgorithm:
         self.visualMode   = False
         self.dataStores = []
         self.towersForGeneration = []
+        self.averageScores = []
 
 
     def run(self):
@@ -49,17 +50,7 @@ class GeneticAlgorithm:
                 self.towersForGeneration.append(self.agent.setTowers(self.agent.population[i]))
                 self.dataStores.append(DataStore())
 
-                # display every tenth generation for testing
-                # if generation == gameCount and i == 0: #and gameCount != 0:
-                #     self.trainingMode = False
-                #     self.visualMode = True
-                # else:
-                #     self.trainingMode = True
-                #     self.visualMode = False
-
             newDataStores = Parallel(n_jobs=-1, verbose=0, backend="threading")(map(delayed(self.runGame), self.towersForGeneration, self.dataStores))
-
-                # fitnessPlot.append(self.agent.fitnessScores[i])
 
             newFitnessScores = []
             for data in newDataStores:
@@ -67,7 +58,9 @@ class GeneticAlgorithm:
 
             self.agent.fitnessScores = newFitnessScores    
 
-            self.normalizeFitnessOfPopulation()
+            averageScore = self.normalizeFitnessOfPopulation()
+            print('Average score for generation: ' + str(averageScore))
+            self.averageScores.append(averageScore)
 
             # create the new population for crossover based off of the probabilities from the fitness scores
             self.selectPopulationForCrossover()
@@ -173,7 +166,6 @@ class GeneticAlgorithm:
 
     # randomly generates a new population to subject to crossover based on their fitness score ratio to the whole
     def selectPopulationForCrossover(self):
-        print(self.agent.fitnessScores)
         newPopulation = list()
         populationSize = len(self.agent.population)
         
@@ -186,12 +178,10 @@ class GeneticAlgorithm:
 
         # translate fitness scores to ranges between 0.0-1.0 to select from randomly
         if SURVIVAL_OF_THE_FITTEST:
-            # print(f"Fitness scores: {self.dataStores.currentFitnessScores}")
             fitParents = np.argpartition(self.agent.fitnessScores, -n)[-n:]
             i = 0
             while i < (populationSize * populationMultiplier):
                 for fitParent in fitParents:
-                    # print(f"Current fit parent: {fitParent}")
                     newPopulation.append(self.agent.population[fitParent])
                 i += n
 
@@ -210,6 +200,7 @@ class GeneticAlgorithm:
                         index = j
                         break
                 newPopulation.append(self.agent.population[index])
+
         self.agent.population = newPopulation
 
 
@@ -232,20 +223,6 @@ class GeneticAlgorithm2:
             # play all of the games for each member of the population
             for i in range(POPULATION_SIZE):
 
-                #Setup Game
-                # pygame.init()
-                # pygame.font.init()
-                # pygame.mixer.init()
-                # pygame.display.set_caption("AI Tower Defense")
-
-                # display every tenth generation for testing
-                # if generation == gameCount and i == 0: #and gameCount != 0:
-                #     self.trainingMode = False
-                #     self.visualMode = True
-                # else:
-                #     self.trainingMode = True
-                #     self.visualMode = False
-
                 self.trainingMode = True
                 self.visualMode = False
 
@@ -255,10 +232,6 @@ class GeneticAlgorithm2:
                 # bool: visualMode, bool: trainingMode, Agent: agent
                 game = Game(self.visualMode, self.trainingMode, self.agent.currentTowers, None)
                 game.run()
-
-                # fitnessPlot.append(self.agent.fitnessScores[i])
-
-                # pygame.quit()
 
             self.normalizeFitnessOfPopulation()
 
@@ -274,9 +247,6 @@ class GeneticAlgorithm2:
             gameCount += 1
 
             # self.agent.fitnessScores = []
-
-
-        #printGraph(fitnessPlot, populationSize)
 
         return
 
