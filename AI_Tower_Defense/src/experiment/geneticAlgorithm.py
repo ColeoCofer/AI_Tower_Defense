@@ -110,6 +110,16 @@ class GeneticAlgorithm:
         return rand.randint(0, STARTING_POSITIONS-1)
 
 
+    def correctNumberOfTowers(self, citizen):
+        towerCount = 0
+        for tower in citizen:
+            if tower != 0:
+                towerCount += 1
+        if towerCount == 20:
+            return True
+
+        return False
+
     # normalizes fitness scores for the entire population
     def normalizeFitnessOfPopulation(self):
         populationSize = len(self.agent.population)
@@ -129,13 +139,20 @@ class GeneticAlgorithm:
 
         i = 0
         while(i < populationSize):
-            pivotPoint = self.getPivot()
+            while True:
+                pivotPoint = self.getPivot()
+                child1 = np.concatenate((self.agent.population[i][:pivotPoint], self.agent.population[i+1][pivotPoint:])).tolist()
+                if NUMBER_OF_CHILDREN == 2:
+                    child2 = np.concatenate((self.agent.population[i+1][:pivotPoint], self.agent.population[i][pivotPoint:])).tolist()
 
-            child1 = np.concatenate((self.agent.population[i][:pivotPoint], self.agent.population[i+1][pivotPoint:])).tolist()
+                if self.correctNumberOfTowers(child1) and self.correctNumberOfTowers(child2):
+                    break
+
+            print('Child1: ' + str(len(child1)))
             newPopulation.append(child1)
 
             if NUMBER_OF_CHILDREN == 2:
-                child2 = np.concatenate((self.agent.population[i+1][:pivotPoint], self.agent.population[i][pivotPoint:])).tolist()
+                print('Child2: ' + str(len(child2)))
                 newPopulation.append(child2)
 
             i += 2
@@ -300,10 +317,12 @@ class GeneticAlgorithm2:
             pivotPoint = self.getPivot()
 
             child1 = np.concatenate((self.agent.population[i][:pivotPoint], self.agent.population[i+1][pivotPoint:])).tolist()
+            # print('Child1: ' + len(str(child1)))
             newPopulation.append(child1)
 
             if NUMBER_OF_CHILDREN == 2:
                 child2 = np.concatenate((self.agent.population[i+1][:pivotPoint], self.agent.population[i][pivotPoint:])).tolist()
+                # print('Child2: ' + len(str(child2)))
                 newPopulation.append(child2)
 
             i += 2

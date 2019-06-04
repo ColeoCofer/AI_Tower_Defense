@@ -58,6 +58,8 @@ class Game:
 
         self.enemies = []
         self.towers = towers
+        # if self.towers != None:
+        #     print('Starting towers: ' + str(len(self.towers)))
         self.towers.append(City((1180, 230)))
         self.towerGrid = [] #Holds all possible locations for a tower to be placed, and whether one is there or not
         self.score = 0
