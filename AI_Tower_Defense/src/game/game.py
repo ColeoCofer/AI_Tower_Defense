@@ -37,10 +37,10 @@ Handles user events (keyboard, mouse, etc)
 Keeps track of score.
 '''
 class Game:
-    def __init__(self, visualMode, trainingMode, towers, dataStore):
+    def __init__(self, visualMode, trainingMode, towers, gameRecord):
         self.visualMode = visualMode
         self.trainingMode = trainingMode
-        self.dataStore = dataStore
+        self.gameRecord = gameRecord
 
         if self.visualMode:
             self.startBgMusic()
@@ -58,6 +58,8 @@ class Game:
 
         self.enemies = []
         self.towers = towers
+        # if self.towers != None:
+        #     print('Starting towers: ' + str(len(self.towers)))
         self.towers.append(City((1180, 230)))
         self.towerGrid = [] #Holds all possible locations for a tower to be placed, and whether one is there or not
         self.score = 0
@@ -123,7 +125,7 @@ class Game:
 
         self.gameover()
 
-        return self.dataStore
+        return self.gameRecord
 
 
     # goes through and removes dead towers from the list
@@ -203,12 +205,12 @@ class Game:
 
     ''' Removes enemies that have walked off screen'''
     def removeEnemies(self):
-        
+
         for enemy in self.enemies:
             if enemy.x > WIN_WIDTH:
                 self.health -= enemy.startingHealth
 
-            
+
             if enemy.health <= 0:
                 self.score += enemy.startingHealth
                 self.wallet.coins += enemy.coinReward
@@ -459,15 +461,11 @@ class Game:
         print('Towers Intact:        ' + str(len(self.towers)))
         print('Coins:                ' + str(self.wallet.coins))
 
-        if self.dataStore != None:
-            self.dataStore.currentFitnessScores = self.score
-            self.dataStore.fitnessScores = self.score
-            self.dataStore.gameScores = self.score
-            self.dataStore.enemiesKilled = self.totalEnemiesKilled
-            self.dataStore.towersRemaining = len(self.towers)
-            self.dataStore.earnings = self.wallet.coins
-
-
+        if self.gameRecord != None:
+            self.gameRecord.fitnessScore = self.score
+            self.gameRecord.enemiesKilled = self.totalEnemiesKilled
+            self.gameRecord.towersRemaining = len(self.towers)
+            self.gameRecord.earnings = self.wallet.coins
 
     # plays our awesome RenFair music
     def startBgMusic(self):

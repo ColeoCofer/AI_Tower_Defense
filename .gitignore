@@ -15,3 +15,6 @@
 */__pycache__/
 *.idea*
 */venv*
+*.txt
+averageScores.txt
+lastfit_gen.txt

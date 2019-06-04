@@ -26,7 +26,7 @@ class GeneticAgent:
     def initPopulation(self):
         for i in range(POPULATION_SIZE):
             # creates random strings for the populations to start
-            citizen = np.zeros(STARTING_POSITIONS, int)
+            citizen = np.zeros((STARTING_POSITIONS,), dtype=int)
 
             # randomly pick a tower type (1-6 right now)
             for j in range(NUMBER_OF_STARTING_TOWERS):
@@ -43,7 +43,7 @@ class GeneticAgent:
             # if the current tile position is not blank in the string reprentation
             #   place the corresonding tower in that position
             if citizen[i] != 0:
-                currentTower = int(citizen[i]) - 1
+                currentTower = citizen[i] - 1
                 newTowerPosition = ((TOWER_GRID[i][0] + (TOWER_GRID_SIZE / 2), TOWER_GRID[i][1] + (TOWER_GRID_SIZE / 2)))
                 newTower = TOWER_TYPES[currentTower](newTowerPosition)
                 self.currentTowers.append(newTower)

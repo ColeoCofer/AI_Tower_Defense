@@ -10,13 +10,13 @@ from constants.gameConstants import *
 from agent.geneticAgent import GeneticAgent
 from game.game import Game
 
+READ_FILE = True      #Set true to continue training from a previously trained GA population
 PRINT_GRAPH = False
 
-class DataStore:
+class GameRecord:
 
     def __init__(self):
-        self.fitnessScores = 0
-        self.gameScores = 0
+        self.fitnessScore = 0
         self.enemiesKilled = 0
         self.towersRemaining = 0
         self.earnings = 0
@@ -27,14 +27,18 @@ class GeneticAlgorithm:
         self.agent = agent
         self.trainingMode = True
         self.visualMode   = False
-        self.dataStores = []
+        self.gameRecords = []
         self.towersForGeneration = []
         self.averageScores = []
         self.averageScoreMax = 0
 
 
     def run(self):
-        self.agent.initPopulation()
+        if READ_FILE:
+            print("** Reading population from file **")
+            self.agent.population = self.loadData()
+        else:
+            self.agent.initPopulation()
         fitnessPlot = []
 
         self.trainingMode = True
@@ -43,28 +47,30 @@ class GeneticAlgorithm:
         gameCount = 0
         for generation in range(MAX_GENERATIONS):
 
-            self.dataStores = []
+            self.gameRecords = []
             self.towersForGeneration = []
 
             # play all of the games for each member of the population
             for i in range(POPULATION_SIZE):
-                
-                self.towersForGeneration.append(self.agent.setTowers(self.agent.population[i]))
-                self.dataStores.append(DataStore())
 
-            newDataStores = Parallel(n_jobs=-1, verbose=0, backend="threading")(map(delayed(self.runGame), self.towersForGeneration, self.dataStores))
+                self.towersForGeneration.append(self.agent.setTowers(self.agent.population[i]))
+                self.gameRecords.append(GameRecord())
+
+            newGameRecords = Parallel(n_jobs=-1, verbose=0, backend="threading")(map(delayed(self.runGame), self.towersForGeneration, self.gameRecords))
 
             newFitnessScores = []
-            for data in newDataStores:
-                newFitnessScores.append(data.fitnessScores)
+            for data in newGameRecords:
+                newFitnessScores.append(data.fitnessScore)
 
-            self.agent.fitnessScores = newFitnessScores    
+            self.agent.fitnessScores = newFitnessScores
 
             averageScore = self.normalizeFitnessOfPopulation()
             if averageScore > self.averageScoreMax:
                 self.averageScoreMax = averageScore
+
             print('\nAverage score for generation ' + str(generation) + ' ' + str(averageScore))
             print('\nLargest Average so far: ' + str(self.averageScoreMax))
+
             self.averageScores.append(averageScore)
 
             # create the new population for crossover based off of the probabilities from the fitness scores
@@ -80,17 +86,53 @@ class GeneticAlgorithm:
 
             self.agent.fitnessScores = []
 
-        if PRINT_GRAPH:
-            self.printGraph()
+            self.saveData()
+
+            if PRINT_GRAPH and generation % int((0.2 * MAX_GENERATIONS)):
+                self.printGraph()
 
         return
 
 
-    def runGame(self, towers, dataStore):
+    def runGame(self, towers, gameRecord):
         # bool: visualMode, bool: trainingMode, Towers, DataStruct
-        game = Game(self.visualMode, self.trainingMode, towers, dataStore)
+        game = Game(self.visualMode, self.trainingMode, towers, gameRecord)
         return game.run()
 
+    def saveData(self):
+        ''' Saves the last trained population so you can load it later and continue training '''
+        lastFitFile = open("lastfit_gen.txt","w")
+
+        populationString = ''
+        for citizen in self.agent.population:
+            populationString += (','.join(str(int(n)) for n in citizen)) + '\n'
+
+        lastFitFile.write(populationString)
+        lastFitFile.close()
+
+        averageScoresFile = open("averageScores.txt", "a")
+        averageScoreString = ','.join(str(n) for n in self.averageScores)
+        averageScoresFile.write(averageScoreString)
+        averageScoresFile.close()
+
+    def loadData(self):
+        ''' Loads previously saved trained population for GA so you can continue training '''
+        populationFile = open("lastfit_gen.txt","r")
+        fileLines = populationFile.readlines()
+        populationList = []
+        for line in fileLines:
+            line = line.strip('\n')
+            line = line.split(',')
+
+            citizen = np.zeros((len(TOWER_GRID),), dtype=int)
+            i = 0
+            for n in line:
+                citizen[i] = int(n)
+                i += 1
+            populationList.append(citizen)
+
+        print(populationList)
+        return populationList
 
     # print the average fitness graph
     def printGraph(self):
@@ -109,6 +151,16 @@ class GeneticAlgorithm:
     def getPivot(self):
         return rand.randint(0, STARTING_POSITIONS-1)
 
+
+    def correctNumberOfTowers(self, citizen):
+        towerCount = 0
+        for tower in citizen:
+            if tower != 0:
+                towerCount += 1
+        if towerCount == 20:
+            return True
+
+        return False
 
     # normalizes fitness scores for the entire population
     def normalizeFitnessOfPopulation(self):
@@ -129,13 +181,18 @@ class GeneticAlgorithm:
 
         i = 0
         while(i < populationSize):
-            pivotPoint = self.getPivot()
+            while True:
+                pivotPoint = self.getPivot()
+                child1 = np.concatenate((self.agent.population[i][:pivotPoint], self.agent.population[i+1][pivotPoint:])).tolist()
+                if NUMBER_OF_CHILDREN == 2:
+                    child2 = np.concatenate((self.agent.population[i+1][:pivotPoint], self.agent.population[i][pivotPoint:])).tolist()
 
-            child1 = np.concatenate((self.agent.population[i][:pivotPoint], self.agent.population[i+1][pivotPoint:])).tolist()
+                if self.correctNumberOfTowers(child1) and self.correctNumberOfTowers(child2):
+                    break
+
             newPopulation.append(child1)
 
             if NUMBER_OF_CHILDREN == 2:
-                child2 = np.concatenate((self.agent.population[i+1][:pivotPoint], self.agent.population[i][pivotPoint:])).tolist()
                 newPopulation.append(child2)
 
             i += 2
@@ -175,7 +232,7 @@ class GeneticAlgorithm:
     def selectPopulationForCrossover(self):
         newPopulation = list()
         populationSize = len(self.agent.population)
-        
+
         # this will take the best 20% of the population for survival of the fittest
         n = populationSize // FITTEST_POPULATION_FRACTION
         if NUMBER_OF_CHILDREN == 1:
@@ -300,10 +357,12 @@ class GeneticAlgorithm2:
             pivotPoint = self.getPivot()
 
             child1 = np.concatenate((self.agent.population[i][:pivotPoint], self.agent.population[i+1][pivotPoint:])).tolist()
+            # print('Child1: ' + len(str(child1)))
             newPopulation.append(child1)
 
             if NUMBER_OF_CHILDREN == 2:
                 child2 = np.concatenate((self.agent.population[i+1][:pivotPoint], self.agent.population[i][pivotPoint:])).tolist()
+                # print('Child2: ' + len(str(child2)))
                 newPopulation.append(child2)
 
             i += 2
