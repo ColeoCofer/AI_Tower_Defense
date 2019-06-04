@@ -37,10 +37,11 @@ Handles user events (keyboard, mouse, etc)
 Keeps track of score.
 '''
 class Game:
-    def __init__(self, visualMode, trainingMode, towers, dataStore):
+    def __init__(self, visualMode, trainingMode, towers, dataStore, citizen):
         self.visualMode = visualMode
         self.trainingMode = trainingMode
         self.dataStore = dataStore
+        self.citizen = citizen     #GA formatted list of towers
 
         if self.visualMode:
             self.startBgMusic()
@@ -468,16 +469,16 @@ class Game:
             self.dataStore.enemiesKilled = self.totalEnemiesKilled
             self.dataStore.towersRemaining = len(self.towers)
             self.dataStore.earnings = self.wallet.coins
-            self.dataStore.population = self.getGATowerList()
+            self.dataStore.population = self.citizen
 
-    def getGATowerList(self):
-        gaTowerList = []
-        for cell in self.towerGrid:
-            if cell[1] == True:
-                #No tower
-                gaTowerList.append(0)
-            else:
-                gaTowerList.append() #Towers might need an index in their class?
+    # def getGATowerList(self):
+    #     gaTowerList = []
+    #     for cell in self.towerGrid:
+    #         if cell[1] == True:
+    #             #No tower
+    #             gaTowerList.append(0)
+    #         else:
+    #             gaTowerList.append() #Towers might need an index in their class?
 
     # plays our awesome RenFair music
     def startBgMusic(self):

@@ -53,7 +53,7 @@ class GeneticAlgorithm:
                 self.towersForGeneration.append(self.agent.setTowers(self.agent.population[i]))
                 self.dataStores.append(DataStore())
 
-            newDataStores = Parallel(n_jobs=-1, verbose=0, backend="threading")(map(delayed(self.runGame), self.towersForGeneration, self.dataStores))
+            newDataStores = Parallel(n_jobs=-1, verbose=0, backend="threading")(map(delayed(self.runGame), self.towersForGeneration, self.dataStores, self.agent.population))
 
             newFitnessScores = []
             for data in newDataStores:
@@ -88,9 +88,9 @@ class GeneticAlgorithm:
         return
 
 
-    def runGame(self, towers, dataStore):
+    def runGame(self, towers, dataStore, citizen):
         # bool: visualMode, bool: trainingMode, Towers, DataStruct
-        game = Game(self.visualMode, self.trainingMode, towers, dataStore)
+        game = Game(self.visualMode, self.trainingMode, towers, dataStore, citizen)
         return game.run()
 
     def saveData(self, generation):
