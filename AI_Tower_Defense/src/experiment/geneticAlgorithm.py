@@ -10,17 +10,16 @@ from constants.gameConstants import *
 from agent.geneticAgent import GeneticAgent
 from game.game import Game
 
+READ_FILE = True
 PRINT_GRAPH = False
 
-class DataStore:
+class GameRecord:
 
     def __init__(self):
-        self.fitnessScores = 0
-        self.gameScores = 0
+        self.fitnessScore = 0
         self.enemiesKilled = 0
         self.towersRemaining = 0
         self.earnings = 0
-        self.population = []
 
 class GeneticAlgorithm:
 
@@ -28,14 +27,18 @@ class GeneticAlgorithm:
         self.agent = agent
         self.trainingMode = True
         self.visualMode   = False
-        self.dataStores = []
+        self.gameRecords = []
         self.towersForGeneration = []
         self.averageScores = []
         self.averageScoreMax = 0
 
 
     def run(self):
-        self.agent.initPopulation()
+        if READ_FILE:
+            print("** Reading population from file **")
+            self.agent.population = self.loadData()
+        else:
+            self.agent.initPopulation()
         fitnessPlot = []
 
         self.trainingMode = True
@@ -44,28 +47,30 @@ class GeneticAlgorithm:
         gameCount = 0
         for generation in range(MAX_GENERATIONS):
 
-            self.dataStores = []
+            self.gameRecords = []
             self.towersForGeneration = []
 
             # play all of the games for each member of the population
             for i in range(POPULATION_SIZE):
 
                 self.towersForGeneration.append(self.agent.setTowers(self.agent.population[i]))
-                self.dataStores.append(DataStore())
+                self.gameRecords.append(GameRecord())
 
-            newDataStores = Parallel(n_jobs=-1, verbose=0, backend="threading")(map(delayed(self.runGame), self.towersForGeneration, self.dataStores, self.agent.population))
+            newGameRecords = Parallel(n_jobs=-1, verbose=0, backend="threading")(map(delayed(self.runGame), self.towersForGeneration, self.gameRecords))
 
             newFitnessScores = []
-            for data in newDataStores:
-                newFitnessScores.append(data.fitnessScores)
+            for data in newGameRecords:
+                newFitnessScores.append(data.fitnessScore)
 
             self.agent.fitnessScores = newFitnessScores
 
             averageScore = self.normalizeFitnessOfPopulation()
             if averageScore > self.averageScoreMax:
                 self.averageScoreMax = averageScore
+
             print('\nAverage score for generation ' + str(generation) + ' ' + str(averageScore))
             print('\nLargest Average so far: ' + str(self.averageScoreMax))
+
             self.averageScores.append(averageScore)
 
             # create the new population for crossover based off of the probabilities from the fitness scores
@@ -81,25 +86,52 @@ class GeneticAlgorithm:
 
             self.agent.fitnessScores = []
 
-        if PRINT_GRAPH or generation % 10 == 0:
-            self.saveData(generation)
-            self.printGraph()
+            self.saveData()
+
+            if PRINT_GRAPH and generation % int((0.2 * MAX_GENERATIONS)):
+                self.printGraph()
 
         return
 
 
-    def runGame(self, towers, dataStore, citizen):
+    def runGame(self, towers, gameRecord):
         # bool: visualMode, bool: trainingMode, Towers, DataStruct
-        game = Game(self.visualMode, self.trainingMode, towers, dataStore, citizen)
+        game = Game(self.visualMode, self.trainingMode, towers, gameRecord)
         return game.run()
 
-    def saveData(self, generation):
-        ''' Appends best citizen seen so far into mostfit.txt '''
-        # mostFitFile = open("mostfit_gen_" + str(self.generation) + ".txt","a")
-        # for pop, fit in zip(self.agent.population, self.dataStores.)
-        #Store best of last ten
-        # mostFitFile.write()
+    def saveData(self):
+        ''' Saves the last trained population so you can load it later and train more '''
+        lastFitFile = open("lastfit_gen.txt","w")
 
+        populationString = ''
+        for citizen in self.agent.population:
+            populationString += (','.join(str(int(n)) for n in citizen)) + '\n'
+
+        lastFitFile.write(populationString)
+        lastFitFile.close()
+
+        averageScoresFile = open("averageScores.txt", "a")
+        averageScoreString = ','.join(str(n) for n in self.averageScores)
+        averageScoresFile.write(averageScoreString)
+        averageScoresFile.close()
+
+    def loadData(self):
+        populationFile = open("lastfit_gen.txt","r")
+        fileLines = populationFile.readlines()
+        populationList = []
+        for line in fileLines:
+            line = line.strip('\n')
+            line = line.split(',')
+
+            citizen = np.zeros((len(TOWER_GRID),), dtype=int)
+            i = 0
+            for n in line:
+                citizen[i] = int(n)
+                i += 1
+            populationList.append(citizen)
+
+        print(populationList)
+        return populationList
 
     # print the average fitness graph
     def printGraph(self):
@@ -157,11 +189,9 @@ class GeneticAlgorithm:
                 if self.correctNumberOfTowers(child1) and self.correctNumberOfTowers(child2):
                     break
 
-            print('Child1: ' + str(len(child1)))
             newPopulation.append(child1)
 
             if NUMBER_OF_CHILDREN == 2:
-                print('Child2: ' + str(len(child2)))
                 newPopulation.append(child2)
 
             i += 2

@@ -37,11 +37,10 @@ Handles user events (keyboard, mouse, etc)
 Keeps track of score.
 '''
 class Game:
-    def __init__(self, visualMode, trainingMode, towers, dataStore, citizen):
+    def __init__(self, visualMode, trainingMode, towers, gameRecord):
         self.visualMode = visualMode
         self.trainingMode = trainingMode
-        self.dataStore = dataStore
-        self.citizen = citizen     #GA formatted list of towers
+        self.gameRecord = gameRecord
 
         if self.visualMode:
             self.startBgMusic()
@@ -126,7 +125,7 @@ class Game:
 
         self.gameover()
 
-        return self.dataStore
+        return self.gameRecord
 
 
     # goes through and removes dead towers from the list
@@ -462,23 +461,11 @@ class Game:
         print('Towers Intact:        ' + str(len(self.towers)))
         print('Coins:                ' + str(self.wallet.coins))
 
-        if self.dataStore != None:
-            self.dataStore.currentFitnessScores = self.score
-            self.dataStore.fitnessScores = self.score
-            self.dataStore.gameScores = self.score
-            self.dataStore.enemiesKilled = self.totalEnemiesKilled
-            self.dataStore.towersRemaining = len(self.towers)
-            self.dataStore.earnings = self.wallet.coins
-            self.dataStore.population = self.citizen
-
-    # def getGATowerList(self):
-    #     gaTowerList = []
-    #     for cell in self.towerGrid:
-    #         if cell[1] == True:
-    #             #No tower
-    #             gaTowerList.append(0)
-    #         else:
-    #             gaTowerList.append() #Towers might need an index in their class?
+        if self.gameRecord != None:
+            self.gameRecord.fitnessScore = self.score
+            self.gameRecord.enemiesKilled = self.totalEnemiesKilled
+            self.gameRecord.towersRemaining = len(self.towers)
+            self.gameRecord.earnings = self.wallet.coins
 
     # plays our awesome RenFair music
     def startBgMusic(self):
