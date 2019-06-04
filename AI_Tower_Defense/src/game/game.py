@@ -96,6 +96,7 @@ class Game:
         self.initTowerGrid()
 
         self.isPaused = False
+        self.currSelectedTower = None   #Type of tower currently being selected from menu
 
 
     def run(self):
@@ -195,6 +196,8 @@ class Game:
 
                 #Show path bounds if the user is placing a tower
                 if buttonWasSelected == True:
+                    print(f"tower type: {towerType}")
+                    self.currSelectedTower = towerType
                     self.showPathBounds = True
 
                 #If not None, the user has purchased and placed a tower
@@ -305,6 +308,7 @@ class Game:
         if SHOW_PATH_BOUNDS and self.showPathBounds:
             self.drawPathBounds(self.win)
             self.drawTowerGrid(self.win)
+            self.drawTowerRadius(self.win)
 
         #Update the window
         pygame.display.update()
@@ -364,6 +368,19 @@ class Game:
                 bgRect.fill((0, 100, 0))
                 position = (tower[0][0] + (TOWER_GRID_SIZE - GRID_DISPLAY_SIZE) / 2, tower[0][1] + (TOWER_GRID_SIZE - GRID_DISPLAY_SIZE) / 2)
                 self.win.blit(bgRect, position)
+
+    def drawTowerRadius(self, win):
+        ''' Draws circle around tower at attack radius '''
+
+        if self.currSelectedTower != None:
+            mousePosition = pygame.mouse.get_pos()
+            tower = self.currSelectedTower((0,0))
+            circleSurface = pygame.Surface((tower.attackRadius * 2, tower.attackRadius * 2))
+            circleSurface.set_colorkey((0, 0, 0))
+            circleSurface.set_alpha(75)
+            pygame.draw.circle(circleSurface, (0, 50, 200), (tower.attackRadius, tower.attackRadius), tower.attackRadius, 0)
+            self.win.blit(circleSurface, (mousePosition[0] - tower.attackRadius, mousePosition[1] - tower.attackRadius))
+
 
     def displayTextUI(self, win, ):
         ''' Render UI elements above all other graphics '''
