@@ -10,6 +10,7 @@ from constants.gameConstants import *
 from agent.geneticAgent import GeneticAgent
 from game.game import Game
 
+PRINT_GRAPH = False
 
 class DataStore:
 
@@ -29,6 +30,7 @@ class GeneticAlgorithm:
         self.dataStores = []
         self.towersForGeneration = []
         self.averageScores = []
+        self.averageScoreMax = 0
 
 
     def run(self):
@@ -59,7 +61,10 @@ class GeneticAlgorithm:
             self.agent.fitnessScores = newFitnessScores    
 
             averageScore = self.normalizeFitnessOfPopulation()
-            print('Average score for generation: ' + str(averageScore))
+            if averageScore > self.averageScoreMax:
+                self.averageScoreMax = averageScore
+            print('\nAverage score for generation ' + str(generation) + ' ' + str(averageScore))
+            print('\nLargest Average so far: ' + str(self.averageScoreMax))
             self.averageScores.append(averageScore)
 
             # create the new population for crossover based off of the probabilities from the fitness scores
@@ -75,6 +80,9 @@ class GeneticAlgorithm:
 
             self.agent.fitnessScores = []
 
+        if PRINT_GRAPH:
+            self.printGraph()
+
         return
 
 
@@ -86,10 +94,9 @@ class GeneticAlgorithm:
 
     # print the average fitness graph
     def printGraph(self):
-        populationSize = len(self.agent.population)
         # plot the accuracy results from the training and test sets
-        title = 'Population = ' + str(populationSize)
-        plt.plot(self.agent.fitnessValues, label=title)
+        title = 'Average Fitness'
+        plt.plot(self.averageScores, label=title)
         plt.xlabel('Generations')
         plt.ylabel('Average Fitness')
         plt.legend(loc='best')

@@ -56,16 +56,7 @@ class Game:
             else:
                 self.win = pygame.display.set_mode((self.width, self.height))
 
-        # game stats
-        # self.win.set_alpha(None)
         self.enemies = []
-        # set current agents towers
-        #   entry point for the AIs
-        
-        # TODO WHY??
-        # if self.agent != None:
-        #     self.towers = self.agent.currentTowers
-
         self.towers = towers
         self.towers.append(City((1180, 230)))
         self.towerGrid = [] #Holds all possible locations for a tower to be placed, and whether one is there or not
@@ -90,7 +81,7 @@ class Game:
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = self.numEnemiesPerLevel
         self.totalEnemiesKilled = 0
-        self.spawnChance = 0.1                            # this can be throttled for testing
+        self.spawnChance = 0.0005                            # this can be throttled for testing
         self.enemySpawnProbs = []
         self.showPathBounds = False
 

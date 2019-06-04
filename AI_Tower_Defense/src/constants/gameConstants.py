@@ -48,10 +48,10 @@ ENEMY_SPAWN_INC = 0.30         #Increments individual enemies spawn chances
 
 #Level increase constants
 STARTING_LEVEL = 10
-SPEED_INCREASE = 3
-HEALTH_INCREASE = 2
-NUMBER_LEVELS_HEALTH_INCREASE = 2
-NUMBER_LEVELS_SPEED_INCREASE = 3
+HEALTH_INCREASE = 1           # how much health is added to enemies when increased  
+SPEED_INCREASE = 1            # how much speed is added to enemies when increased          
+NUMBER_LEVELS_HEALTH_INCREASE = 2       # how many levels before an enemy health increase 
+NUMBER_LEVELS_SPEED_INCREASE = 3        # how many levels before an enemy speed increase
 
 #Window Dimensions
 WIN_WIDTH = 1200
