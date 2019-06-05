@@ -2,17 +2,27 @@ import pygame
 
 from game.game import Game
 from experiment.qLearning import QLearning
-from experiment.geneticAlgorithm import GeneticAlgorithm, GeneticAlgorithm2
+from experiment.geneticAlgorithm.parallelGA import ParallelGeneticAlgorithm
+from experiment.geneticAlgorithm.serialGA import SerialGeneticAlgorithm
+
 from agent.qLearningAgent import QLearningAgent
 from agent.geneticAgent import GeneticAgent
 
-
 from constants.gameConstants import *
 
-MANUAL_MODE = False
-PARALLEL_MODE = True
-GA_MODE = True
+
+GA_MODE        = True
 QLEARNING_MODE = False
+
+MANUAL_MODE    = False
+PARALLEL_MODE  = False
+
+VISUAL_MODE    = False
+
+READ_FILE      = False
+SAVE_TO_DISK   = False
+PRINT_GRAPHS   = False
+
 
 def main():
     ''' Entry point for game '''
@@ -25,27 +35,20 @@ def main():
 
     if GA_MODE:
         if MANUAL_MODE:
-            game = Game(True, False, [], None)
+            game = Game(True, [], None)
             game.run()
         else:
-            gaAgent = GeneticAgent()
             if PARALLEL_MODE:
-                gaAlgo = GeneticAlgorithm(gaAgent)      # Parallel mode
+                gaAlgo = ParallelGeneticAlgorithm(VISUAL_MODE, READ_FILE, SAVE_TO_DISK, PRINT_GRAPHS)   # Parallel mode
             else:
-                gaAlgo = GeneticAlgorithm2(gaAgent)     # Manual mode
+                gaAlgo = SerialGeneticAlgorithm(VISUAL_MODE, READ_FILE, SAVE_TO_DISK, PRINT_GRAPHS)     # Manual mode
 
             gaAlgo.run()
 
+
     pygame.quit()
 
-    # qAgent = QLearningAgent()
-    # qLearning = QLearning(qAgent)
-
-    # qLearning.run()
-
-
-
-
+ 
 
 if __name__ == "__main__":
     main()

@@ -37,9 +37,8 @@ Handles user events (keyboard, mouse, etc)
 Keeps track of score.
 '''
 class Game:
-    def __init__(self, visualMode, trainingMode, towers, gameRecord):
+    def __init__(self, visualMode, towers, gameRecord):
         self.visualMode = visualMode
-        self.trainingMode = trainingMode
         self.gameRecord = gameRecord
 
         if self.visualMode:
@@ -83,7 +82,7 @@ class Game:
         self.numEnemiesPerLevel = 10
         self.remainingEnemies = self.numEnemiesPerLevel
         self.totalEnemiesKilled = 0
-        self.spawnChance = 0.0005                            # this can be throttled for testing
+        self.spawnChance = 0.005                            # this can be throttled for testing
         self.enemySpawnProbs = []
         self.showPathBounds = False
 
@@ -458,13 +457,14 @@ class Game:
         print('\nTotal Enemies Killed: ' + str(self.totalEnemiesKilled))
         print('Final Level:          ' + str(self.level))
         print('Final Score:          ' + str(self.score))
-        print('Towers Intact:        ' + str(len(self.towers)))
+        print('Towers Intact:        ' + str(len(self.towers)-1))
         print('Coins:                ' + str(self.wallet.coins))
 
         if self.gameRecord != None:
             self.gameRecord.fitnessScore = self.score
+            self.gameRecord.level = self.level
             self.gameRecord.enemiesKilled = self.totalEnemiesKilled
-            self.gameRecord.towersRemaining = len(self.towers)
+            self.gameRecord.towersRemaining = len(self.towers) - 1
             self.gameRecord.earnings = self.wallet.coins
 
     # plays our awesome RenFair music
