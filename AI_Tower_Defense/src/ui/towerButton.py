@@ -49,6 +49,20 @@ class TowerButton:
 
         return False, None, None
 
+    def handleHoverEvents(self):
+        ''' Handle if user hovers mouse over tower button '''
+        #Create a transparent rectangle
+        #Display enemies that are weak to each tower
+        #Display info about it?
+        #Create a description memeber maybe for each tower
+
+        self.bgRect = pygame.Surface((120, 40))
+        self.bgRect.set_alpha(100)
+        self.bgRect.fill((137, 139, 145))
+
+
+
+
     def canPlaceTower(self, towerGrid):
         ''' Returns the location to place a tower if the current mouse position is in an empty grid space'''
         mousePosition = pygame.mouse.get_pos()
@@ -86,3 +100,9 @@ class TowerButton:
         ''' Displays the text at the given position '''
         fontSurface = font.render(text, False, color)
         win.blit(fontSurface, position)
+
+    def drawEnemyHud(self, towerType):
+        '''
+        Displays information in a rectangle hud about each tower when
+        the user hovers over the tower button
+        '''

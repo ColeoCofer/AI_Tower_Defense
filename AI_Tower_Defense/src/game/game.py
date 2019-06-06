@@ -189,6 +189,9 @@ class Game:
                     else:
                         self.isPaused = True
 
+            #Handle events where user hovers mouse over tower buttons
+            self.menu.handleHoverEvents()
+
             #Store mouse clicks to determine path for enemies
             mousePosition = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
