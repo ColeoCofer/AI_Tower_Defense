@@ -21,7 +21,8 @@ class QLearning:
         #self.qTable = [[0 for j in range(NUMBER_OF_TOWERS)] for i in range(NUM_TOWER_POSITIONS)]
         self.qTable = np.zeros((NUMBER_OF_TOWERS, NUM_TOWER_POSITIONS), dtype=int)
 
-        self.towerPlacements = [-1] * NUM_TOWER_POSITIONS  # -1 for empty position
+        # Array of position indexes to track which locations have a tower placed there. -1 for empty position, and tower type index otherwise
+        self.towerPlacements = [-1] * NUM_TOWER_POSITIONS
 
     def run(self):
         self.agent.initTowers()
