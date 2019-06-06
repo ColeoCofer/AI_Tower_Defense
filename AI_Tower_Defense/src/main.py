@@ -9,8 +9,8 @@ from agent.geneticAgent import GeneticAgent
 
 from constants.gameConstants import *
 
-MANUAL_MODE = True
-PARALLEL_MODE = False
+MANUAL_MODE = False
+PARALLEL_MODE = True
 GA_MODE = True
 QLEARNING_MODE = False
 
