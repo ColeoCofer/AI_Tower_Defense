@@ -43,7 +43,6 @@ class TowerButton:
         elif self.isSelected == True and wallet.coins >= self.cost:
             towerLocation = self.canPlaceTower(towerGrid)
             if towerLocation != None:
-                wallet.spendCoins(self.cost)
                 self.isSelected = False
                 return False, self.type, towerLocation
 

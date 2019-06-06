@@ -38,12 +38,12 @@ Keeps track of score.
 '''
 class Game:
 
-    def __init__(self, visualMode, towers, gameRecord, collectData):
+    def __init__(self, visualMode, towers, gameRecord, collectInnerGameData):
         
-        self.visualMode          = visualMode
-        self.gameRecord          = gameRecord
-        self.collectData         = collectData
-        self.randomChoicesRecord = []
+        self.visualMode           = visualMode
+        self.gameRecord           = gameRecord
+        self.collectInnerGameData = collectInnerGameData
+        self.randomChoicesRecord  = []
 
         if self.visualMode:
             self.startBgMusic()
@@ -84,7 +84,7 @@ class Game:
         self.numEnemiesPerLevel      = 10
         self.remainingEnemies        = self.numEnemiesPerLevel
         self.totalEnemiesKilled      = 0
-        self.spawnChance             = 0.005       # this can be throttled for testing
+        self.spawnChance             = 0.05       # this can be throttled for testing
         self.enemySpawnProbs         = []
         self.showPathBounds          = False
 
@@ -111,9 +111,9 @@ class Game:
 
             playerHasQuit = self.handleEvents()
             if self.isPaused == False:
-                if self.collectData:
+                if self.collectInnerGameData:
                     if self.wallet.coins >= BUYING_THRESHOLD:
-                        self.chooseNewTower()
+                        self.chooseNewTowerRandomly()
                 self.spawnEnemies()
                 self.towerHealthCheck()
                 self.towersAttack()
@@ -130,14 +130,22 @@ class Game:
 
         self.gameover()
 
-        if self.collectData:
-            return self.gameRecord, self.randomChoicesRecord    
-        else:
-            return self.gameRecord
+        return self.gameRecord
 
 
     # Randomly buys a new tower and places it for data collection
-    def chooseNewTower(self):
+    def chooseNewTowerRandomly(self):
+
+        while True:
+            towerType = random.randint(0, NUMBER_OF_TOWERS - 1)
+            towerPlacement = random.randint(0, STARTING_POSITIONS - 1)
+            if self.towerGrid[towerPlacement][1] == False:
+                self.towerGrid[towerPlacement] = ((TOWER_GRID[towerPlacement], True))
+                self.placeTower(towerType, TOWER_GRID[towerPlacement])
+
+                self.
+                
+                break
 
         return
 
@@ -327,13 +335,14 @@ class Game:
         pygame.display.update()
 
 
-    def placeTower(self, towerType, towerLocation):
-        i = 0
-        for i in range(len(TOWER_TYPES)):
-            if TOWER_TYPES[i] == towerType:
-                towerLocation = (towerLocation[0] + (TOWER_GRID_SIZE / 2), towerLocation[1] + (TOWER_GRID_SIZE / 2))
-                self.towers.append(TOWER_TYPES[i](towerLocation))
-                self.showPathBounds = False
+    def placeTower(self, towerType, towerLocation): 
+        if type(towerType) != int:
+            towerType = TOWER_TYPES.index(towerType)
+        newTowerLocation = (towerLocation[0] + (TOWER_GRID_SIZE / 2), towerLocation[1] + (TOWER_GRID_SIZE / 2))
+        newTower = TOWER_TYPES[towerType](newTowerLocation)
+        self.towers.append(newTower)
+        self.showPathBounds = False
+        self.wallet.spendCoins(newTower.cost)
 
 
     def calcPathBounds(self):
@@ -508,6 +517,8 @@ class Game:
             self.gameRecord.enemiesKilled = self.totalEnemiesKilled
             self.gameRecord.towersRemaining = len(self.towers) - 1
             self.gameRecord.earnings = self.wallet.coins
+
+            self.gameRecord.randomChoicesRecord = self.randomChoicesRecord
 
     # plays our awesome RenFair music
     def startBgMusic(self):
