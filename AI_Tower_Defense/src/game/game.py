@@ -196,7 +196,6 @@ class Game:
 
                 #Show path bounds if the user is placing a tower
                 if buttonWasSelected == True:
-                    print(f"tower type: {towerType}")
                     self.currSelectedTower = towerType
                     self.showPathBounds = True
 
