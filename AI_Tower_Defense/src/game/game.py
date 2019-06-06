@@ -30,6 +30,23 @@ from constants.gameConstants import *
 from constants.animationConstants import *
 
 
+
+class InnerGameRecord:
+
+    def __init__(self):
+        self.currentScore = 0
+        self.currentLevel = 0
+        self.currentEnemiesKilled = 0
+        self.currentNumberOfEnemies = 0
+        self.currentNumberOfTowers = 0
+        self.died = 0
+        self.typeOfTowerPlaced = 0
+        self.towerX = 0
+        self.towerY = 0
+
+        self.currentTowers = []
+
+
 '''
 Setup initial window and settings.
 Renders all objects and background to the screen.
@@ -43,7 +60,7 @@ class Game:
         self.visualMode           = visualMode
         self.gameRecord           = gameRecord
         self.collectInnerGameData = collectInnerGameData
-        self.randomChoicesRecord  = []
+        self.innerGameRecords     = []
 
         if self.visualMode:
             self.startBgMusic()
@@ -60,7 +77,7 @@ class Game:
                 self.win = pygame.display.set_mode((self.width, self.height))
 
         self.enemies      = []
-        self.towerGrid    = [] #Holds all possible locations for a tower to be placed, and whether one is there or not
+        self.towerGrid    = [] #Holds all possible locations for a tower to be placed, and whether one is there or not, and the type of tower placed
         self.score        = 0
         self.health       = 200
         self.coinPosition = ((self.width - 150, 35))
@@ -140,10 +157,37 @@ class Game:
             towerType = random.randint(0, NUMBER_OF_TOWERS - 1)
             towerPlacement = random.randint(0, STARTING_POSITIONS - 1)
             if self.towerGrid[towerPlacement][1] == False:
-                self.towerGrid[towerPlacement] = ((TOWER_GRID[towerPlacement], True))
-                self.placeTower(towerType, TOWER_GRID[towerPlacement])
+                # this will be used to map a tower to its record for data keeping purposes
+                index = len(self.innerGameRecords)
+                
+                # place a random tower type in a random position
+                self.towerGrid[towerPlacement] = ((TOWER_GRID[towerPlacement], True, towerType + 1))
+                self.placeTower(towerType, TOWER_GRID[towerPlacement], index)
+                
+                # collect data for record
+                newRecord = InnerGameRecord()
+                newRecord.currentScore = self.score
+                newRecord.currentLevel = self.level
+                newRecord.currentEnemiesKilled = self.totalEnemiesKilled
+                newRecord.currentNumberOfEnemies = len(self.enemies)
+                newRecord.currentNumberOfTowers = len(self.towers)
+                newRecord.typeOfTowerPlaced = towerType
+                newRecord.towerX = TOWER_GRID[towerPlacement][0]
+                newRecord.towerY = TOWER_GRID[towerPlacement][1]
 
-                self.
+                for i in range(STARTING_POSITIONS):
+                    if self.towerGrid[i][1] == False:
+                        newRecord.currentTowers.append(0)
+                    else:
+                        # included a digit in tower grids tuples to include tower type
+                        newRecord.currentTowers.append(self.towerGrid[i][2])
+
+                # print('Game score: ' + str(self.score))
+                # print('Record score: ' + str(newRecord.currentScore))
+                # add new record to the list
+                self.innerGameRecords.append(newRecord)
+                # print('After: ' + str(self.innerGameRecords[len(self.innerGameRecords) - 1].currentScore))
+                # print(len(self.innerGameRecords))
                 
                 break
 
@@ -160,10 +204,12 @@ class Game:
                 newTowers.append(self.towers[i])
             # a dead tower was found, free up its tile
             else:
+                # this should update our record keeping to show that a tower that was placed has died
+                self.innerGameRecords[self.towers[i].indexForRecordTable].died = 1
                 j = 0
                 for j in range(len(self.towerGrid)):
                     if self.towerGrid[j][0][0] == (self.towers[i].position[0] - (TOWER_GRID_SIZE / 2)) and self.towerGrid[j][0][1] == (self.towers[i].position[1] - (TOWER_GRID_SIZE / 2)):
-                        self.towerGrid[j] = ((self.towerGrid[j][0], False))
+                        self.towerGrid[j] = ((self.towerGrid[j][0], False, -1))
 
         self.towers = newTowers
 
@@ -223,7 +269,7 @@ class Game:
 
                 #If not None, the user has purchased and placed a tower
                 if towerType != None and towerLocation != None:
-                    self.placeTower(towerType, towerLocation)
+                    self.placeTower(towerType, towerLocation, -1)
 
                 #Store & print mouse clicks for path finding and debugging
                 if SHOW_CLICKS:
@@ -335,11 +381,12 @@ class Game:
         pygame.display.update()
 
 
-    def placeTower(self, towerType, towerLocation): 
+    def placeTower(self, towerType, towerLocation, index): 
         if type(towerType) != int:
             towerType = TOWER_TYPES.index(towerType)
         newTowerLocation = (towerLocation[0] + (TOWER_GRID_SIZE / 2), towerLocation[1] + (TOWER_GRID_SIZE / 2))
         newTower = TOWER_TYPES[towerType](newTowerLocation)
+        newTower.indexForRecordTable = index
         self.towers.append(newTower)
         self.showPathBounds = False
         self.wallet.spendCoins(newTower.cost)
@@ -481,7 +528,7 @@ class Game:
         Second value is True if a tower is placed in that location
         '''
         for location in TOWER_GRID:
-            self.towerGrid.append((pygame.Rect(location, (TOWER_GRID_SIZE, TOWER_GRID_SIZE)), False))
+            self.towerGrid.append((pygame.Rect(location, (TOWER_GRID_SIZE, TOWER_GRID_SIZE)), False, -1))
 
 
     def showClicks(self):
@@ -518,7 +565,8 @@ class Game:
             self.gameRecord.towersRemaining = len(self.towers) - 1
             self.gameRecord.earnings = self.wallet.coins
 
-            self.gameRecord.randomChoicesRecord = self.randomChoicesRecord
+            self.gameRecord.randomChoicesMade = self.innerGameRecords
+
 
     # plays our awesome RenFair music
     def startBgMusic(self):

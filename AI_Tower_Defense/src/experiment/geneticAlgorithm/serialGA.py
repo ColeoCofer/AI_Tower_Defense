@@ -38,8 +38,13 @@ class SerialGeneticAlgorithm(GeneticAlgorithm):
                 # bool: visualMode, Towers: Agent.currentTowers, blank GameRecord, returns a record of the game stats
                 game = Game(self.visualMode, self.agent.currentTowers, GameRecord(), self.collectInnerGameData)
                 # collects stats for the whole game
-                self.gameRecords.append(game.run())
+                record = game.run()
+                # print(len(record.randomChoicesRecord))
 
-            self.postGameProcessing(self.correctNumberOfTowers)
+                # print('\nList Size: ' + str(len(record.randomChoicesMade)))
+
+                self.gameRecords.append(record)
+
+            self.postGameProcessing()
 
         return

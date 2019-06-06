@@ -8,7 +8,7 @@ from joblib import Parallel, delayed
 from constants.aiConstants import *
 from constants.gameConstants import *
 from agent.geneticAgent import GeneticAgent
-from game.game import Game
+from game.game import Game, InnerGameRecord
 
 
 class GameRecord:
@@ -24,6 +24,7 @@ class GameRecord:
         self.population = []
 
         self.randomChoicesMade = []
+        
 
 
 class GeneticAlgorithm:
@@ -33,7 +34,7 @@ class GeneticAlgorithm:
         self.agent                 = GeneticAgent()
         self.visualMode            = False
         self.gameRecords           = []
-        self.randomChoicesRecord   = []
+        # self.randomChoicesRecord   = []
         self.towersForGeneration   = []
         self.averageScores         = []
         self.averageScoreMax       = 0
@@ -120,6 +121,25 @@ class GeneticAlgorithm:
 
         if self.printGraphs and self.correctNumberOfTowers % int((0.2 * MAX_GENERATIONS)):
             self.printGraph()
+
+        # self.currentScore = 0
+        # self.currentLevel = 0
+        # self.currentEnemiesKilled = 0
+        # self.currentNumberOfEnemies = 0
+        # self.currentNumberOfTowers = 0
+        # self.died = 0
+        # self.typeOfTowerPlaced = 0
+        # self.towerX = 0
+        # self.towerY = 0
+
+        self.currentTowers = []
+
+        for gRecord in self.gameRecords:
+            # print('here')
+            # print(gRecord.randomChoicesMade)
+            for record in gRecord.randomChoicesMade:
+                print('Score: ' + str(record.currentScore))
+                print('Level: ' + str(record.currentLevel))
 
         return
 

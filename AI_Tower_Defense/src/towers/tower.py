@@ -32,7 +32,7 @@ class Tower:
         self.projectilesFired = []   # projectile magazine
         self.animations = []         # animations to render
 
-
+        self.indexForRecordTable = 0
 
     # launches a tower attacking round
     def attack(self, enemies, ticks):

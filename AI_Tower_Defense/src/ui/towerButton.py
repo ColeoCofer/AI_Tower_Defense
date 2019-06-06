@@ -1,4 +1,5 @@
 import pygame
+from constants.gameConstants import *
 
 TEXT_GAP_PX = 15
 
@@ -55,7 +56,7 @@ class TowerButton:
         for i in range(len(towerGrid)):
             #Return true if user attempts to place a tower in an empty cell
             if towerGrid[i][1] == False and towerGrid[i][0].collidepoint(mousePosition):
-                towerGrid[i] = ((towerGrid[i][0], True))
+                towerGrid[i] = ((towerGrid[i][0], True, TOWER_TYPES.index(self.type) + 1))
 
                 return towerGrid[i][0]
         return None
