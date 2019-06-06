@@ -23,13 +23,13 @@ class GeneticAgent:
 
 
     # Creates an initial randomized population
-    def initPopulation(self):
+    def initPopulation(self, numberOfStartingTowers):
+        self.population = []
         for i in range(POPULATION_SIZE):
             # creates random strings for the populations to start
             citizen = np.zeros((STARTING_POSITIONS,), dtype=int)
-
             # randomly pick a tower type (1-6 right now)
-            for j in range(NUMBER_OF_STARTING_TOWERS):
+            for j in range(numberOfStartingTowers):
                 citizen[j] = rand.randint(1, NUMBER_OF_TOWERS)
             np.random.shuffle(citizen)
             self.population.append(citizen)

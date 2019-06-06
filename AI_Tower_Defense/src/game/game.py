@@ -213,7 +213,7 @@ class Game:
 
     ''' Removes enemies that have walked off screen'''
     def removeEnemies(self):
-
+        
         for enemy in self.enemies:
             if enemy.x > WIN_WIDTH:
                 self.health -= enemy.startingHealth
@@ -225,10 +225,10 @@ class Game:
 
             if enemy.x > WIN_WIDTH or enemy.health <= 0:
                 self.enemies.remove(enemy)
-                self.totalEnemiesKilled += 1
-                self.remainingEnemies -= 1
-
-        # print(self.score)
+                self.remainingEnemies -= 1     
+                
+                if enemy.health <= 0:
+                    self.totalEnemiesKilled += 1
 
 
     def spawnEnemies(self):

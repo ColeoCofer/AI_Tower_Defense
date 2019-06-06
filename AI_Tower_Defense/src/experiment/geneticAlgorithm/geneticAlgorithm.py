@@ -14,27 +14,35 @@ from game.game import Game
 class GameRecord:
 
     def __init__(self):
+        self.earnings = 0
+        
+        self.numberOfTowers = 0
         self.fitnessScore = 0
+        self.level = 0
         self.enemiesKilled = 0
         self.towersRemaining = 0
-        self.earnings = 0
-        self.level = 0
+        self.population = []
+
 
 class GeneticAlgorithm:
 
-    def __init__(self, visualMode, readFile, saveToDisk, printGraphs):
-        self.agent = GeneticAgent()
-        self.visualMode   = False
-        self.gameRecords = []
-        self.towersForGeneration = []
-        self.averageScores = []
-        self.averageScoreMax = 0
-        self.highScore = 0
-        self.highestLevel = 0
-        self.visualMode = visualMode
-        self.readFile = readFile
-        self.saveToDisk = saveToDisk
-        self.printGraphs = printGraphs
+    def __init__(self, visualMode, readFile, saveToDisk, printGraphs, collectData):
+        
+        self.agent                 = GeneticAgent()
+        self.visualMode            = False
+        self.gameRecords           = []
+        self.towersForGeneration   = []
+        self.averageScores         = []
+        self.averageScoreMax       = 0
+        self.highScore             = 0
+        self.highestLevel          = 0
+        self.correctNumberOfTowers = 0
+        self.visualMode            = visualMode
+        self.readFile              = readFile
+        self.saveToDisk            = saveToDisk
+        self.printGraphs           = printGraphs
+        self.collectData           = collectData
+
 
 
     # base class stub
@@ -44,15 +52,24 @@ class GeneticAlgorithm:
 
     # saves the current populations to a text file
     def saveData(self):
-        ''' Saves the last trained population so you can load it later and continue training '''
-        lastFitFile = open("lastfit_gen.txt","w")
-
         populationString = ''
-        for citizen in self.agent.population:
-            populationString += (','.join(str(int(n)) for n in citizen)) + '\n'
+        gameRecord = ''
 
-        lastFitFile.write(populationString)
-        lastFitFile.close()
+        if self.collectData:
+            dataCollectionFile = open("ga_data.txt","w")
+            for record in self.gameRecords:
+                gameRecord += str(record.numberOfTowers) + ',' + str(record.fitnessScore) + ',' + str(record.level) + ',' + str(record.enemiesKilled) + ',' + str(record.towersRemaining) + ',' + (','.join(str(int(n)) for n in record.population)) + '\n'
+        
+            dataCollectionFile.write(gameRecord)
+            dataCollectionFile.close()
+        else:
+            ''' Saves the last trained population so you can load it later and continue training '''
+            lastFitFile = open("lastfit_gen.txt","w")
+            for citizen in self.agent.population:
+                populationString += (','.join(str(int(n)) for n in citizen)) + '\n'
+
+            lastFitFile.write(populationString)
+            lastFitFile.close()
 
         averageScoresFile = open("averageScores.txt", "a")
         averageScoreString = ','.join(str(n) for n in self.averageScores)
@@ -61,7 +78,7 @@ class GeneticAlgorithm:
 
 
     # calls all of the common functions to update fitness scores, populations, and stats
-    def postGameProcessing(self, generation):
+    def postGameProcessing(self):
         newFitnessScores = []
         for data in self.gameRecords:
             newFitnessScores.append(data.fitnessScore)
@@ -78,7 +95,7 @@ class GeneticAlgorithm:
             self.averageScoreMax = averageScore
         self.averageScores.append(averageScore)
 
-        print('\nAverage score for generation ' + str(generation) + ': ' + str(averageScore))
+        print('\nAverage score for generation ' + str(self.correctNumberOfTowers) + ': ' + str(averageScore))
         print('Largest Average so far:          ' + str(self.averageScoreMax))
         print('High Score so far:               ' + str(self.highScore))
         print('Highest Level Reached:           ' + str(self.highestLevel))
@@ -97,8 +114,8 @@ class GeneticAlgorithm:
         if self.saveToDisk:
             self.saveData()
 
-        if self.printGraphs and generation % int((0.2 * MAX_GENERATIONS)):
-                self.printGraph()
+        if self.printGraphs and self.correctNumberOfTowers % int((0.2 * MAX_GENERATIONS)):
+            self.printGraph()
 
         return
 
@@ -142,12 +159,14 @@ class GeneticAlgorithm:
 
 
     # return True if a citizen has exactly 20 towers
-    def correctNumberOfTowers(self, citizen):
+    def hasCorrectNumberOfTowers(self, citizen):
         towerCount = 0
         for tower in citizen:
             if tower != 0:
                 towerCount += 1
-        if towerCount == 20:
+        # print('Tower Count: ' + str(towerCount))
+        # print('Self number: ' + str(self.correctNumberOfTowers))
+        if towerCount == self.correctNumberOfTowers:
             return True
 
         return False
@@ -179,7 +198,7 @@ class GeneticAlgorithm:
                 if NUMBER_OF_CHILDREN == 2:
                     child2 = np.concatenate((self.agent.population[i+1][:pivotPoint], self.agent.population[i][pivotPoint:])).tolist()
 
-                if self.correctNumberOfTowers(child1) and self.correctNumberOfTowers(child2):
+                if self.hasCorrectNumberOfTowers(child1) and self.hasCorrectNumberOfTowers(child2):
                     break
 
             newPopulation.append(child1)

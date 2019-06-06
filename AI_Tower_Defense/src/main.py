@@ -15,12 +15,14 @@ GA_MODE        = True
 QLEARNING_MODE = False
 
 MANUAL_MODE    = False
-PARALLEL_MODE  = False
+PARALLEL_MODE  = True
 
-VISUAL_MODE    = False
+VISUAL_MODE    = PARALLEL_MODE and False
+
+COLLECT_DATA   = True
+SAVE_TO_DISK   = True
 
 READ_FILE      = False
-SAVE_TO_DISK   = False
 PRINT_GRAPHS   = False
 
 
@@ -39,9 +41,9 @@ def main():
             game.run()
         else:
             if PARALLEL_MODE:
-                gaAlgo = ParallelGeneticAlgorithm(VISUAL_MODE, READ_FILE, SAVE_TO_DISK, PRINT_GRAPHS)   # Parallel mode
+                gaAlgo = ParallelGeneticAlgorithm(VISUAL_MODE, READ_FILE, SAVE_TO_DISK, PRINT_GRAPHS, COLLECT_DATA)   # Parallel mode
             else:
-                gaAlgo = SerialGeneticAlgorithm(VISUAL_MODE, READ_FILE, SAVE_TO_DISK, PRINT_GRAPHS)     # Manual mode
+                gaAlgo = SerialGeneticAlgorithm(VISUAL_MODE, READ_FILE, SAVE_TO_DISK, PRINT_GRAPHS, COLLECT_DATA)     # Manual mode
 
             gaAlgo.run()
 
