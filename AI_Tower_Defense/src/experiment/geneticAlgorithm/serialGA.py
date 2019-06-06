@@ -14,8 +14,8 @@ from .geneticAlgorithm import GeneticAlgorithm, GameRecord
 
 class SerialGeneticAlgorithm(GeneticAlgorithm):
 
-    def __init__(self, visualMode, readFile, saveToDisk, printGraphs, collectData):
-        super().__init__(visualMode, readFile, saveToDisk, printGraphs, collectData)
+    def __init__(self, visualMode, readFile, saveToDisk, printGraphs, collectData, collectInnerGameData):
+        super().__init__(visualMode, readFile, saveToDisk, printGraphs, collectData, collectInnerGameData)
 
     def run(self):
         
@@ -28,13 +28,16 @@ class SerialGeneticAlgorithm(GeneticAlgorithm):
         for generation in range(MAX_GENERATIONS):
             self.gameRecords = []
             self.correctNumberOfTowers = generation + 1
+            
             if self.collectData:
                 self.agent.initPopulation(self.correctNumberOfTowers)
+
             # play all of the games for each member of the population
             for i in range(POPULATION_SIZE):
                 self.agent.setTowers(self.agent.population[i])
                 # bool: visualMode, Towers: Agent.currentTowers, blank GameRecord, returns a record of the game stats
-                game = Game(self.visualMode, self.agent.currentTowers, GameRecord())
+                game = Game(self.visualMode, self.agent.currentTowers, GameRecord(), self.collectData)
+                # collects stats for the whole game
                 self.gameRecords.append(game.run())
 
             self.postGameProcessing(self.correctNumberOfTowers)

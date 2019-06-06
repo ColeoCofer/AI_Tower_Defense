@@ -14,8 +14,8 @@ from .geneticAlgorithm import GeneticAlgorithm, GameRecord
 
 class ParallelGeneticAlgorithm(GeneticAlgorithm):
 
-    def __init__(self, visualMode, readFile, saveToDisk, printGraphs, collectData):
-        super().__init__(visualMode, readFile, saveToDisk, printGraphs, collectData)
+    def __init__(self, visualMode, readFile, saveToDisk, printGraphs, collectData, collectInnerGameData):
+        super().__init__(visualMode, readFile, saveToDisk, printGraphs, collectData, collectInnerGameData)
 
     def run(self):
         
@@ -38,6 +38,7 @@ class ParallelGeneticAlgorithm(GeneticAlgorithm):
             for i in range(POPULATION_SIZE):
                 gameRecord = GameRecord()
                 
+                # this is capturing whole game stats, we will also collect in-game stats
                 if self.collectData:
                     # record population for data collection for other algorithms
                     gameRecord.population = self.agent.population[i]
@@ -49,7 +50,7 @@ class ParallelGeneticAlgorithm(GeneticAlgorithm):
 
             # play all of the games for each member of the population
             # n_jobs=-1 means to ask for all of the processor cores
-            self.gameRecords = Parallel(n_jobs=-1, verbose=0, backend="threading")(map(delayed(self.runGame), self.towersForGeneration, self.gameRecords))
+            self.gameRecords, self. = Parallel(n_jobs=-1, verbose=0, backend="threading")(map(delayed(self.runGame), self.towersForGeneration, self.gameRecords))
 
             # process the results of the generation
             self.postGameProcessing()
@@ -59,5 +60,5 @@ class ParallelGeneticAlgorithm(GeneticAlgorithm):
 
     def runGame(self, towers, gameRecord):
         # bool: visualMode, list: towers, record for individual game data
-        game = Game(self.visualMode, towers, gameRecord)
+        game = Game(self.visualMode, towers, gameRecord, self.collectInnerGameData)
         return game.run()

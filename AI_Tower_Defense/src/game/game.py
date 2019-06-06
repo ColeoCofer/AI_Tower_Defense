@@ -37,15 +37,19 @@ Handles user events (keyboard, mouse, etc)
 Keeps track of score.
 '''
 class Game:
-    def __init__(self, visualMode, towers, gameRecord):
-        self.visualMode = visualMode
-        self.gameRecord = gameRecord
+
+    def __init__(self, visualMode, towers, gameRecord, collectData):
+        
+        self.visualMode          = visualMode
+        self.gameRecord          = gameRecord
+        self.collectData         = collectData
+        self.randomChoicesRecord = []
 
         if self.visualMode:
             self.startBgMusic()
 
         ''' Initial window setup '''
-        self.width = WIN_WIDTH
+        self.width  = WIN_WIDTH
         self.height = WIN_HEIGHT
 
         self.ticks = 0
@@ -55,37 +59,37 @@ class Game:
             else:
                 self.win = pygame.display.set_mode((self.width, self.height))
 
-        self.enemies = []
-        self.towers = towers
-        self.towers.append(City((1180, 230)))
-        self.towerGrid = [] #Holds all possible locations for a tower to be placed, and whether one is there or not
-        self.score = 0
-        self.health = 200
+        self.enemies      = []
+        self.towerGrid    = [] #Holds all possible locations for a tower to be placed, and whether one is there or not
+        self.score        = 0
+        self.health       = 200
         self.coinPosition = ((self.width - 150, 35))
-        self.wallet = Wallet(self.coinPosition, STARTING_COINS)
-        self.addedHealth = 0
-        self.addedSpeed = 0
+        self.wallet       = Wallet(self.coinPosition, STARTING_COINS)
+        self.addedHealth  = 0
+        self.addedSpeed   = 0
+        self.towers       = towers
+        self.towers.append(City((1180, 230)))
 
         # graphics
-        self.menu = Menu((350, 650), TOWER_TYPES)
-        self.bg = pygame.image.load(os.path.join("../assets/map", "bg.png"))
-        self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
+        self.menu          = Menu((350, 650), TOWER_TYPES)
+        self.bg            = pygame.image.load(os.path.join("../assets/map", "bg.png"))
+        self.bg            = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
         self.gameoverImage = pygame.image.load(os.path.join("../assets/other", "gameover.png"))
         self.gameoverImage = pygame.transform.scale(self.bg, (self.width, self.height))
-        self.clicks = []
+        self.clicks        = []
 
         #Level & Spawn
         self.level = 1
         self.enemiesSpawnedThisLevel = 0
-        self.numEnemiesPerLevel = 10
-        self.remainingEnemies = self.numEnemiesPerLevel
-        self.totalEnemiesKilled = 0
-        self.spawnChance = 0.005                            # this can be throttled for testing
-        self.enemySpawnProbs = []
-        self.showPathBounds = False
+        self.numEnemiesPerLevel      = 10
+        self.remainingEnemies        = self.numEnemiesPerLevel
+        self.totalEnemiesKilled      = 0
+        self.spawnChance             = 0.005       # this can be throttled for testing
+        self.enemySpawnProbs         = []
+        self.showPathBounds          = False
 
         #Fonts
-        self.uiFont = pygame.font.SysFont('lucidagrandettc', 24)
+        self.uiFont       = pygame.font.SysFont('lucidagrandettc', 24)
         self.gameoverFont = pygame.font.SysFont('lucidagrandettc', 50)
 
         #Path
@@ -94,13 +98,12 @@ class Game:
         self.updateSpawnProbabilities()
         self.initTowerGrid()
 
-        self.isPaused = False
+        self.isPaused          = False
         self.currSelectedTower = None   #Type of tower currently being selected from menu
 
 
     def run(self):
         ''' Main game loop '''
-        # clock = pygame.time.Clock()
         run = True
         playerHasQuit = False
 
@@ -108,12 +111,16 @@ class Game:
 
             playerHasQuit = self.handleEvents()
             if self.isPaused == False:
+                if self.collectData:
+                    if self.wallet.coins >= BUYING_THRESHOLD:
+                        self.chooseNewTower()
                 self.spawnEnemies()
                 self.towerHealthCheck()
                 self.towersAttack()
                 self.enemiesAttack()
                 self.enemiesMove(self.ticks)
                 self.removeEnemies()
+                
                 run = self.isAlive()
                 self.ticks += 1
 
@@ -121,10 +128,18 @@ class Game:
                 self.draw()
 
 
-
         self.gameover()
 
-        return self.gameRecord
+        if self.collectData:
+            return self.gameRecord, self.randomChoicesRecord    
+        else:
+            return self.gameRecord
+
+
+    # Randomly buys a new tower and places it for data collection
+    def chooseNewTower(self):
+
+        return
 
 
     # goes through and removes dead towers from the list
@@ -213,7 +228,7 @@ class Game:
 
     ''' Removes enemies that have walked off screen'''
     def removeEnemies(self):
-        
+
         for enemy in self.enemies:
             if enemy.x > WIN_WIDTH:
                 self.health -= enemy.startingHealth

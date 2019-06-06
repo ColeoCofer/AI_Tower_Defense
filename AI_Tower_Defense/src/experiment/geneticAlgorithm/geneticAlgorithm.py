@@ -26,11 +26,12 @@ class GameRecord:
 
 class GeneticAlgorithm:
 
-    def __init__(self, visualMode, readFile, saveToDisk, printGraphs, collectData):
+    def __init__(self, visualMode, readFile, saveToDisk, printGraphs, collectData, collectInnerGameData):
         
         self.agent                 = GeneticAgent()
         self.visualMode            = False
         self.gameRecords           = []
+        self.randomChoicesRecord   = []
         self.towersForGeneration   = []
         self.averageScores         = []
         self.averageScoreMax       = 0
@@ -42,6 +43,7 @@ class GeneticAlgorithm:
         self.saveToDisk            = saveToDisk
         self.printGraphs           = printGraphs
         self.collectData           = collectData
+        self.collectInnerGameData  = collectInnerGameData
 
 
 
@@ -56,7 +58,7 @@ class GeneticAlgorithm:
         gameRecord = ''
 
         if self.collectData:
-            dataCollectionFile = open("ga_data.txt","w")
+            dataCollectionFile = open("ga_data.txt","a")
             for record in self.gameRecords:
                 gameRecord += str(record.numberOfTowers) + ',' + str(record.fitnessScore) + ',' + str(record.level) + ',' + str(record.enemiesKilled) + ',' + str(record.towersRemaining) + ',' + (','.join(str(int(n)) for n in record.population)) + '\n'
         
