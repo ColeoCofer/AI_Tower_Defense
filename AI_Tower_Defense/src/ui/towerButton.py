@@ -38,13 +38,12 @@ class TowerButton:
             #Check if they have enough coins
             if wallet.coins >= self.cost and self.isSelected == False:
                 self.isSelected = True
-                return True, None, None
+                return True, self.type, None
         #Check if they have already selected a tower, and tried place it at a valid location
         elif self.isSelected == True and wallet.coins >= self.cost:
             towerLocation = self.canPlaceTower(towerGrid)
             if towerLocation != None:
                 wallet.spendCoins(self.cost)
-                #May need to return a tower to be created here...
                 self.isSelected = False
                 return False, self.type, towerLocation
 

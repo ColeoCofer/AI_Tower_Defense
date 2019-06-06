@@ -39,7 +39,7 @@ VISUAL_MODE = False     #Set false to stop rendering
 FPS = 60
 
 #Player
-STARTING_COINS = 500
+STARTING_COINS = 10000
 
 #Spawn Probabilities
 GLOBAL_SPAWN_PROB_INC = 0.15   #Percent increase spawn chance per level
