@@ -59,6 +59,6 @@ class ParallelGeneticAlgorithm(GeneticAlgorithm):
 
 
     def runGame(self, towers, gameRecord):
-        # bool: visualMode, list: towers, record for individual game data
-        game = Game(self.visualMode, towers, gameRecord, self.collectInnerGameData)
+        # bool: visualMode, list: towers, record for individual game data, None for the deepQ agent the game now expects
+        game = Game(self.visualMode, towers, gameRecord, self.collectInnerGameData, None)
         return game.run()

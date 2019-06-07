@@ -35,8 +35,9 @@ class SerialGeneticAlgorithm(GeneticAlgorithm):
             # play all of the games for each member of the population
             for i in range(POPULATION_SIZE):
                 self.agent.setTowers(self.agent.population[i])
-                # bool: visualMode, Towers: Agent.currentTowers, blank GameRecord, returns a record of the game stats
-                game = Game(self.visualMode, self.agent.currentTowers, GameRecord(), self.collectInnerGameData)
+                # bool: visualMode, Towers: Agent.currentTowers, blank GameRecord, returns a record of the game stats, 
+                # None for the deepQagent the game now expects 
+                game = Game(self.visualMode, self.agent.currentTowers, GameRecord(), self.collectInnerGameData, None)
                 # collects stats for the whole game
                 record = game.run()
                 # print(len(record.randomChoicesRecord))

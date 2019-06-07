@@ -3,6 +3,7 @@ from pygame.locals import *
 import os
 import random
 import numpy as np
+import copy
 
 import enemies.zombie
 from enemies.dino import Dino
@@ -30,7 +31,10 @@ from constants.gameConstants import *
 from constants.aiConstants import *
 from constants.animationConstants import *
 
-
+TOWER_POSITION_TAKEN_PENALTY = -15.0
+TOWER_TAKES_DAMAGE_PENALTY   = -4.0
+TOWER_DEALS_DAMAGE_REWARD    = 5.0
+TOWER_FREEZES_REWARD         = 2.0
 
 class InnerGameRecord:
 
@@ -56,7 +60,7 @@ Keeps track of score.
 '''
 class Game:
 
-    def __init__(self, visualMode, towers, gameRecord, collectInnerGameData):
+    def __init__(self, visualMode, towers, gameRecord, collectInnerGameData, deepQagent):
         
         self.visualMode           = visualMode
         self.gameRecord           = gameRecord
@@ -116,6 +120,15 @@ class Game:
         self.updateSpawnProbabilities()
         self.initTowerGrid()
 
+        # deep Q things
+        self.deepQagent        = deepQagent
+        self.dqOldTowerGrid    = copy.deepcopy(self.towerGrid)
+        self.dqLastTowerPlaced = None
+        self.dqCurrentReward   = 0
+        # deep Q reward things?? the damage dealt worries me for the igloo
+        self.dqDamageDealt     = 0
+        self.dqDamageTaken     = 0        
+
         self.isPaused          = False
         self.currSelectedTower = None   #Type of tower currently being selected from menu
 
@@ -129,6 +142,7 @@ class Game:
 
             playerHasQuit = self.handleEvents()
             if self.isPaused == False:
+                # entry point for GAagent for data collection
                 if self.collectInnerGameData:
                     if self.wallet.coins >= BUYING_THRESHOLD and len(self.towers) <= NUMBER_OF_STARTING_TOWERS:
                         self.chooseNewTowerRandomly()
@@ -142,13 +156,57 @@ class Game:
                 run = self.isAlive()
                 self.ticks += 1
 
+                # entry point for the deepQ agent to make decisions and learn from
+
+                # all game states are the full tower grid of tuples
+                # signature for update model:   update(oldGameState, newGameState, reward):   
+                #                                       oldGameState is the tower arrangment that is a result of the previous arrangment,
+                #                                       newGameState is the current tower arrangement
+                #                                       TODO we still need to structure our rewards
+                # signature for next action:    getNextAction(currentGameState):
+                if self.deepQagent != None:
+                    if self.wallet.coins >= DEEP_BUYING_THRESHOLD:
+                        newReward = self.getReward()
+                        # update the model 
+                        self.deepQagent.update(self.dqOldTowerGrid, self.towerGrid, newReward)
+
+                        # store a copy of the old tower grid state
+                        self.dqOldTowerGrid = copy.deepcopy(self.towerGrid)
+
+                        # this is returning a tower grid tuple from the agent
+                        newTower = self.deepQagent.getNextAction(self.towerGrid)
+
+                        # place the model chosen tower if possible
+                        taken = False
+                        for location in self.towerGrid:
+                            if location[0] == newTower[0]:
+                                self.dqCurrentReward += TOWER_POSITION_TAKEN_PENALTY
+                                taken = True
+                                break
+                        if not taken:
+                            # should place a tower of the given type between 0-5, and with a position from the model
+                            self.dqLastTowerPlaced = self.placeTower(newTower[2], newTower[0], -1)
+            
             if self.visualMode:
                 self.draw()
 
-
         self.gameover()
 
-        return self.gameRecord
+        if self.collectInnerGameData:
+            return self.gameRecord
+        elif self.deepQagent != None:
+            return self.deepQagent
+        else:
+            return
+
+
+    def getReward(self):
+        reward = 0
+        if self.dqLastTowerPlaced != None:
+            reward =  self.dqLastTowerPlaced.damageDealtOnTurn
+            reward -= self.dqLastTowerPlaced.damageTakenOnTurn
+
+        return reward
 
 
     # Randomly buys a new tower and places it for data collection
@@ -202,7 +260,8 @@ class Game:
             # a dead tower was found, free up its tile
             else:
                 # this should update our record keeping to show that a tower that was placed has died
-                self.innerGameRecords[self.towers[i].indexForRecordTable].died = 1
+                # self.innerGameRecords[self.towers[i].indexForRecordTable].died = 1
+                self.dqLastTowerPlaced.damageTakenOnTurn += 50
                 j = 0
                 for j in range(len(self.towerGrid)):
                     if self.towerGrid[j][0][0] == (self.towers[i].position[0] - (TOWER_GRID_SIZE / 2)) and self.towerGrid[j][0][1] == (self.towers[i].position[1] - (TOWER_GRID_SIZE / 2)):
@@ -381,12 +440,18 @@ class Game:
     def placeTower(self, towerType, towerLocation, index): 
         if type(towerType) != int:
             towerType = TOWER_TYPES.index(towerType)
+        
         newTowerLocation = (towerLocation[0] + (TOWER_GRID_SIZE / 2), towerLocation[1] + (TOWER_GRID_SIZE / 2))
         newTower = TOWER_TYPES[towerType](newTowerLocation)
+        
+        # this is just for the GA
         newTower.indexForRecordTable = index
+        
         self.towers.append(newTower)
         self.showPathBounds = False
         self.wallet.spendCoins(newTower.cost)
+
+        return newTower
 
 
     def calcPathBounds(self):

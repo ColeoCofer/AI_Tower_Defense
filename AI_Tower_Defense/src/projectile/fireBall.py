@@ -41,6 +41,8 @@ class Fireball(RangeProjectile):
                 # if not (self.trainingMode):
                 #     self.attackSound.play()
                 self.targetEnemy.hit(self.damage, self.damageType, ticks)
+                self.damage += self.damage
+                
                 return True
 
         return False

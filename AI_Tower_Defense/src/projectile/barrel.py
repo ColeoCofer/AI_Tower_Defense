@@ -34,7 +34,9 @@ class Barrel(RangeProjectile):
             dist = (enemy.x - self.x) ** 2 + (enemy.y - self.y) ** 2
             #Use radius squared to avoid taking square roots of distance
             if dist <= self.attackRadius ** 2:
-                enemy.hit((self.damage / 2), self.damageType, ticks)
+                halfDamage = self.damage / 2
+                enemy.hit(halfDamage, self.damageType, ticks)
+                self.damage += halfDamage
 
 
     # returns a residual animation
