@@ -3,14 +3,13 @@ import numpy as np
 from constants.gameConstants import *
 from constants.aiConstants import *
 
-
 class Qdata:
 
     def __init__(self):
-        self.qTable = np.zeros((STARTING_POSITIONS, NUMBER_OF_TOWERS))
-        self.towers = []
+        self.qTable = np.zeros((NUMBER_OF_TOWERS, STARTING_POSITIONS))
+        #  self.towers = []
         self.gameScores = []
-        self.currentScore = 0
+        #  self.currentScore = 0
 
 
 class QLearningAgent:
@@ -26,5 +25,4 @@ class QLearningAgent:
 
 
     def updateRecord(self):
-
         return
