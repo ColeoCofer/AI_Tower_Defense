@@ -9,11 +9,11 @@ OFF = False
 NUMBER_OF_STARTING_TOWERS = 20
 
 # Q-Learning constants
-GAMMA          = 0.9
+DISCOUNT_RATE          = 0.9
 EPSILON        = 0.1
 EPSILON_STEP   = 0.004
 EPSILON_PERIOD = 100
-ETA            = 0.1
+LEARN_RATE            = 0.1
 N_EPISODES     = 50000
 M_STEPS        = 500
 
