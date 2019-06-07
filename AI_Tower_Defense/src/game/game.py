@@ -57,8 +57,6 @@ class Game:
 
         self.enemies = []
         self.towers = towers
-        # if self.towers != None:
-        #     print('Starting towers: ' + str(len(self.towers)))
         self.towers.append(City((1180, 230)))
         self.towerGrid = [] #Holds all possible locations for a tower to be placed, and whether one is there or not
         self.score = 0
@@ -96,6 +94,9 @@ class Game:
         self.updateSpawnProbabilities()
         self.initTowerGrid()
 
+        self.isPaused = False
+        self.currSelectedTower = None   #Type of tower currently being selected from menu
+
 
     def run(self):
         ''' Main game loop '''
@@ -106,21 +107,20 @@ class Game:
         while run == True and playerHasQuit == False:
 
             playerHasQuit = self.handleEvents()
-
-
-            self.spawnEnemies()
-            # left this in here training mode or not in case we are viewing the AI for a round and want to quit
-            self.towerHealthCheck()
-            self.towersAttack()
-            self.enemiesAttack()
-            self.enemiesMove(self.ticks)
-            self.removeEnemies()
-            run = self.isAlive()
+            if self.isPaused == False:
+                self.spawnEnemies()
+                self.towerHealthCheck()
+                self.towersAttack()
+                self.enemiesAttack()
+                self.enemiesMove(self.ticks)
+                self.removeEnemies()
+                run = self.isAlive()
+                self.ticks += 1
 
             if self.visualMode:
                 self.draw()
 
-            self.ticks += 1
+
 
         self.gameover()
 
@@ -180,6 +180,14 @@ class Game:
                 if event.unicode == 'q':
                     return True
 
+            #Pause and unpause when p key is pushed
+            if event.type == pygame.KEYDOWN:
+                if event.unicode == 'p':
+                    if self.isPaused == True:
+                        self.isPaused = False
+                    else:
+                        self.isPaused = True
+
             #Store mouse clicks to determine path for enemies
             mousePosition = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -187,6 +195,7 @@ class Game:
 
                 #Show path bounds if the user is placing a tower
                 if buttonWasSelected == True:
+                    self.currSelectedTower = towerType
                     self.showPathBounds = True
 
                 #If not None, the user has purchased and placed a tower
@@ -297,6 +306,7 @@ class Game:
         if SHOW_PATH_BOUNDS and self.showPathBounds:
             self.drawPathBounds(self.win)
             self.drawTowerGrid(self.win)
+            self.drawTowerRadius(self.win)
 
         #Update the window
         pygame.display.update()
@@ -357,6 +367,19 @@ class Game:
                 position = (tower[0][0] + (TOWER_GRID_SIZE - GRID_DISPLAY_SIZE) / 2, tower[0][1] + (TOWER_GRID_SIZE - GRID_DISPLAY_SIZE) / 2)
                 self.win.blit(bgRect, position)
 
+    def drawTowerRadius(self, win):
+        ''' Draws circle around tower at attack radius '''
+
+        if self.currSelectedTower != None:
+            mousePosition = pygame.mouse.get_pos()
+            tower = self.currSelectedTower((0,0))
+            circleSurface = pygame.Surface((tower.attackRadius * 2, tower.attackRadius * 2))
+            circleSurface.set_colorkey((0, 0, 0))
+            circleSurface.set_alpha(75)
+            pygame.draw.circle(circleSurface, (0, 50, 200), (tower.attackRadius, tower.attackRadius), tower.attackRadius, 0)
+            self.win.blit(circleSurface, (mousePosition[0] - tower.attackRadius, mousePosition[1] - tower.attackRadius))
+
+
     def displayTextUI(self, win, ):
         ''' Render UI elements above all other graphics '''
         #Info about enemies
@@ -375,6 +398,10 @@ class Game:
 
         #Score
         self.displayText("Score: " + str(self.score), (self.coinPosition[0] - 20, self.coinPosition[1] + 30), self.uiFont, (250, 241, 95))
+
+        #Paused
+        if self.isPaused == True:
+            self.displayText("PAUSED", ((WIN_WIDTH / 2) - 25, 60), self.uiFont, (200, 0, 0))
 
         # Display FPS, however, it always displays 0 for some reason...
         # self.displayText("FPS: " + str(int(fps)), (15, 20), self.uiFont, WHITE)
