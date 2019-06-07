@@ -7,9 +7,9 @@ class Qdata:
 
     def __init__(self):
         self.qTable = np.zeros((NUMBER_OF_TOWERS, STARTING_POSITIONS))
-        self.towers = []
+        #  self.towers = []
         self.gameScores = []
-        self.currentScore = 0
+        #  self.currentScore = 0
 
 
 class QLearningAgent:
@@ -25,5 +25,4 @@ class QLearningAgent:
 
 
     def updateRecord(self):
-
         return

@@ -11,13 +11,13 @@ from agent.geneticAgent import GeneticAgent
 from constants.gameConstants import *
 
 
-GA_MODE        = True
-QLEARNING_MODE = False
+GA_MODE        = False
+QLEARNING_MODE = True
 
 MANUAL_MODE    = False
 PARALLEL_MODE  = False
 
-VISUAL_MODE    = False
+VISUAL_MODE    = True
 
 READ_FILE      = False
 SAVE_TO_DISK   = False
@@ -44,6 +44,9 @@ def main():
                 gaAlgo = SerialGeneticAlgorithm(VISUAL_MODE, READ_FILE, SAVE_TO_DISK, PRINT_GRAPHS)     # Manual mode
 
             gaAlgo.run()
+    elif QLEARNING_MODE:
+        qLearning = QLearning(VISUAL_MODE)
+        qLearning.run()
 
 
     pygame.quit()
