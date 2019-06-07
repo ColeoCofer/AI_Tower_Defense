@@ -8,6 +8,7 @@ from constants.gameConstants import *
 from agent.qLearningAgent import QLearningAgent
 from game.game import Game
 
+LOAD_QTABLE_FROM_FILE = True
 
 class QLearning:
 
@@ -22,7 +23,13 @@ class QLearning:
 
     def run(self):
         ''' Kicks off multiple game instances and updates the q-table after each game ends '''
-        for N in range(10):  #N_EPISODES
+
+        # Read in saved qtable and continue training
+        if LOAD_QTABLE_FROM_FILE:
+            self.qtable = self.loadData()
+
+        # Number of games to train on
+        for N in range(10):
             # decrease epsilon every 50 episodes
             if self.epsilon >= 0:  #  and self.trainingMode == ON:
                 if N % EPSILON_PERIOD == 0:
@@ -40,6 +47,7 @@ class QLearning:
 
             # Update q-table for each tower placement using the final game score
             self.applyReward(game.score)
+            self.saveData()
 
         return
 
@@ -100,6 +108,36 @@ class QLearning:
         self.qtable[placement][tower] = \
             self.qtable[placement][tower] + LEARN_RATE * \
             (score + DISCOUNT_RATE * self.findHighestQValue() - self.qtable[placement][tower])
+
+    def saveData(self):
+        ''' Saves the q-table to a file '''
+        qtable = open("qtable.txt","w")
+
+        qtableString = ''
+        for row in self.qtable:
+            for cell in row:
+                qtableString += (','.join(str(cell) for n in row)) + '\n'
+
+        qtable.write(qtableString)
+        qtable.close()
+
+    def loadData(self):
+        ''' Loads previously qtable '''
+        qtableFile = open("qtable.txt","r")
+        qtableLines = qtableFile.readlines()
+
+        qtable = []
+        for line in qtableLines:
+            line = line.strip('\n')
+            line = line.split(',')
+
+            row = []
+            for n in line:
+                row.append(float(n))
+            qtable.append(row)
+
+        return qtable
+
 
     def printQTable(self):
         print(self.qtable)

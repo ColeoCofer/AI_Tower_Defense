@@ -12,51 +12,45 @@ from agent.geneticAgent import GeneticAgent
 from constants.gameConstants import *
 
 
-GA_MODE        = False
-QLEARNING_MODE = True
-
-MANUAL_MODE    = False
-PARALLEL_MODE  = False
-
-VISUAL_MODE    = False
-
-READ_FILE      = False
-SAVE_TO_DISK   = False
-PRINT_GRAPHS   = False
-
-class GAME_MODE(Enum):
+class MODE(Enum):
     manual           = 0,
     geneticAlgorithm = 1,
     qLearning        = 2
 
 
+GAME_MODE = MODE.qLearning  # Select which mode to run the game in
+PARALLEL_MODE  = False   # Run a game on each processor core (only when visual_mode is off)
+
+VISUAL_MODE    = False   # Display Graphics
+READ_FILE      = False   # Read model from file and continue training from it
+SAVE_TO_DISK   = False   # Collect and store data
+PRINT_GRAPHS   = False   # Prints graphs of score averages
+
 
 def main():
     ''' Entry point for game '''
 
-    # #Setup Game
+    #Setup Game
     pygame.init()
     pygame.font.init()
     pygame.mixer.init()
     pygame.display.set_caption("AI Tower Defense")
 
-    if GA_MODE:
-        if MANUAL_MODE:
-            game = Game(True, [], None)
-            game.run()
+    # Determine game mode
+    if GAME_MODE == MODE.manual:
+        game = Game(True, [], None)
+        game.run()
+    elif GAME_MODE == MODE.geneticAlgorithm:
+        if PARALLEL_MODE:
+            gaAlgo = ParallelGeneticAlgorithm(VISUAL_MODE, READ_FILE, SAVE_TO_DISK, PRINT_GRAPHS)
         else:
-            if PARALLEL_MODE:
-                gaAlgo = ParallelGeneticAlgorithm(VISUAL_MODE, READ_FILE, SAVE_TO_DISK, PRINT_GRAPHS)   # Parallel mode
-            else:
-                gaAlgo = SerialGeneticAlgorithm(VISUAL_MODE, READ_FILE, SAVE_TO_DISK, PRINT_GRAPHS)     # Manual mode
-            gaAlgo.run()
-    elif QLEARNING_MODE:
-        qLearning = QLearning(VISUAL_MODE)
-        qLearning.run()
-
+            gaAlgo = SerialGeneticAlgorithm(VISUAL_MODE, READ_FILE, SAVE_TO_DISK, PRINT_GRAPHS)
+        gaAlgo.run()
+    elif GAME_MODE == MODE.qLearning:
+            qLearning = QLearning(VISUAL_MODE)
+            qLearning.run()
 
     pygame.quit()
-
 
 
 if __name__ == "__main__":
