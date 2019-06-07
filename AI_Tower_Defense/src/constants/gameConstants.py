@@ -32,12 +32,13 @@ TOWER_GRID_SIZE = 64
 # Smaller dark spot when manually placing the towers
 GRID_DISPLAY_SIZE = 45
 
-TRAINING_MODE = True  # If true will uncap framerates
-VISUAL_MODE = True    # Set false to stop rendering
+TRAINING_MODE = True    #If true will uncap framerates  TODO  not sure this is used anymore
+VISUAL_MODE = False     #Set false to stop rendering
 FPS = 60
 
 #Player
-STARTING_COINS = 10000
+STARTING_COINS   = 500
+BUYING_THRESHOLD = 200         # the number of coins to trigger the AI to decide where to buy a new tower
 
 #Spawn Probabilities
 GLOBAL_SPAWN_PROB_INC = 0.15   # Percent increase spawn chance per level
@@ -45,23 +46,24 @@ ENEMY_PROB_INC = 0.20          # Percent increase number of enemies per level
 ENEMY_SPAWN_INC = 0.30         # Increments individual enemies spawn chances
 
 #Level increase constants
-STARTING_LEVEL = 10
+STARTING_LEVEL  = 10
 HEALTH_INCREASE = 1                     # how much health is added to enemies when increased
-SPEED_INCREASE = 1                      # how much speed is added to enemies when increased
+SPEED_INCREASE  = 1                     # how much speed is added to enemies when increased
 NUMBER_LEVELS_HEALTH_INCREASE = 2       # how many levels before an enemy health increase
-NUMBER_LEVELS_SPEED_INCREASE = 3        # how many levels before an enemy speed increase
+NUMBER_LEVELS_SPEED_INCREASE  = 3       # how many levels before an enemy speed increase
 
 #Window Dimensions
 WIN_WIDTH = 1200
 WIN_HEIGHT = 800
 
 #Enemies
-ENEMY_TYPES = [Zombie, Dino, Dragon, Robot, Wizard, Warrior, Trump]
+ENEMY_TYPES   = [Zombie, Dino, Dragon, Robot, Wizard, Warrior, Trump]
 ENEMY_INDICES = [0, 1, 2, 3, 4, 5, 6]
-Y_MAX_OFFSET = 35  #yOffset along enemy walking path
+Y_MAX_OFFSET  = 35  #yOffset along enemy walking path, causes the enemies to not be walking on same exact line
 
 #Towers
-TOWER_TYPES = [SquareTower, BirdCastle, Igloo, WizardTower, Pyramid, Obelisk]
+TOWER_TYPES      = [SquareTower, BirdCastle, Igloo, WizardTower, Pyramid, Obelisk]
+TOWER_INDICES    = [0, 1, 2, 3, 4, 5]
 NUMBER_OF_TOWERS = len(TOWER_TYPES)
 
 #Sounds
