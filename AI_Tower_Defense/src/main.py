@@ -17,7 +17,7 @@ QLEARNING_MODE = True
 MANUAL_MODE    = False
 PARALLEL_MODE  = False
 
-VISUAL_MODE    = True
+VISUAL_MODE    = False
 
 READ_FILE      = False
 SAVE_TO_DISK   = False

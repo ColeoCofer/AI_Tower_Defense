@@ -34,14 +34,11 @@ class QLearning:
 
     '''
     TODO
-    Find out how to rewrite run()
-    Figure out how we want to place towers
-    Decide what is handled by this file vs the agent file
     Figure out testing procedures / make sure the code is logical
     '''
 
     def run(self):
-        for N in range(1):  #N_EPISODES
+        for N in range(10):  #N_EPISODES
             # decrease epsilon every 50 episodes
             if self.epsilon >= 0:  #  and self.trainingMode == ON:
                 if N % EPSILON_PERIOD == 0:
@@ -49,7 +46,6 @@ class QLearning:
 
             # Should be while game not over
             self.towers = []
-            print(f"VISUAL MODE: {self.visualMode}")
             for M in range(NUMBER_OF_STARTING_TOWERS):
                 # Robby makes a move using epsilon-greedy
                 # robby, reward = nextAction(epsilon, Qmatrix, robby, board, actionTax)
@@ -65,6 +61,8 @@ class QLearning:
                 if nextAction[0] > STARTING_POSITIONS - 1:
                     print(f"PositionIndex: {nextAction[0]}")
 
+                self.towerPlacements[nextAction[0]] = nextAction[1]
+
                 towerLocation = TOWER_GRID[nextAction[0]]
                 towerLocation = (towerLocation[0] + (TOWER_GRID_SIZE / 2), towerLocation[1] + (TOWER_GRID_SIZE / 2))
 
@@ -73,6 +71,9 @@ class QLearning:
 
             game = Game(self.visualMode, self.towers, None)
             game.run()
+            self.applyReward(game.score)
+            self.printQTable()
+
         return
 
     def chooseAction(self):
@@ -106,9 +107,7 @@ class QLearning:
     def isLegal(self, placementIndex):
         gridPosition = TOWER_GRID[placementIndex]
         gridPosition = (gridPosition[0] + (TOWER_GRID_SIZE / 2), gridPosition[1] + (TOWER_GRID_SIZE / 2))
-        print(f"New Tower Position: [{gridPosition[0]}][{gridPosition[1]}]")
         for i in range(len(self.towers)):
-            print(f"Current Tower Position: [{self.towers[i].position[0]}][{self.towers[i].position[1]}]")
             if gridPosition == self.towers[i].position:
                 return False
         return True
@@ -118,11 +117,14 @@ class QLearning:
         #     return False
 
     def applyReward(self, score):
-        for i in range(len(self.towerPlacements)):
-            if self.towerPlacements[i] is not -1:
-                self.updateQtable(self.towerPlacements[i], i, score)
+        for location in range(len(self.towerPlacements)):
+            if self.towerPlacements[location] != -1:
+                self.updateQtable(self.towerPlacements[location], location, score)
 
     def updateQtable(self, tower, placement, score):
-        self.qtable[tower][placement] = \
-            self.qtable[tower][placement] + LEARN_RATE * \
-            (score + DISCOUNT_RATE * self.findHighestQValue() - self.qtable[tower][placement])
+        self.qtable[placement][tower] = \
+            self.qtable[placement][tower] + LEARN_RATE * \
+            (score + DISCOUNT_RATE * self.findHighestQValue() - self.qtable[placement][tower])
+
+    def printQTable(self):
+        print(self.qtable)
