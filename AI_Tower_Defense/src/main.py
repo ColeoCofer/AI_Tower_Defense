@@ -7,12 +7,14 @@ from experiment.geneticAlgorithm.serialGA import SerialGeneticAlgorithm
 
 from agent.qLearningAgent import QLearningAgent
 from agent.geneticAgent import GeneticAgent
+from agent.deepQagent import DeepQagent
 
 from constants.gameConstants import *
 
 
-GA_MODE        = True
+GA_MODE        = False
 QLEARNING_MODE = False
+DEEPQ_MODE     = True
 
 MANUAL_MODE    = False
 PARALLEL_MODE  = True
@@ -47,6 +49,10 @@ def main():
                 gaAlgo = SerialGeneticAlgorithm(VISUAL_MODE, READ_FILE, SAVE_TO_DISK, PRINT_GRAPHS, COLLECT_WHOLE_GAME_DATA, COLLECT_INNER_GAME_DATA)     # Manual mode
 
             gaAlgo.run()
+    elif DEEPQ_MODE:
+        daq = DeepQagent()
+        test = daq.randomAction()
+        daq.translateModelAction(test)
 
 
     pygame.quit()
