@@ -6,7 +6,7 @@ OFF = False
 
 
 # AI general constants
-NUMBER_OF_STARTING_TOWERS = 20
+NUMBER_OF_STARTING_TOWERS = 50
 
 # Q-Learning constants
 GAMMA          = 0.9

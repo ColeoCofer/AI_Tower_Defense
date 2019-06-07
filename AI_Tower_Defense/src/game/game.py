@@ -27,6 +27,7 @@ from ui.menu import Menu
 from agent.qLearningAgent import QLearningAgent
 
 from constants.gameConstants import *
+from constants.aiConstants import *
 from constants.animationConstants import *
 
 
@@ -101,7 +102,7 @@ class Game:
         self.numEnemiesPerLevel      = 10
         self.remainingEnemies        = self.numEnemiesPerLevel
         self.totalEnemiesKilled      = 0
-        self.spawnChance             = 0.05       # this can be throttled for testing
+        self.spawnChance             = 0.005       # this can be throttled for testing
         self.enemySpawnProbs         = []
         self.showPathBounds          = False
 
@@ -129,7 +130,7 @@ class Game:
             playerHasQuit = self.handleEvents()
             if self.isPaused == False:
                 if self.collectInnerGameData:
-                    if self.wallet.coins >= BUYING_THRESHOLD:
+                    if self.wallet.coins >= BUYING_THRESHOLD and len(self.towers) <= NUMBER_OF_STARTING_TOWERS:
                         self.chooseNewTowerRandomly()
                 self.spawnEnemies()
                 self.towerHealthCheck()
@@ -182,12 +183,8 @@ class Game:
                         # included a digit in tower grids tuples to include tower type
                         newRecord.currentTowers.append(self.towerGrid[i][2])
 
-                # print('Game score: ' + str(self.score))
-                # print('Record score: ' + str(newRecord.currentScore))
                 # add new record to the list
                 self.innerGameRecords.append(newRecord)
-                # print('After: ' + str(self.innerGameRecords[len(self.innerGameRecords) - 1].currentScore))
-                # print(len(self.innerGameRecords))
                 
                 break
 

@@ -34,7 +34,6 @@ class GeneticAlgorithm:
         self.agent                 = GeneticAgent()
         self.visualMode            = False
         self.gameRecords           = []
-        # self.randomChoicesRecord   = []
         self.towersForGeneration   = []
         self.averageScores         = []
         self.averageScoreMax       = 0
@@ -75,6 +74,36 @@ class GeneticAlgorithm:
 
             lastFitFile.write(populationString)
             lastFitFile.close()
+
+        if self.collectInnerGameData:
+            dataCollectionFile = open("deep_data.txt","a")
+            gameRecord = ''
+            # peel off a game record for a generation at a time
+            for record in self.gameRecords:
+                # peel off the individual tower placement decision that were made
+                for n in record.randomChoicesMade:
+                    gameRecord += str(record.towersRemaining) + ',' + str(record.fitnessScore) + ',' + str(record.level) + ',' + str(record.enemiesKilled) + ',' +  \
+                                  str(n.currentScore) + ',' + str(n.currentLevel) + ',' + str(n.currentEnemiesKilled) + ',' + str(n.currentNumberOfEnemies) + ',' + str(n.currentNumberOfTowers) + ',' +  \
+                                  str(n.died) + ',' + str(n.typeOfTowerPlaced) + ',' + str(n.towerX) + ',' + str(n.towerY) + ',' + (','.join(str(int(m)) for m in n.currentTowers)) + '\n'
+            dataCollectionFile.write(gameRecord)
+            dataCollectionFile.close()
+
+        # Index  Length:128
+        # ----------------------------------------------------
+        # 0:  Number of remaining towers when game ended
+        # 1:  Final score of the game
+        # 2:  Final level reached in the game
+        # 3:  Total enemies killed in the game
+        # 4:  Current score when the tower placement was made
+        # 5:  Current level when the tower placement was made
+        # 6:  Current number of enemies killed when the tower placement was made
+        # 7:  Current number of alove enemies when the tower placement was made
+        # 8:  Current number of placed towers when the new tower placement was made
+        # 9:  Did the tower that is placed die before the end of the game (0: No, 1: Yes)
+        # 10: The type of the tower placed (0-5)
+        # 11: The x-position on the screen of the tower that has been placed
+        # 12: The y-position on the screen of the tower that has been placed
+        # 13-126: The digital representation of the tower grid and its constituents  
 
         averageScoresFile = open("averageScores.txt", "a")
         averageScoreString = ','.join(str(n) for n in self.averageScores)
@@ -122,26 +151,10 @@ class GeneticAlgorithm:
         if self.printGraphs and self.correctNumberOfTowers % int((0.2 * MAX_GENERATIONS)):
             self.printGraph()
 
-        # self.currentScore = 0
-        # self.currentLevel = 0
-        # self.currentEnemiesKilled = 0
-        # self.currentNumberOfEnemies = 0
-        # self.currentNumberOfTowers = 0
-        # self.died = 0
-        # self.typeOfTowerPlaced = 0
-        # self.towerX = 0
-        # self.towerY = 0
-
         self.currentTowers = []
 
-        for gRecord in self.gameRecords:
-            # print('here')
-            # print(gRecord.randomChoicesMade)
-            for record in gRecord.randomChoicesMade:
-                print('Score: ' + str(record.currentScore))
-                print('Level: ' + str(record.currentLevel))
-
         return
+
 
     # load populations from a text file
     def loadData(self):
