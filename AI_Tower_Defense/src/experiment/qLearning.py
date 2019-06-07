@@ -12,73 +12,47 @@ from game.game import Game
 class QLearning:
 
     def __init__(self, visualMode):
-        # self.agent        = agent
-        self.epsilon      = EPSILON
+        self.epsilon    = EPSILON
+        self.visualMode = visualMode
 
-        self.visualMode   = visualMode
-
-        # Array of position indexes to track which locations have a tower placed there. -1 for empty position, and tower type index otherwise
+        # Array of position indices to track which locations have a tower placed there. -1 for empty position, and tower type index otherwise
         self.towerPlacements = [-1] * STARTING_POSITIONS
         self.qtable = np.zeros((STARTING_POSITIONS, NUMBER_OF_TOWERS))
         self.towers = []
 
-    '''
-    Current workflow concept:
-        Initialize a qLearningAgent that views the qLearning process at a high level
-            For each game, create a Qlearning object to handle the game level details
-                while(game not over)
-                    chooseAction()
-                    performAction()
-                applyRewardToEachTowerPlacement() (in qTable)
-    '''
-
-    '''
-    TODO
-    Figure out testing procedures / make sure the code is logical
-    '''
-
     def run(self):
+        ''' Kicks off multiple game instances and updates the q-table after each game ends '''
         for N in range(10):  #N_EPISODES
             # decrease epsilon every 50 episodes
             if self.epsilon >= 0:  #  and self.trainingMode == ON:
                 if N % EPSILON_PERIOD == 0:
                     self.epsilon -= EPSILON_STEP
 
-            # Should be while game not over
             self.towers = []
+            # Each step determines the next tower to place
             for M in range(NUMBER_OF_STARTING_TOWERS):
-                # Robby makes a move using epsilon-greedy
-                # robby, reward = nextAction(epsilon, Qmatrix, robby, board, actionTax)
-                # # Update the Q-matrix after each action
-                # if trainingModeOn:
-                #     Qmatrix = updateQmatrix(eta, gamma, Qmatrix, robby, reward, robbiesOldState, robbiesOldPosition)
+                location, tower = self.chooseAction()
+                self.addTower(location, tower)
 
-
-                # bool: visualMode, bool: trainingMode, Agent: agent
-                nextAction = self.chooseAction()
-                if nextAction[1] > NUMBER_OF_TOWERS - 1:
-                    print(f"TowerIndex: {nextAction[1]}")
-                if nextAction[0] > STARTING_POSITIONS - 1:
-                    print(f"PositionIndex: {nextAction[0]}")
-
-                self.towerPlacements[nextAction[0]] = nextAction[1]
-
-                towerLocation = TOWER_GRID[nextAction[0]]
-                towerLocation = (towerLocation[0] + (TOWER_GRID_SIZE / 2), towerLocation[1] + (TOWER_GRID_SIZE / 2))
-
-                newTower = TOWER_TYPES[nextAction[1]](towerLocation)
-                self.towers.append(newTower)
-
+            # Run the game until it's over
             game = Game(self.visualMode, self.towers, None)
             game.run()
+
+            # Update q-table for each tower placement using the final game score
             self.applyReward(game.score)
-            self.printQTable()
 
         return
 
+    def addTower(self, location, tower):
+        ''' Adds a new tower into the list of starting towers '''
+        self.towerPlacements[location] = tower
+        towerLocation = TOWER_GRID[location]
+        towerLocationCenter = (towerLocation[0] + (TOWER_GRID_SIZE / 2), towerLocation[1] + (TOWER_GRID_SIZE / 2))
+        newTower = TOWER_TYPES[tower](towerLocationCenter)
+        self.towers.append(newTower)
+
     def chooseAction(self):
         """ Chooses the next best tower and location to place """
-
         if random.random() < self.epsilon:
             #Pick randomly
             location = random.randint(0, STARTING_POSITIONS - 1)
@@ -86,7 +60,7 @@ class QLearning:
             while not self.isLegal(location):
                 location = random.randint(0, STARTING_POSITIONS)
 
-            return (location, tower)
+            return location, tower
         else:
             #Greedily pick using Q-table
             bestQValueIndices = [(0, 0)]
@@ -99,29 +73,30 @@ class QLearning:
                     elif self.qtable[location][tower] == self.qtable[bestQValueIndices[0][0]][bestQValueIndices[0][1]] and self.isLegal(location):
                         bestQValueIndices.append((location, tower))
 
-        return random.choice(bestQValueIndices)
+        randTower = random.choice(bestQValueIndices)
+        return randTower[0], randTower[1]
 
     def findHighestQValue(self):
+        ''' Returns the next highest value in the q-table '''
         return np.amax(self.qtable)
 
     def isLegal(self, placementIndex):
+        ''' Returns true if the attempted position to place a tower is empty '''
         gridPosition = TOWER_GRID[placementIndex]
         gridPosition = (gridPosition[0] + (TOWER_GRID_SIZE / 2), gridPosition[1] + (TOWER_GRID_SIZE / 2))
         for i in range(len(self.towers)):
             if gridPosition == self.towers[i].position:
                 return False
         return True
-        # if self.towerPlacements[placementIndex] == 0:
-        #     return True
-        # else:
-        #     return False
 
     def applyReward(self, score):
+        ''' Updates the q-table for each placed tower with the overall reward / game score '''
         for location in range(len(self.towerPlacements)):
             if self.towerPlacements[location] != -1:
                 self.updateQtable(self.towerPlacements[location], location, score)
 
     def updateQtable(self, tower, placement, score):
+        ''' Updates the q-table after finishing one game '''
         self.qtable[placement][tower] = \
             self.qtable[placement][tower] + LEARN_RATE * \
             (score + DISCOUNT_RATE * self.findHighestQValue() - self.qtable[placement][tower])

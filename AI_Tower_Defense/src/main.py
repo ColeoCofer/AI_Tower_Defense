@@ -1,4 +1,5 @@
 import pygame
+from enum import Enum
 
 from game.game import Game
 from experiment.qLearning import QLearning
@@ -23,6 +24,12 @@ READ_FILE      = False
 SAVE_TO_DISK   = False
 PRINT_GRAPHS   = False
 
+class GAME_MODE(Enum):
+    manual           = 0,
+    geneticAlgorithm = 1,
+    qLearning        = 2
+
+
 
 def main():
     ''' Entry point for game '''
@@ -42,7 +49,6 @@ def main():
                 gaAlgo = ParallelGeneticAlgorithm(VISUAL_MODE, READ_FILE, SAVE_TO_DISK, PRINT_GRAPHS)   # Parallel mode
             else:
                 gaAlgo = SerialGeneticAlgorithm(VISUAL_MODE, READ_FILE, SAVE_TO_DISK, PRINT_GRAPHS)     # Manual mode
-
             gaAlgo.run()
     elif QLEARNING_MODE:
         qLearning = QLearning(VISUAL_MODE)
@@ -51,7 +57,7 @@ def main():
 
     pygame.quit()
 
- 
+
 
 if __name__ == "__main__":
     main()
