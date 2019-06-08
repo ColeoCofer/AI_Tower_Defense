@@ -101,7 +101,7 @@ class Game:
         self.numEnemiesPerLevel      = 10
         self.remainingEnemies        = self.numEnemiesPerLevel
         self.totalEnemiesKilled      = 0
-        self.spawnChance             = 0.5       # this can be throttled for testing
+        self.spawnChance             = 0.005       # this can be throttled for testing
         self.enemySpawnProbs         = []
         self.showPathBounds          = False
 
@@ -156,7 +156,7 @@ class Game:
                 self.enemiesAttack()
                 self.enemiesMove(self.ticks)
                 self.removeEnemies()
-                
+
                 run = self.isAlive()
                 self.ticks += 1
 
@@ -222,11 +222,11 @@ class Game:
             if self.towerGrid[towerPlacement][1] == False:
                 # this will be used to map a tower to its record for data keeping purposes
                 index = len(self.innerGameRecords)
-                
+
                 # place a random tower type in a random position
                 self.towerGrid[towerPlacement] = ((TOWER_GRID[towerPlacement], True, towerType + 1))
                 self.placeTower(towerType, TOWER_GRID[towerPlacement], index)
-                
+
                 # collect data for record
                 newRecord = InnerGameRecord()
                 newRecord.currentScore = self.score
@@ -247,7 +247,7 @@ class Game:
 
                 # add new record to the list
                 self.innerGameRecords.append(newRecord)
-                
+
                 break
 
         return
@@ -263,9 +263,10 @@ class Game:
                 newTowers.append(self.towers[i])
             # a dead tower was found, free up its tile
             else:
-                # this should update our record keeping to show that a tower that was placed has died
-                # self.innerGameRecords[self.towers[i].indexForRecordTable].died = 1
-                # self.dqLastTowerPlaced.damageTakenOnTurn += 50
+
+                # if self.collectInnerGameData:
+                    # this should update our record keeping to show that a tower that was placed has died
+                    # self.innerGameRecords[self.towers[i].indexForRecordTable].died = 1
                 j = 0
                 for j in range(len(self.towerGrid)):
                     if self.towerGrid[j][0][0] == (self.towers[i].position[0] - (TOWER_GRID_SIZE / 2)) and self.towerGrid[j][0][1] == (self.towers[i].position[1] - (TOWER_GRID_SIZE / 2)):
@@ -317,6 +318,9 @@ class Game:
                     else:
                         self.isPaused = True
 
+            #Handle mouse hover over events for the menu
+            self.menu.handleHoverEvents()
+
             #Store mouse clicks to determine path for enemies
             mousePosition = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -355,8 +359,8 @@ class Game:
 
             if enemy.x > WIN_WIDTH or enemy.health <= 0:
                 self.enemies.remove(enemy)
-                self.remainingEnemies -= 1     
-                
+                self.remainingEnemies -= 1
+
                 if enemy.health <= 0:
                     self.totalEnemiesKilled += 1
 
@@ -443,7 +447,7 @@ class Game:
         pygame.display.update()
 
 
-    def placeTower(self, towerType, towerLocation, index): 
+    def placeTower(self, towerType, towerLocation, index):
         if type(towerType) != int:
             towerType = TOWER_TYPES.index(towerType)
         
@@ -529,6 +533,7 @@ class Game:
         self.displayText("Level: " + str(self.level), ((numEnemiesPosition[0] , numEnemiesPosition[1] - 25)), self.uiFont, WHITE)
 
         self.displayText("Dead: " + str(self.totalEnemiesKilled), ((numEnemiesPosition[0] , numEnemiesPosition[1] - 50)), self.uiFont, WHITE)
+        self.displayText("Towers: " + str(len(self.towers)), (numEnemiesPosition[0], numEnemiesPosition[1] - 75), self.uiFont, WHITE)
 
         #Health
         healthText = "Health: " + str(int(self.health))
@@ -624,11 +629,11 @@ class Game:
 
 
     def gameover(self):
-        print('\nTotal Enemies Killed: ' + str(self.totalEnemiesKilled))
+        print('\nFinal Score:          ' + str(self.score))
+        print('Total Enemies Killed: ' + str(self.totalEnemiesKilled))
         print('Final Level:          ' + str(self.level))
-        print('Final Score:          ' + str(self.score))
         print('Towers Intact:        ' + str(len(self.towers)-1))
-        print('Coins:                ' + str(self.wallet.coins))
+        print('Coins:                ' + str(self.wallet.coins) + '\n')
 
         if self.gameRecord != None:
             self.gameRecord.fitnessScore = self.score

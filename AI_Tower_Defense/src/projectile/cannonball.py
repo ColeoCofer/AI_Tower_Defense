@@ -5,6 +5,7 @@ import math
 from .projectile import DamageType
 from .rangeProjectile import RangeProjectile
 from animations.fireExplosion import FireExplosion
+from constants.animationConstants import PLAY_SOUND_AFFECTS
 
 
 class Cannonball(RangeProjectile):
@@ -15,7 +16,7 @@ class Cannonball(RangeProjectile):
         self.damageType = DamageType.exploding  # cannonballs go boom
         self.reloadTime = 30                    # reload time long
         self.velocity = 100                     # cannonballs are fast
-        
+
 
         self.numImages = 5
         self.width = 30
@@ -41,6 +42,8 @@ class Cannonball(RangeProjectile):
                 halfDamage = self.damage / 2
                 enemy.hit(halfDamage, self.damageType, ticks)
                 self.damage += halfDamage
+                if PLAY_SOUND_AFFECTS:
+                    self.attackSound.play()
 
 
     # returns a residual animation

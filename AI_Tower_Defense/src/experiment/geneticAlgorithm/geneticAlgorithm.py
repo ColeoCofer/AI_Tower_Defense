@@ -232,9 +232,7 @@ class GeneticAlgorithm:
                 if NUMBER_OF_CHILDREN == 2:
                     child2 = np.concatenate((self.agent.population[i+1][:pivotPoint], self.agent.population[i][pivotPoint:])).tolist()
 
-                print('Before match')
                 if self.hasCorrectNumberOfTowers(child1) and self.hasCorrectNumberOfTowers(child2):
-                    print('Match')
                     break
 
             newPopulation.append(child1)

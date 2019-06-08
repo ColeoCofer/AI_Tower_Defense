@@ -18,7 +18,7 @@ class SerialGeneticAlgorithm(GeneticAlgorithm):
         super().__init__(visualMode, readFile, saveToDisk, printGraphs, collectWholeGameData, collectInnerGameData)
 
     def run(self):
-        
+
         if self.readFile:
             print("** Reading population from file **")
             self.agent.population = self.loadData()

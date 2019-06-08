@@ -4,6 +4,8 @@ import os
 from .rangeProjectile import RangeProjectile
 from .projectile import DamageType
 from animations.explosion import Explosion
+from constants.animationConstants import PLAY_SOUND_AFFECTS
+
 
 class Fireball(RangeProjectile):
 
@@ -38,8 +40,8 @@ class Fireball(RangeProjectile):
                 return False
             # deal damage to enemy
             if self.damageType == weakness:
-                # if not (self.trainingMode):
-                #     self.attackSound.play()
+                if PLAY_SOUND_AFFECTS:
+                    self.attackSound.play()
                 self.targetEnemy.hit(self.damage, self.damageType, ticks)
                 self.damage += self.damage
                 

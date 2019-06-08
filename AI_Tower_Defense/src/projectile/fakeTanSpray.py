@@ -20,8 +20,9 @@ class FakeTanSpray(Projectile):
         self.image = pygame.image.load("../assets/projectiles/fakenews/fakenews.png")
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.images.append(self.image)
-        self.attackAnimationDuration = 4
+
         self.animationCount = 0
+        self.attackAnimationDuration = 10
 
     def draw(self, win, ticks):
         ''' Draws the enemy with given images '''

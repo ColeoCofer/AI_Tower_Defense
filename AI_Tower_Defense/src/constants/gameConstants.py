@@ -17,6 +17,7 @@ from towers.igloo import Igloo
 
 FULLSCREEN_MODE = False     #Display in fullscreen (runs better for high res screens)
 PLAY_BG_MUSIC = False        #Set false to turn music off
+
 SHOW_CLICKS = False         #If true will display dots where clicked, and print the coordinate in terminal
 SHOW_PATH_BOUNDS = True     #If true will display bounds to enemy path
 
