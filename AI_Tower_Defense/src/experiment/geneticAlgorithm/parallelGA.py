@@ -28,7 +28,7 @@ class ParallelGeneticAlgorithm(GeneticAlgorithm):
         for generation in range(MAX_GENERATIONS):
             self.gameRecords = []
             self.towersForGeneration = []
-            self.correctNumberOfTowers = generation + 1
+            # self.correctNumberOfTowers = generation + 1
 
             # initializes the population to one with the same number of towers as the generation for data collection
             if self.collectWholeGameData:

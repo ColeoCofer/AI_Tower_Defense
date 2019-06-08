@@ -12,7 +12,7 @@ NUMBER_OF_HIDDEN_NODES = OUTPUT_NODES
 class DeepQagent:
 
     # making iterations smaller will decrease how long the agent explores and increase time spent
-    def __init__(self, learningRate=0.1, discountRate=0.95, explorationRate=1.0, iterations=10000):
+    def __init__(self, learningRate=0.1, discountRate=0.95, explorationRate=1.0, iterations=1000):
         
         self.learningRate = learningRate
         self.discountRate = discountRate
@@ -29,6 +29,8 @@ class DeepQagent:
         self.session.run(self.initializer)
 
         self.lastAction = []
+        self.finalScore = 0
+        self.finalLevel = 0
 
 
     # this gets ran once on creation of a new DeepQlearning object (init)

@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pygame
 import tensorflow as tf
-from joblib import Parallel, delayed
+# from joblib import Parallel, delayed
 
 
 from constants.aiConstants import *
@@ -31,17 +31,26 @@ class DeepQlearning:
 
         deepQ = DeepQagent()   
         saver = tf.train.Saver()
-        saver.restore(deepQ.session, "./deepQmodel/model.ckpt")
-        
+        # saver.restore(deepQ.session, "./deepQmodel/model.ckpt")
+        highScore = 0
+        highLevel = 0
+
         for iteration in range(DEEP_ITERATIONS):
-            if (iteration == DEEP_ITERATIONS - 1) and (not PARALLEL_MODE):   
+            # if (iteration == DEEP_ITERATIONS - 1) and (not PARALLEL_MODE):   
+            #     self.visualMode = True
+            if iteration % 10 == 0:
+                self.visualMode = True
+            elif (iteration - 1) % 10 == 0:
                 self.visualMode = True
             else:
                 self.visualMode = False
 
-            print('\nIteration: ' + str(iteration))
+            print('\nIteration: ' + str(iteration + 1))
 
             game = Game(self.visualMode, [], None, False, deepQ)
             deepQ = game.run()
+
+            if iteration % 100 == 0: 
+                saver.save(deepQ.session, "./deepQmodel/model.ckpt")
 
         saver.save(deepQ.session, "./deepQmodel/model.ckpt")

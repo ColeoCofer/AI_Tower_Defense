@@ -81,7 +81,7 @@ class Game:
         self.score        = 0
         self.health       = 200
         self.coinPosition = ((self.width - 150, 35))
-        self.wallet       = Wallet(self.coinPosition, STARTING_COINS)
+
         self.addedHealth  = 0
         self.addedSpeed   = 0
         self.towers       = towers
@@ -101,7 +101,7 @@ class Game:
         self.numEnemiesPerLevel      = 10
         self.remainingEnemies        = self.numEnemiesPerLevel
         self.totalEnemiesKilled      = 0
-        self.spawnChance             = 0.005       # this can be throttled for testing
+        self.spawnChance             = 0.5       # this can be throttled for testing
         self.enemySpawnProbs         = []
         self.showPathBounds          = False
 
@@ -127,6 +127,14 @@ class Game:
 
         self.isPaused          = False
         self.currSelectedTower = None   #Type of tower currently being selected from menu
+
+        if self.deepQagent == None:
+            self.wallet = Wallet(self.coinPosition, STARTING_COINS)
+        else:
+            self.wallet = Wallet(self.coinPosition, DEEP_STARTING_COINS)
+
+        # print('Tower length = ' + str(len(self.towers)))
+        # print('Starting Coins = ' + str(self.wallet.coins))
 
 
     def run(self):
@@ -178,15 +186,17 @@ class Game:
                         if not taken:
                             # should place a tower of the given type between 0-5, and with a position from the model
                             self.dqLastTowerPlaced = self.placeTower(newTower[2], newTower[0], -1)
+                            # print('Tower length = ' + str(len(self.towers)))
+
                         else:
                             # this will be a flag to say that a tower was placed on an existing tower location when we 
                             # calculate the results later
                             self.dqLastTowerPlaced = None
 
                         # store a copy of the new grid state
-                        # newTowerGrid = copy.deepcopy(self.towerGrid)
+                        newTowerGrid = copy.deepcopy(self.towerGrid)
 
-                        self.deepDecisions.append((oldTowerGrid, self.dqLastTowerPlaced))
+                        self.deepDecisions.append((oldTowerGrid, newTowerGrid, self.dqLastTowerPlaced))
 
             
             if self.visualMode:
@@ -255,7 +265,7 @@ class Game:
             else:
                 # this should update our record keeping to show that a tower that was placed has died
                 # self.innerGameRecords[self.towers[i].indexForRecordTable].died = 1
-                self.dqLastTowerPlaced.damageTakenOnTurn += 50
+                # self.dqLastTowerPlaced.damageTakenOnTurn += 50
                 j = 0
                 for j in range(len(self.towerGrid)):
                     if self.towerGrid[j][0][0] == (self.towers[i].position[0] - (TOWER_GRID_SIZE / 2)) and self.towerGrid[j][0][1] == (self.towers[i].position[1] - (TOWER_GRID_SIZE / 2)):
@@ -339,6 +349,7 @@ class Game:
 
 
             if enemy.health <= 0:
+                # print('Enemy Died!!')
                 self.score += enemy.startingHealth
                 self.wallet.coins += enemy.coinReward
 
@@ -630,14 +641,16 @@ class Game:
 
         if self.deepQagent != None:
             self.updateDecisions()
+            self.deepQagent.finalScore = self.score
+            self.deepQagent.finalLevel = self.level
 
 
     def updateDecisions(self):
-        # a decision: (oldTowerGrid, self.dqLastTowerPlaced) <-- reference to last tower placed
+        # a decision: (oldTowerGrid, newTowerGrid, self.dqLastTowerPlaced) <-- reference to last tower placed
         for decision in self.deepDecisions:
-            newReward = self.getReward(decision[1])
+            newReward = self.getReward(decision[2])
             # update the model 
-            self.deepQagent.update(decision[0], self.towerGrid, newReward)
+            self.deepQagent.update(decision[0], decision[1], newReward)
 
 
     def getReward(self, tower):
@@ -645,9 +658,9 @@ class Game:
         if tower != None:
             reward =  tower.damageDealtOnTurn
             reward -= tower.damageTakenOnTurn
-            reward += self.score // 10              # reduce the influence of the final score
-            if self.score == 0:
-                reward -= 100
+            reward += self.score # // 10              # reduce the influence of the final score
+            # if self.score == 0:
+            #     reward -= 100
         else:
             reward += TOWER_POSITION_TAKEN_PENALTY
 
