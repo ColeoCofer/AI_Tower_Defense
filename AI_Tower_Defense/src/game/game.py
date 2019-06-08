@@ -161,7 +161,7 @@ class Game:
                 #                                       TODO we still need to structure our rewards
                 # signature for next action:    getNextAction(currentGameState):
                 if self.deepQagent != None:
-                    if self.wallet.coins >= DEEP_BUYING_THRESHOLD:
+                    if self.wallet.coins >= DEEP_BUYING_THRESHOLD and len(self.towers) <= NUMBER_OF_STARTING_TOWERS:
                         
                         # this is returning a tower grid tuple from the agent
                         newTower = self.deepQagent.getNextAction(self.towerGrid)
@@ -185,8 +185,9 @@ class Game:
                             self.dqLastTowerPlaced = None
 
                         # store a copy of the new grid state
-                        newTowerGrid = copy.deepcopy(self.towerGrid)
-                        self.deepDecisions.append((oldTowerGrid, newTowerGrid, self.dqLastTowerPlaced))
+                        # newTowerGrid = copy.deepcopy(self.towerGrid)
+
+                        self.deepDecisions.append((oldTowerGrid, self.dqLastTowerPlaced))
 
             
             if self.visualMode:
@@ -197,7 +198,7 @@ class Game:
         if self.collectInnerGameData:
             return self.gameRecord
         elif self.deepQagent != None:
-            return self.deepQagent
+            return self.deepDecisions
         else:
             return
 
@@ -631,14 +632,17 @@ class Game:
             self.gameRecord.randomChoicesMade = self.innerGameRecords
 
         if self.deepQagent != None:
-            self.updateDeepQtable()
+            self.updateDecisions()
 
 
-    def updateDeepQtable(self):
-        for decision in self.deepDecisions:
-            newReward = self.getReward(decision[2])
+    def updateDecisions(self):
+        # a decision: (oldTowerGrid, newTowerGrid, self.dqLastTowerPlaced) <-- reference to last tower placed
+        for i in range(len(self.deepDecisions)):
+            newReward = self.getReward(self.deepDecisions[i][1])
+            self.deepDecisions[i] = tuple((self.deepDecisions[i][0], self.towerGrid, newReward))
+            
             # update the model 
-            self.deepQagent.update(decision[0], decision[1], newReward)
+            # self.deepQagent.update(decision[0], self.towerGrid, newReward)
 
 
     def getReward(self, tower):
@@ -652,4 +656,4 @@ class Game:
 
         return reward
 
-TOWER_POSITION_TAKEN_PENALTY = -15.0
+TOWER_POSITION_TAKEN_PENALTY = -100.0
