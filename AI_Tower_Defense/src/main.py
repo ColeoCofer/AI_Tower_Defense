@@ -14,12 +14,14 @@ from constants.gameConstants import *
 class MODE(Enum):
     manual           = 0,
     geneticAlgorithm = 1,
-    qLearning        = 2
+    qLearning        = 2,
+    deepQlearning    = 3
 
 
 GAME_MODE = MODE.manual  # Select which mode to run the game in
 PARALLEL_MODE  = False   # Run a game on each processor core (only when visual_mode is off)
-
+COLLECT_WHOLE_GAME_DATA = True
+COLLECT_INNER_GAME_DATA = True
 VISUAL_MODE    = False   # Display Graphics
 READ_FILE      = False   # Read model from file and continue training from it
 SAVE_TO_DISK   = True   # Collect and store data
@@ -39,7 +41,7 @@ def main():
 
     # Determine game mode
     if GAME_MODE == MODE.manual:
-        game = Game(True, [], None)
+        game = Game(True, [], None, None)
         game.run()
     elif GAME_MODE == MODE.geneticAlgorithm:
         if PARALLEL_MODE:
@@ -47,6 +49,7 @@ def main():
         else:
             gaAlgo = SerialGeneticAlgorithm(VISUAL_MODE, READ_FILE, SAVE_TO_DISK, PRINT_GRAPHS)
         gaAlgo.run()
+
     elif GAME_MODE == MODE.qLearning:
         if PARALLEL_MODE:
             qLearning = ParallelQLearning(VISUAL_MODE, READ_FILE, SAVE_TO_DISK, PRINT_GRAPHS)
@@ -54,6 +57,11 @@ def main():
             qLearning = SerialQLearning(VISUAL_MODE, READ_FILE, SAVE_TO_DISK, PRINT_GRAPHS)
 
         qLearning.run()
+
+    elif GAME_MODE == MODE.deepQlearning:
+        daq = DeepQagent()
+        test = daq.randomAction()
+        daq.translateModelAction(test)
 
     pygame.quit()
 

@@ -27,7 +27,25 @@ from ui.menu import Menu
 from agent.qLearningAgent import QLearningAgent
 
 from constants.gameConstants import *
+from constants.aiConstants import *
 from constants.animationConstants import *
+
+
+
+class InnerGameRecord:
+
+    def __init__(self):
+        self.currentScore = 0
+        self.currentLevel = 0
+        self.currentEnemiesKilled = 0
+        self.currentNumberOfEnemies = 0
+        self.currentNumberOfTowers = 0
+        self.died = 0
+        self.typeOfTowerPlaced = 0
+        self.towerX = 0
+        self.towerY = 0
+
+        self.currentTowers = []
 
 
 '''
@@ -37,15 +55,19 @@ Handles user events (keyboard, mouse, etc)
 Keeps track of score.
 '''
 class Game:
-    def __init__(self, visualMode, towers, gameRecord):
-        self.visualMode = visualMode
-        self.gameRecord = gameRecord
+
+    def __init__(self, visualMode, towers, gameRecord, collectInnerGameData):
+        
+        self.visualMode           = visualMode
+        self.gameRecord           = gameRecord
+        self.collectInnerGameData = collectInnerGameData
+        self.innerGameRecords     = []
 
         if self.visualMode:
             self.startBgMusic()
 
         ''' Initial window setup '''
-        self.width = WIN_WIDTH
+        self.width  = WIN_WIDTH
         self.height = WIN_HEIGHT
 
         self.ticks = 0
@@ -55,37 +77,37 @@ class Game:
             else:
                 self.win = pygame.display.set_mode((self.width, self.height))
 
-        self.enemies = []
-        self.towers = towers
-        self.towers.append(City((1180, 230)))
-        self.towerGrid = [] #Holds all possible locations for a tower to be placed, and whether one is there or not
-        self.score = 0
-        self.health = 200
+        self.enemies      = []
+        self.towerGrid    = [] #Holds all possible locations for a tower to be placed, and whether one is there or not, and the type of tower placed
+        self.score        = 0
+        self.health       = 200
         self.coinPosition = ((self.width - 150, 35))
-        self.wallet = Wallet(self.coinPosition, STARTING_COINS)
-        self.addedHealth = 0
-        self.addedSpeed = 0
+        self.wallet       = Wallet(self.coinPosition, STARTING_COINS)
+        self.addedHealth  = 0
+        self.addedSpeed   = 0
+        self.towers       = towers
+        self.towers.append(City((1180, 230)))
 
         # graphics
-        self.menu = Menu((350, 650), TOWER_TYPES)
-        self.bg = pygame.image.load(os.path.join("../assets/map", "bg.png"))
-        self.bg = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
+        self.menu          = Menu((350, 650), TOWER_TYPES)
+        self.bg            = pygame.image.load(os.path.join("../assets/map", "bg.png"))
+        self.bg            = pygame.transform.scale(self.bg, (self.width, self.height)) #Scale to window (Make sure aspect ratio is the same)
         self.gameoverImage = pygame.image.load(os.path.join("../assets/other", "gameover.png"))
         self.gameoverImage = pygame.transform.scale(self.bg, (self.width, self.height))
-        self.clicks = []
+        self.clicks        = []
 
         #Level & Spawn
         self.level = 1
         self.enemiesSpawnedThisLevel = 0
-        self.numEnemiesPerLevel = 10
-        self.remainingEnemies = self.numEnemiesPerLevel
-        self.totalEnemiesKilled = 0
-        self.spawnChance = 0.005                            # this can be throttled for testing
-        self.enemySpawnProbs = []
-        self.showPathBounds = False
+        self.numEnemiesPerLevel      = 10
+        self.remainingEnemies        = self.numEnemiesPerLevel
+        self.totalEnemiesKilled      = 0
+        self.spawnChance             = 0.005       # this can be throttled for testing
+        self.enemySpawnProbs         = []
+        self.showPathBounds          = False
 
         #Fonts
-        self.uiFont = pygame.font.SysFont('lucidagrandettc', 24)
+        self.uiFont       = pygame.font.SysFont('lucidagrandettc', 24)
         self.gameoverFont = pygame.font.SysFont('lucidagrandettc', 50)
 
         #Path
@@ -94,13 +116,12 @@ class Game:
         self.updateSpawnProbabilities()
         self.initTowerGrid()
 
-        self.isPaused = False
+        self.isPaused          = False
         self.currSelectedTower = None   #Type of tower currently being selected from menu
 
 
     def run(self):
         ''' Main game loop '''
-        # clock = pygame.time.Clock()
         run = True
         playerHasQuit = False
 
@@ -108,12 +129,16 @@ class Game:
 
             playerHasQuit = self.handleEvents()
             if self.isPaused == False:
+                if self.collectInnerGameData:
+                    if self.wallet.coins >= BUYING_THRESHOLD and len(self.towers) <= NUMBER_OF_STARTING_TOWERS:
+                        self.chooseNewTowerRandomly()
                 self.spawnEnemies()
                 self.towerHealthCheck()
                 self.towersAttack()
                 self.enemiesAttack()
                 self.enemiesMove(self.ticks)
                 self.removeEnemies()
+                
                 run = self.isAlive()
                 self.ticks += 1
 
@@ -121,10 +146,49 @@ class Game:
                 self.draw()
 
 
-
         self.gameover()
 
         return self.gameRecord
+
+
+    # Randomly buys a new tower and places it for data collection
+    def chooseNewTowerRandomly(self):
+
+        while True:
+            towerType = random.randint(0, NUMBER_OF_TOWERS - 1)
+            towerPlacement = random.randint(0, STARTING_POSITIONS - 1)
+            if self.towerGrid[towerPlacement][1] == False:
+                # this will be used to map a tower to its record for data keeping purposes
+                index = len(self.innerGameRecords)
+                
+                # place a random tower type in a random position
+                self.towerGrid[towerPlacement] = ((TOWER_GRID[towerPlacement], True, towerType + 1))
+                self.placeTower(towerType, TOWER_GRID[towerPlacement], index)
+                
+                # collect data for record
+                newRecord = InnerGameRecord()
+                newRecord.currentScore = self.score
+                newRecord.currentLevel = self.level
+                newRecord.currentEnemiesKilled = self.totalEnemiesKilled
+                newRecord.currentNumberOfEnemies = len(self.enemies)
+                newRecord.currentNumberOfTowers = len(self.towers)
+                newRecord.typeOfTowerPlaced = towerType
+                newRecord.towerX = TOWER_GRID[towerPlacement][0]
+                newRecord.towerY = TOWER_GRID[towerPlacement][1]
+
+                for i in range(STARTING_POSITIONS):
+                    if self.towerGrid[i][1] == False:
+                        newRecord.currentTowers.append(0)
+                    else:
+                        # included a digit in tower grids tuples to include tower type
+                        newRecord.currentTowers.append(self.towerGrid[i][2])
+
+                # add new record to the list
+                self.innerGameRecords.append(newRecord)
+                
+                break
+
+        return
 
 
     # goes through and removes dead towers from the list
@@ -137,10 +201,12 @@ class Game:
                 newTowers.append(self.towers[i])
             # a dead tower was found, free up its tile
             else:
+                # this should update our record keeping to show that a tower that was placed has died
+                self.innerGameRecords[self.towers[i].indexForRecordTable].died = 1
                 j = 0
                 for j in range(len(self.towerGrid)):
                     if self.towerGrid[j][0][0] == (self.towers[i].position[0] - (TOWER_GRID_SIZE / 2)) and self.towerGrid[j][0][1] == (self.towers[i].position[1] - (TOWER_GRID_SIZE / 2)):
-                        self.towerGrid[j] = ((self.towerGrid[j][0], False))
+                        self.towerGrid[j] = ((self.towerGrid[j][0], False, -1))
 
         self.towers = newTowers
 
@@ -203,7 +269,7 @@ class Game:
 
                 #If not None, the user has purchased and placed a tower
                 if towerType != None and towerLocation != None:
-                    self.placeTower(towerType, towerLocation)
+                    self.placeTower(towerType, towerLocation, -1)
 
                 #Store & print mouse clicks for path finding and debugging
                 if SHOW_CLICKS:
@@ -228,10 +294,10 @@ class Game:
 
             if enemy.x > WIN_WIDTH or enemy.health <= 0:
                 self.enemies.remove(enemy)
-                self.totalEnemiesKilled += 1
-                self.remainingEnemies -= 1
-
-        # print(self.score)
+                self.remainingEnemies -= 1     
+                
+                if enemy.health <= 0:
+                    self.totalEnemiesKilled += 1
 
 
     def spawnEnemies(self):
@@ -315,13 +381,15 @@ class Game:
         pygame.display.update()
 
 
-    def placeTower(self, towerType, towerLocation):
-        i = 0
-        for i in range(len(TOWER_TYPES)):
-            if TOWER_TYPES[i] == towerType:
-                towerLocation = (towerLocation[0] + (TOWER_GRID_SIZE / 2), towerLocation[1] + (TOWER_GRID_SIZE / 2))
-                self.towers.append(TOWER_TYPES[i](towerLocation))
-                self.showPathBounds = False
+    def placeTower(self, towerType, towerLocation, index): 
+        if type(towerType) != int:
+            towerType = TOWER_TYPES.index(towerType)
+        newTowerLocation = (towerLocation[0] + (TOWER_GRID_SIZE / 2), towerLocation[1] + (TOWER_GRID_SIZE / 2))
+        newTower = TOWER_TYPES[towerType](newTowerLocation)
+        newTower.indexForRecordTable = index
+        self.towers.append(newTower)
+        self.showPathBounds = False
+        self.wallet.spendCoins(newTower.cost)
 
 
     def calcPathBounds(self):
@@ -461,7 +529,7 @@ class Game:
         Second value is True if a tower is placed in that location
         '''
         for location in TOWER_GRID:
-            self.towerGrid.append((pygame.Rect(location, (TOWER_GRID_SIZE, TOWER_GRID_SIZE)), False))
+            self.towerGrid.append((pygame.Rect(location, (TOWER_GRID_SIZE, TOWER_GRID_SIZE)), False, -1))
 
 
     def showClicks(self):
@@ -497,6 +565,9 @@ class Game:
             self.gameRecord.enemiesKilled = self.totalEnemiesKilled
             self.gameRecord.towersRemaining = len(self.towers) - 1
             self.gameRecord.earnings = self.wallet.coins
+
+            self.gameRecord.randomChoicesMade = self.innerGameRecords
+
 
     # plays our awesome RenFair music
     def startBgMusic(self):

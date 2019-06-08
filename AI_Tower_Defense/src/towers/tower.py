@@ -19,6 +19,7 @@ class Tower:
         self.health = self.startingHealth
         self.weaknesses = [DamageType.melee, DamageType.fakeNews]    # All towers are weak to the punches
         self.attackCooldownTime = 0             # Timestamp showing when tower can attack again
+        self.damageDealt = 0
 
         self.healthBarWidth = 50
         self.healthBarHeight = 10
@@ -32,7 +33,7 @@ class Tower:
         self.projectilesFired = []   # projectile magazine
         self.animations = []         # animations to render
 
-
+        self.indexForRecordTable = 0
 
     # launches a tower attacking round
     def attack(self, enemies, ticks):
@@ -101,6 +102,7 @@ class Tower:
                 continue
             # TODO I think we may want to think about this. It currently is saying that a projectile has hit it's target
             if self.projectilesFired[i].draw(win, ticks) == True:
+                self.damageDealt += self.projectilesFired[i].damage
                 # replace the projectile with its final animation in the same postion
                 self.addAnimationToQueue(self.projectilesFired[i], ticks)
                 del self.projectilesFired[i]
