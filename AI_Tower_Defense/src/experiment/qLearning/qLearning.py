@@ -4,6 +4,8 @@ import pickle
 import sys
 import numpy as np
 
+import matplotlib.pyplot as plt
+
 from constants.aiConstants import *
 from constants.gameConstants import *
 from agent.qLearningAgent import QLearningAgent
@@ -52,7 +54,7 @@ class QLearning:
         else:
             #Greedily pick using Q-table
             bestQValueIndices = [(0, 0)]
-            for location in range(STARTING_POSITIONS):
+            for location in range(STARTING_POSITIONS - 1):
                 for tower in range(NUMBER_OF_TOWERS):
                     #Finds the best tower for a single location in the tower grid
                     if self.qtable[location][tower] > self.qtable[bestQValueIndices[0][0]][bestQValueIndices[0][1]] and self.isLegal(location):
@@ -70,7 +72,7 @@ class QLearning:
 
     def isLegal(self, placementIndex):
         ''' Returns true if the attempted position to place a tower is empty '''
-        gridPosition = TOWER_GRID[placementIndex - 1]
+        gridPosition = TOWER_GRID[placementIndex]
         gridPosition = (gridPosition[0] + (TOWER_GRID_SIZE / 2), gridPosition[1] + (TOWER_GRID_SIZE / 2))
         for i in range(len(self.towers)):
             if gridPosition == self.towers[i].position:
@@ -109,7 +111,7 @@ class QLearning:
         print(f'\nLoaded qtable from file.\n')
         qtablePickleFile.close()
 
-        #Load game scores
+        # Load game scores
         qtableScoresFile = open("qLearningGameScores.txt", "r")
         scoresString = qtableScoresFile.readLine()
         scores = [int(x) for x in scoresString.split(',')]
@@ -117,6 +119,15 @@ class QLearning:
         self.gameScores = scores
 
         return qtable
+
+    def saveGraph(self):
+        # plot the accuracy results from the training and test sets
+        title = 'Game Scores'
+        plt.plot(self.gameScores, label=title)
+        plt.xlabel('Hundreds of Episodes')
+        plt.ylabel('Score')
+        # plt.legend().set_visible(False)
+        plt.savefig('qtableScores.png')
 
     def printQTable(self):
         print(self.qtable)

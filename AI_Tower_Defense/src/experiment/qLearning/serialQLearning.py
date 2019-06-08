@@ -52,12 +52,3 @@ class SerialQLearning(QLearning):
             # Save a graph every x games
             if self.printGraphs and (N + 1) % NUM_GAMES_BEFORE_SAVING_GRAPH == 0:
                 self.saveGraph()
-
-    def saveGraph(self):
-        # plot the accuracy results from the training and test sets
-        title = 'Game Scores'
-        plt.plot(self.gameScores, label=title)
-        plt.xlabel('Episode')
-        plt.ylabel('Score')
-        # plt.legend().set_visible(False)
-        plt.savefig('qtableScores.png')
