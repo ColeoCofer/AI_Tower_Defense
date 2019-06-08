@@ -20,6 +20,15 @@ class TowerButton:
         self.costColor = (250, 241, 95)
         self.isSelected = False
         self.shouldDrawEnemyHud = False
+        self.playedHoverSound = False
+        # self.hoverClickSound = pygame.mixer.Sound("../assets/sounds/hoverClick.wav")
+        self.hoverClickSound =  pygame.mixer.Sound("../assets/sounds/clickTower.ogg")
+        self.hoverClickSound.set_volume(0.4)
+        self.selectTowerSound = pygame.mixer.Sound("../assets/sounds/selectTower.ogg")
+        self.selectTowerSound.set_volume(0.8)
+        self.placedTowerSound = pygame.mixer.Sound("../assets/sounds/placeTower.ogg")
+        self.placedTowerSound.set_volume(1)
+
 
     def draw(self, win):
         ''' Draw the button containing an image of the tower '''
@@ -42,12 +51,14 @@ class TowerButton:
         if self.rect.collidepoint(mousePosition):
             #Check if they have enough coins
             if wallet.coins >= self.cost and self.isSelected == False:
+                self.selectTowerSound.play()
                 self.isSelected = True
                 return True, self.type, None
         #Check if they have already selected a tower, and tried place it at a valid location
         elif self.isSelected == True and wallet.coins >= self.cost:
             towerLocation = self.canPlaceTower(towerGrid)
             if towerLocation != None:
+                self.placedTowerSound.play()
                 wallet.spendCoins(self.cost)
                 self.isSelected = False
                 return False, self.type, towerLocation
@@ -97,8 +108,15 @@ class TowerButton:
         mousePosition = pygame.mouse.get_pos()
         if self.rect.collidepoint(mousePosition):
             self.shouldDrawEnemyHud = True
+
+            if self.playedHoverSound == False:
+                self.hoverClickSound.play()
+                self.playedHoverSound = True
+
         else:
             self.shouldDrawEnemyHud = False
+            self.playedHoverSound = False
+
 
 
     def canPlaceTower(self, towerGrid):

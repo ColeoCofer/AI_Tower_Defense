@@ -2,7 +2,7 @@ import pygame
 import random
 from .projectile import Projectile
 from .projectile import DamageType
-
+from constants.animationConstants import PLAY_SOUND_AFFECTS
 
 class IceBeam(Projectile):
 
@@ -33,8 +33,8 @@ class IceBeam(Projectile):
                 return False
             # deal damage to enemy
             if self.damageType == weakness:
-                # if not (self.trainingMode):
-                #     self.attackSound.play()
+                if PLAY_SOUND_AFFECTS:
+                    self.attackSound.play()
                 self.targetEnemy.hit(self.damage, self.damageType, ticks)
                 return True
 
