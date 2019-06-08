@@ -1,4 +1,6 @@
 import pygame
+from enemies.zombie import Zombie
+from constants.gameConstants import TOWER_GRID_SIZE
 
 TEXT_GAP_PX = 15
 
@@ -17,6 +19,7 @@ class TowerButton:
         self.titleColor = (0, 0, 0)
         self.costColor = (250, 241, 95)
         self.isSelected = False
+        self.shouldDrawEnemyHud = False
 
     def draw(self, win):
         ''' Draw the button containing an image of the tower '''
@@ -25,8 +28,10 @@ class TowerButton:
         self.displayText(self.title, namePosition, self.titleColor, win, self.titleFont)
         costPosition = (namePosition[0], namePosition[1] + TEXT_GAP_PX)
         self.displayText(str(self.cost), costPosition, self.costColor, win, self.costFont)
-
         self.isPlacingTower(win)
+
+        if self.shouldDrawEnemyHud:
+            self.drawEnemyHud(win)
 
     def handleEvents(self, mousePosition, wallet, towerGrid):
         '''
@@ -48,6 +53,53 @@ class TowerButton:
                 return False, self.type, towerLocation
 
         return False, None, None
+
+    def drawEnemyHud(self, win):
+        '''
+        Displays information in a rectangle hud about each tower when
+        the user hovers over the tower button
+        '''
+
+        # Transparent rectangle for the background
+        self.bgRect = pygame.Surface((355, 120))
+        self.bgRect.set_alpha(100)
+        self.bgRect.fill((137, 139, 145))
+        bgRectPos = (self.position[0], self.position[1] - 140)
+
+        tower = self.type((0, 0))
+        projectileType = tower.loadProjectile(Zombie(0))
+        damageType = projectileType.damageType.name
+        damageAmt = projectileType.damage
+        weaknesses = tower.weaknesses
+        attackRadius = round(tower.attackRadius / TOWER_GRID_SIZE, 1)
+
+        weaknessString = "Weaknesses: "
+        for weakness in weaknesses:
+            weaknessString += weakness.name + ", "
+        weaknessString = weaknessString[:-2] #Get rid of last comma
+
+        damageString = "Damage Type: " + damageType
+        damageAmtString = "Damage: " + str(damageAmt)
+        attackRadiusString = "Attack Radius: " + str(attackRadius) + " Grids"
+
+
+        win.blit(self.bgRect, bgRectPos)
+
+        self.displayText(weaknessString, (bgRectPos[0] + 10, bgRectPos[1] + 10), (255, 255, 255), win, self.costFont)
+        self.displayText(damageString, (bgRectPos[0] + 10, bgRectPos[1] + 35), (255, 255, 255), win, self.costFont)
+        self.displayText(damageAmtString, (bgRectPos[0] + 10, bgRectPos[1] + 60), (255, 255, 255), win, self.costFont)
+        self.displayText(attackRadiusString, (bgRectPos[0] + 10, bgRectPos[1] + 85), (255, 255, 255), win, self.costFont)
+
+
+
+    def handleHoverEvents(self):
+        ''' Handle if user hovers mouse over tower button and display enemy info if so '''
+        mousePosition = pygame.mouse.get_pos()
+        if self.rect.collidepoint(mousePosition):
+            self.shouldDrawEnemyHud = True
+        else:
+            self.shouldDrawEnemyHud = False
+
 
     def canPlaceTower(self, towerGrid):
         ''' Returns the location to place a tower if the current mouse position is in an empty grid space'''

@@ -124,7 +124,7 @@ class QLearning:
         # plot the accuracy results from the training and test sets
         title = 'Game Scores'
         plt.plot(self.gameScores, label=title)
-        plt.xlabel('Hundreds of Episodes')
+        plt.xlabel('Episode')
         plt.ylabel('Score')
         # plt.legend().set_visible(False)
         plt.savefig('qtableScores.png')

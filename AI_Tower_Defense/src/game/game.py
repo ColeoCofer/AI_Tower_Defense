@@ -188,6 +188,9 @@ class Game:
                     else:
                         self.isPaused = True
 
+            #Handle mouse hover over events for the menu
+            self.menu.handleHoverEvents()
+
             #Store mouse clicks to determine path for enemies
             mousePosition = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:

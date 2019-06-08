@@ -20,7 +20,7 @@ class Trump(AttackingEnemy):
         self.weaknesses.append(DamageType.fire)
         self.weaknesses.append(DamageType.poison)
         self.weaknesses.append(DamageType.lightning)    # Trump is weak to EVERYTHING
-        self.superWeakness = DamageType.poison            # and super weak to fire
+        self.superWeakness = DamageType.poison          # and super weak to fire
 
         self.healthBarYOffset = 15
         self.width = 100

@@ -17,7 +17,7 @@ class MODE(Enum):
     qLearning        = 2
 
 
-GAME_MODE = MODE.qLearning  # Select which mode to run the game in
+GAME_MODE = MODE.manual  # Select which mode to run the game in
 PARALLEL_MODE  = False   # Run a game on each processor core (only when visual_mode is off)
 
 VISUAL_MODE    = False   # Display Graphics

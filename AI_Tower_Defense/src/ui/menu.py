@@ -71,3 +71,7 @@ class Menu:
                 return towerType, buttonWasSelected, towerLocation
 
         return towerType, buttonWasSelected, towerLocation
+
+    def handleHoverEvents(self):
+        for button in self.buttons:
+            button.handleHoverEvents()
