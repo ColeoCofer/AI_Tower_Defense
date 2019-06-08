@@ -158,7 +158,6 @@ class Game:
                 # signature for update model:   update(oldGameState, newGameState, reward):   
                 #                                       oldGameState is the tower arrangment that is a result of the previous arrangment,
                 #                                       newGameState is the current tower arrangement
-                #                                       TODO we still need to structure our rewards
                 # signature for next action:    getNextAction(currentGameState):
                 if self.deepQagent != None:
                     if self.wallet.coins >= DEEP_BUYING_THRESHOLD and len(self.towers) <= NUMBER_OF_STARTING_TOWERS:
@@ -198,7 +197,8 @@ class Game:
         if self.collectInnerGameData:
             return self.gameRecord
         elif self.deepQagent != None:
-            return self.deepDecisions
+            # return self.deepDecisions
+            return self.deepQagent
         else:
             return
 
@@ -531,9 +531,6 @@ class Game:
         if self.isPaused == True:
             self.displayText("PAUSED", ((WIN_WIDTH / 2) - 25, 60), self.uiFont, (200, 0, 0))
 
-        # Display FPS, however, it always displays 0 for some reason...
-        # self.displayText("FPS: " + str(int(fps)), (15, 20), self.uiFont, WHITE)
-
 
     def displayText(self, text, position, font, color):
         ''' Renders text at location using a specific font '''
@@ -636,13 +633,11 @@ class Game:
 
 
     def updateDecisions(self):
-        # a decision: (oldTowerGrid, newTowerGrid, self.dqLastTowerPlaced) <-- reference to last tower placed
-        for i in range(len(self.deepDecisions)):
-            newReward = self.getReward(self.deepDecisions[i][1])
-            self.deepDecisions[i] = tuple((self.deepDecisions[i][0], self.towerGrid, newReward))
-            
+        # a decision: (oldTowerGrid, self.dqLastTowerPlaced) <-- reference to last tower placed
+        for decision in self.deepDecisions:
+            newReward = self.getReward(decision[1])
             # update the model 
-            # self.deepQagent.update(decision[0], self.towerGrid, newReward)
+            self.deepQagent.update(decision[0], self.towerGrid, newReward)
 
 
     def getReward(self, tower):
@@ -651,6 +646,8 @@ class Game:
             reward =  tower.damageDealtOnTurn
             reward -= tower.damageTakenOnTurn
             reward += self.score // 10              # reduce the influence of the final score
+            if self.score == 0:
+                reward -= 100
         else:
             reward += TOWER_POSITION_TAKEN_PENALTY
 
