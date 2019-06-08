@@ -18,3 +18,5 @@
 *.txt
 averageScores.txt
 lastfit_gen.txt
+*.pkl
+qtableScores.png

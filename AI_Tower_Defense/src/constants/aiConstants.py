@@ -6,7 +6,7 @@ OFF = False
 
 
 # AI general constants
-NUMBER_OF_STARTING_TOWERS = 50
+NUMBER_OF_STARTING_TOWERS = 30
 
 # Q-Learning constants
 DISCOUNT_RATE          = 0.9
@@ -14,7 +14,7 @@ EPSILON        = 0.1
 EPSILON_STEP   = 0.004
 EPSILON_PERIOD = 100
 LEARN_RATE            = 0.1
-N_EPISODES     = 50000
+N_EPISODES     = 20000
 M_STEPS        = 500
 
 # GA constants

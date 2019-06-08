@@ -14,11 +14,12 @@ from .geneticAlgorithm import GeneticAlgorithm, GameRecord
 
 class ParallelGeneticAlgorithm(GeneticAlgorithm):
 
-    def __init__(self, visualMode, readFile, saveToDisk, printGraphs, collectWholeGameData, collectInnerGameData):
-        super().__init__(visualMode, readFile, saveToDisk, printGraphs, collectWholeGameData, collectInnerGameData)
+
+    def __init__(self, visualMode, readFile, saveToDisk, printGraphs):
+        super().__init__(visualMode, readFile, saveToDisk, printGraphs)
 
     def run(self):
-        
+
         if self.readFile:
             print("** Reading population from file **")
             self.agent.population = self.loadData()
@@ -37,15 +38,15 @@ class ParallelGeneticAlgorithm(GeneticAlgorithm):
             # create a list of all of the populations tower arrangements, and a blank list of records to feed to the parallel call
             for i in range(POPULATION_SIZE):
                 gameRecord = GameRecord()
-                
+
                 # this is capturing whole game stats, we will also collect in-game stats
                 if self.collectWholeGameData:
                     # record population for data collection for other algorithms
                     gameRecord.population = self.agent.population[i]
                     # record the generation number as that as how many towers they get for data collection
                     gameRecord.numberOfTowers = generation
-                    
-                self.towersForGeneration.append(self.agent.setTowers(self.agent.population[i]))                
+
+                self.towersForGeneration.append(self.agent.setTowers(self.agent.population[i]))
                 self.gameRecords.append(gameRecord)
 
             # play all of the games for each member of the population
