@@ -48,7 +48,7 @@ class QLearning:
             location = random.randint(0, STARTING_POSITIONS - 1)
             tower = random.randint(0, NUMBER_OF_TOWERS - 1)
             while not self.isLegal(location):
-                location = random.randint(0, STARTING_POSITIONS)
+                location = random.randint(0, STARTING_POSITIONS - 1)
 
             return location, tower
         else:
