@@ -21,7 +21,6 @@ class TowerButton:
         self.isSelected = False
         self.shouldDrawEnemyHud = False
         self.playedHoverSound = False
-        # self.hoverClickSound = pygame.mixer.Sound("../assets/sounds/hoverClick.wav")
         self.hoverClickSound =  pygame.mixer.Sound("../assets/sounds/clickTower.ogg")
         self.hoverClickSound.set_volume(0.4)
         self.selectTowerSound = pygame.mixer.Sound("../assets/sounds/selectTower.ogg")

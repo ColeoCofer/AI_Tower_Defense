@@ -36,7 +36,7 @@ class SerialQLearning(QLearning):
                 self.addTower(location, tower)
 
             # Run the game until it's over
-            game = Game(self.visualMode, self.towers, None)
+            game = Game(self.visualMode, self.towers, None, None)
             game.run()
 
             # Update q-table for each tower placement using the final game score

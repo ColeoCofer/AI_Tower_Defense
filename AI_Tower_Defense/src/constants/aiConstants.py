@@ -6,7 +6,7 @@ OFF = False
 
 
 # AI general constants
-NUMBER_OF_STARTING_TOWERS = 40
+NUMBER_OF_STARTING_TOWERS = 30
 
 # Q-Learning constants
 DISCOUNT_RATE          = 0.9
