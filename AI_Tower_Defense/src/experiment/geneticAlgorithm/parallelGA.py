@@ -15,8 +15,8 @@ from .geneticAlgorithm import GeneticAlgorithm, GameRecord
 class ParallelGeneticAlgorithm(GeneticAlgorithm):
 
 
-    def __init__(self, visualMode, readFile, saveToDisk, printGraphs):
-        super().__init__(visualMode, readFile, saveToDisk, printGraphs)
+    def __init__(self, visualMode, readFile, saveToDisk, printGraphs, collectWholeGameData, collectInnerGameData):
+        super().__init__(visualMode, readFile, saveToDisk, printGraphs, collectWholeGameData, collectInnerGameData)
 
     def run(self):
 
@@ -29,7 +29,7 @@ class ParallelGeneticAlgorithm(GeneticAlgorithm):
         for generation in range(MAX_GENERATIONS):
             self.gameRecords = []
             self.towersForGeneration = []
-            self.correctNumberOfTowers = generation + 1
+            # self.correctNumberOfTowers = generation + 1
 
             # initializes the population to one with the same number of towers as the generation for data collection
             if self.collectWholeGameData:
@@ -60,6 +60,6 @@ class ParallelGeneticAlgorithm(GeneticAlgorithm):
 
 
     def runGame(self, towers, gameRecord):
-        # bool: visualMode, list: towers, record for individual game data
-        game = Game(self.visualMode, towers, gameRecord, self.collectInnerGameData)
+        # bool: visualMode, list: towers, record for individual game data, None for the deepQ agent the game now expects
+        game = Game(self.visualMode, towers, gameRecord, self.collectInnerGameData, None)
         return game.run()

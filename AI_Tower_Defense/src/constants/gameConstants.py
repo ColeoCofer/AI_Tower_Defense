@@ -16,7 +16,8 @@ from towers.city import City
 from towers.igloo import Igloo
 
 FULLSCREEN_MODE = False     #Display in fullscreen (runs better for high res screens)
-PLAY_BG_MUSIC = True       #Set false to turn music off
+PLAY_BG_MUSIC = False        #Set false to turn music off
+
 SHOW_CLICKS = False         #If true will display dots where clicked, and print the coordinate in terminal
 SHOW_PATH_BOUNDS = True     #If true will display bounds to enemy path
 
@@ -41,14 +42,14 @@ STARTING_COINS   = 500
 BUYING_THRESHOLD = 200         # the number of coins to trigger the AI to decide where to buy a new tower
 
 #Spawn Probabilities
-GLOBAL_SPAWN_PROB_INC = 0.15   # Percent increase spawn chance per level
+GLOBAL_SPAWN_PROB_INC = 0.25   # Percent increase spawn chance per level
 ENEMY_PROB_INC = 0.20          # Percent increase number of enemies per level
 ENEMY_SPAWN_INC = 0.30         # Increments individual enemies spawn chances
 
 #Level increase constants
-STARTING_LEVEL  = 10
-HEALTH_INCREASE = 1                     # how much health is added to enemies when increased
-SPEED_INCREASE  = 1                     # how much speed is added to enemies when increased
+# STARTING_LEVEL  = 10
+HEALTH_INCREASE = 3                     # how much health is added to enemies when increased
+SPEED_INCREASE  = 2                     # how much speed is added to enemies when increased
 NUMBER_LEVELS_HEALTH_INCREASE = 2       # how many levels before an enemy health increase
 NUMBER_LEVELS_SPEED_INCREASE  = 3       # how many levels before an enemy speed increase
 

@@ -136,13 +136,10 @@ class GeneticAlgorithm:
 
         # create the new population for crossover based off of the probabilities from the fitness scores
         self.selectPopulationForCrossover()
-
         # perform the crossing over of pairs in the population
         self.crossoverParents()
-
         # perform the random mutation on the children
         self.mutateChildren()
-
         self.agent.fitnessScores = []
 
         if self.saveToDisk:
@@ -203,7 +200,7 @@ class GeneticAlgorithm:
                 towerCount += 1
         # print('Tower Count: ' + str(towerCount))
         # print('Self number: ' + str(self.correctNumberOfTowers))
-        if towerCount == self.correctNumberOfTowers:
+        if towerCount == NUMBER_OF_STARTING_TOWERS:
             return True
 
         return False

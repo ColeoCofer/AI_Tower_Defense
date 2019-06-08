@@ -11,7 +11,8 @@ NUMBER_OF_HIDDEN_NODES = OUTPUT_NODES
 
 class DeepQagent:
 
-    def __init__(self, learningRate=0.1, discountRate=0.95, explorationRate=1.0, iterations=10000):
+    # making iterations smaller will decrease how long the agent explores and increase time spent
+    def __init__(self, learningRate=0.1, discountRate=0.95, explorationRate=1.0, iterations=1000):
         
         self.learningRate = learningRate
         self.discountRate = discountRate
@@ -28,13 +29,15 @@ class DeepQagent:
         self.session.run(self.initializer)
 
         self.lastAction = []
+        self.finalScore = 0
+        self.finalLevel = 0
 
 
     # this gets ran once on creation of a new DeepQlearning object (init)
     # this defines how the input layer is constructed: self.modelInput
     # this defines how the output layer is structured: self.modelOutput
     def defineModel(self):
-        self.modelInput = tf.placeholder(dtype=tf.float32, shape=[None, self.inputCount])
+        self.modelInput = tf.placeholder(dtype=tf.float32, shape=[1, self.inputCount])
 
         # Two hidden layers of 50 neurons with sigmoid activation initialized to zero for stability
         fc1 = tf.layers.dense(self.modelInput, NUMBER_OF_HIDDEN_NODES, activation=tf.sigmoid, kernel_initializer=tf.constant_initializer(np.zeros((self.inputCount, NUMBER_OF_HIDDEN_NODES))))
@@ -42,7 +45,7 @@ class DeepQagent:
 
         # output is a representation of the actions that could be taken, i.e. where to place a new tower
         self.modelOutput = tf.layers.dense(fc2, self.outputCount)
-        self.targetOutput = tf.placeholder(shape=[None, self.outputCount], dtype=tf.float32)
+        self.targetOutput = tf.placeholder(shape=[1, self.outputCount], dtype=tf.float32)
         loss = tf.losses.mean_squared_error(self.targetOutput, self.modelOutput)
         
         # Optimizer adjusts weights to minimize loss
@@ -130,7 +133,7 @@ class DeepQagent:
 
     # translate the tower grid of the game into a binary string of length 798 (7 tower states * 114 grid positions)
     def translateGameState(self, towerGrid):
-        gameState = np.zeros((INPUT_NODES,), dtype=int)
+        gameState = np.zeros((1, INPUT_NODES), dtype=int)
         step = NUMBER_OF_TOWERS + 1
         
         i = 0
@@ -138,7 +141,7 @@ class DeepQagent:
             # tower should be a 0-6 to represent no tower through all 6 tower types (the +1 is to shift the -1 that represents 
             # empty to be the proper location in our binary representation)
             tower = location[2] + 1
-            gameState[i + tower] = 1
+            gameState[0][i + tower] = 1
             i += step
 
         return gameState

@@ -3,6 +3,7 @@ from pygame.locals import *
 import os
 import random
 import numpy as np
+import copy
 
 import enemies.zombie
 from enemies.dino import Dino
@@ -30,8 +31,6 @@ from constants.gameConstants import *
 from constants.aiConstants import *
 from constants.animationConstants import *
 
-
-
 class InnerGameRecord:
 
     def __init__(self):
@@ -56,8 +55,8 @@ Keeps track of score.
 '''
 class Game:
 
-    def __init__(self, visualMode, towers, gameRecord, collectInnerGameData):
-
+    def __init__(self, visualMode, towers, gameRecord, collectInnerGameData, deepQagent):
+        
         self.visualMode           = visualMode
         self.gameRecord           = gameRecord
         self.collectInnerGameData = collectInnerGameData
@@ -82,7 +81,7 @@ class Game:
         self.score        = 0
         self.health       = 200
         self.coinPosition = ((self.width - 150, 35))
-        self.wallet       = Wallet(self.coinPosition, STARTING_COINS)
+
         self.addedHealth  = 0
         self.addedSpeed   = 0
         self.towers       = towers
@@ -116,8 +115,26 @@ class Game:
         self.updateSpawnProbabilities()
         self.initTowerGrid()
 
+        # deep Q things
+        self.deepQagent        = deepQagent
+        self.dqOldTowerGrid    = copy.deepcopy(self.towerGrid)
+        self.dqLastTowerPlaced = None
+        self.dqCurrentReward   = 0
+        # deep Q reward things?? the damage dealt worries me for the igloo
+        self.dqDamageDealt     = 0
+        self.dqDamageTaken     = 0  
+        self.deepDecisions     = []      
+
         self.isPaused          = False
         self.currSelectedTower = None   #Type of tower currently being selected from menu
+
+        if self.deepQagent == None:
+            self.wallet = Wallet(self.coinPosition, STARTING_COINS)
+        else:
+            self.wallet = Wallet(self.coinPosition, DEEP_STARTING_COINS)
+
+        # print('Tower length = ' + str(len(self.towers)))
+        # print('Starting Coins = ' + str(self.wallet.coins))
 
 
     def run(self):
@@ -129,6 +146,7 @@ class Game:
 
             playerHasQuit = self.handleEvents()
             if self.isPaused == False:
+                # entry point for GAagent for data collection
                 if self.collectInnerGameData:
                     if self.wallet.coins >= BUYING_THRESHOLD and len(self.towers) <= NUMBER_OF_STARTING_TOWERS:
                         self.chooseNewTowerRandomly()
@@ -142,13 +160,57 @@ class Game:
                 run = self.isAlive()
                 self.ticks += 1
 
+                # entry point for the deepQ agent to make decisions and learn from
+
+                # all game states are the full tower grid of tuples
+                # signature for update model:   update(oldGameState, newGameState, reward):   
+                #                                       oldGameState is the tower arrangment that is a result of the previous arrangment,
+                #                                       newGameState is the current tower arrangement
+                # signature for next action:    getNextAction(currentGameState):
+                if self.deepQagent != None:
+                    if self.wallet.coins >= DEEP_BUYING_THRESHOLD and len(self.towers) <= NUMBER_OF_STARTING_TOWERS:
+                        
+                        # this is returning a tower grid tuple from the agent
+                        newTower = self.deepQagent.getNextAction(self.towerGrid)
+
+                        # place the model chosen tower if possible
+                        taken = False
+                        for location in self.towerGrid:
+                            if location[1] == True and location[0][0] == newTower[0][0] and location[0][1] == newTower[0][1]:
+                                taken = True
+                                break
+                        
+                        # store a copy of the old tower grid state
+                        oldTowerGrid = copy.deepcopy(self.towerGrid)
+                        
+                        if not taken:
+                            # should place a tower of the given type between 0-5, and with a position from the model
+                            self.dqLastTowerPlaced = self.placeTower(newTower[2], newTower[0], -1)
+                            # print('Tower length = ' + str(len(self.towers)))
+
+                        else:
+                            # this will be a flag to say that a tower was placed on an existing tower location when we 
+                            # calculate the results later
+                            self.dqLastTowerPlaced = None
+
+                        # store a copy of the new grid state
+                        newTowerGrid = copy.deepcopy(self.towerGrid)
+
+                        self.deepDecisions.append((oldTowerGrid, newTowerGrid, self.dqLastTowerPlaced))
+
+            
             if self.visualMode:
                 self.draw()
 
-
         self.gameover()
 
-        return self.gameRecord
+        if self.collectInnerGameData:
+            return self.gameRecord
+        elif self.deepQagent != None:
+            # return self.deepDecisions
+            return self.deepQagent
+        else:
+            return
 
 
     # Randomly buys a new tower and places it for data collection
@@ -201,9 +263,10 @@ class Game:
                 newTowers.append(self.towers[i])
             # a dead tower was found, free up its tile
             else:
-                if self.collectInnerGameData:
+
+                # if self.collectInnerGameData:
                     # this should update our record keeping to show that a tower that was placed has died
-                    self.innerGameRecords[self.towers[i].indexForRecordTable].died = 1
+                    # self.innerGameRecords[self.towers[i].indexForRecordTable].died = 1
                 j = 0
                 for j in range(len(self.towerGrid)):
                     if self.towerGrid[j][0][0] == (self.towers[i].position[0] - (TOWER_GRID_SIZE / 2)) and self.towerGrid[j][0][1] == (self.towers[i].position[1] - (TOWER_GRID_SIZE / 2)):
@@ -290,6 +353,7 @@ class Game:
 
 
             if enemy.health <= 0:
+                # print('Enemy Died!!')
                 self.score += enemy.startingHealth
                 self.wallet.coins += enemy.coinReward
 
@@ -320,8 +384,9 @@ class Game:
                 self.enemiesSpawnedThisLevel += 1
                 self.updateEnemyHealth()
                 self.updateEnemyWalkingSpeed()
+                
                 newEnemy.health += self.addedHealth
-                newEnemy.startingHealth = newEnemy.health
+                # newEnemy.startingHealth = newEnemy.health
                 newEnemy.velocity += self.addedSpeed
                 self.enemies.append(newEnemy)
         else:
@@ -385,12 +450,18 @@ class Game:
     def placeTower(self, towerType, towerLocation, index):
         if type(towerType) != int:
             towerType = TOWER_TYPES.index(towerType)
+        
         newTowerLocation = (towerLocation[0] + (TOWER_GRID_SIZE / 2), towerLocation[1] + (TOWER_GRID_SIZE / 2))
         newTower = TOWER_TYPES[towerType](newTowerLocation)
+        
+        # this is just for the GA
         newTower.indexForRecordTable = index
+        
         self.towers.append(newTower)
         self.showPathBounds = False
         self.wallet.spendCoins(newTower.cost)
+
+        return newTower
 
 
     def calcPathBounds(self):
@@ -476,9 +547,6 @@ class Game:
         if self.isPaused == True:
             self.displayText("PAUSED", ((WIN_WIDTH / 2) - 25, 60), self.uiFont, (200, 0, 0))
 
-        # Display FPS, however, it always displays 0 for some reason...
-        # self.displayText("FPS: " + str(int(fps)), (15, 20), self.uiFont, WHITE)
-
 
     def displayText(self, text, position, font, color):
         ''' Renders text at location using a specific font '''
@@ -552,10 +620,17 @@ class Game:
             self.win.blit(bgRect, (mousePosition[0], mousePosition[1]))
 
 
-    def gameover(self):
+    # plays our awesome RenFair music
+    def startBgMusic(self):
+        if PLAY_BG_MUSIC and self.visualMode:
+            randSong = random.randint(0, len(BG_MUSIC) - 1)
+            pygame.mixer.music.load("../assets/music/background/" + BG_MUSIC[randSong])
+            pygame.mixer.music.play(-1)
 
-        print('Final Score:          ' + str(self.score))
-        print('\nTotal Enemies Killed: ' + str(self.totalEnemiesKilled))
+
+    def gameover(self):
+        print('\nFinal Score:          ' + str(self.score))
+        print('Total Enemies Killed: ' + str(self.totalEnemiesKilled))
         print('Final Level:          ' + str(self.level))
         print('Towers Intact:        ' + str(len(self.towers)-1))
         print('Coins:                ' + str(self.wallet.coins) + '\n')
@@ -569,10 +644,31 @@ class Game:
 
             self.gameRecord.randomChoicesMade = self.innerGameRecords
 
+        if self.deepQagent != None:
+            self.updateDecisions()
+            self.deepQagent.finalScore = self.score
+            self.deepQagent.finalLevel = self.level
 
-    # plays our awesome RenFair music
-    def startBgMusic(self):
-        if PLAY_BG_MUSIC and self.visualMode:
-            randSong = random.randint(0, len(BG_MUSIC) - 1)
-            pygame.mixer.music.load("../assets/music/background/" + BG_MUSIC[randSong])
-            pygame.mixer.music.play(-1)
+
+    def updateDecisions(self):
+        # a decision: (oldTowerGrid, newTowerGrid, self.dqLastTowerPlaced) <-- reference to last tower placed
+        for decision in self.deepDecisions:
+            newReward = self.getReward(decision[2])
+            # update the model 
+            self.deepQagent.update(decision[0], decision[1], newReward)
+
+
+    def getReward(self, tower):
+        reward = 0
+        if tower != None:
+            reward =  tower.damageDealtOnTurn
+            reward -= tower.damageTakenOnTurn
+            reward += self.score # // 10              # reduce the influence of the final score
+            # if self.score == 0:
+            #     reward -= 100
+        else:
+            reward += TOWER_POSITION_TAKEN_PENALTY
+
+        return reward
+
+TOWER_POSITION_TAKEN_PENALTY = -100.0

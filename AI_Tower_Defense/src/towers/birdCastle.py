@@ -11,7 +11,6 @@ class BirdCastle(Tower):
     def __init__(self, position):
         super().__init__(position)
         self.name = "Bird Castle"
-        self.cost = 200
         self.startingHealth = 250                            # pretty tough
         self.health = self.startingHealth
         self.attackRadius = 300

@@ -78,6 +78,7 @@ class AttackingEnemy(Enemy):
         centerX = self.x - (self.width / 2)
         centerY = self.y - (self.height / 2) + self.yOffset
 
+
         # checks projectile magazine for projectiles to render
         i = 0
         while i < len(self.projectilesFired):

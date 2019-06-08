@@ -11,7 +11,6 @@ class Pyramid(Tower):
     def __init__(self, position):
         super().__init__(position)
         self.name = "Pyramid"
-        self.cost = 200
         self.startingHealth = 450                                # tough
         self.health = self.startingHealth
         self.attackRadius = 300

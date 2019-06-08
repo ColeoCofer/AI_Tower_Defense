@@ -37,9 +37,13 @@ class Cannonball(RangeProjectile):
             dist = (enemy.x - self.x) ** 2 + (enemy.y - self.y) ** 2
             #Use radius squared to avoid taking square roots of distance
             if dist <= self.attackRadius ** 2:
+                # if not self.trainingMode:
+                #     self.attackSound.play()
+                halfDamage = self.damage / 2
+                enemy.hit(halfDamage, self.damageType, ticks)
+                self.damage += halfDamage
                 if PLAY_SOUND_AFFECTS:
                     self.attackSound.play()
-                enemy.hit((self.damage / 2), self.damageType, ticks)
 
 
     # returns a residual animation

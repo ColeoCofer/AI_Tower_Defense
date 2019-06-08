@@ -2,6 +2,8 @@ import pygame
 from projectile.projectile import Projectile, DamageType
 from animations.animation import Animation
 from constants.animationConstants import *
+from projectile.iceBeam import IceBeam
+# from .igloo import Igloo
 
 
 # Tower base class
@@ -9,7 +11,7 @@ class Tower:
 
     def __init__(self, position):
         self.name = "No Name"
-        self.cost = 100
+        self.cost = 200
         self.position = position
         self.x = position[0]   # Position on map
         self.y = position[1]
@@ -33,7 +35,12 @@ class Tower:
         self.projectilesFired = []   # projectile magazine
         self.animations = []         # animations to render
 
+        # for the GAs
         self.indexForRecordTable = 0
+
+        # for deep learning
+        self.damageDealtOnTurn = 0
+        self.damageTakenOnTurn = 0
 
     # launches a tower attacking round
     def attack(self, enemies, ticks):
@@ -102,7 +109,14 @@ class Tower:
                 continue
             # TODO I think we may want to think about this. It currently is saying that a projectile has hit it's target
             if self.projectilesFired[i].draw(win, ticks) == True:
-                self.damageDealt += self.projectilesFired[i].damage
+                initialDamage = self.projectilesFired[i].damage
+                self.damageDealt += initialDamage
+                
+                # deep Q 
+                self.damageDealtOnTurn += initialDamage
+                if type(self.projectilesFired[i]) == IceBeam:
+                    self.damageDealtOnTurn += 2
+                
                 # replace the projectile with its final animation in the same postion
                 self.addAnimationToQueue(self.projectilesFired[i], ticks)
                 del self.projectilesFired[i]
@@ -127,6 +141,7 @@ class Tower:
     # this is called when an enemy has hit a tower to reduce the towers health
     def hit(self, damage, damageType, ticks):
         self.health = self.health - damage
+        self.damageTakenOnTurn += damage
 
 
     # parent stub for loading projectiles
