@@ -8,7 +8,7 @@ from constants.gameConstants import *
 from agent.deepQagent import DeepQagent
 from game.game import Game
 
-DEEP_ITERATIONS = 100
+DEEP_ITERATIONS = 1000
 
 # the game expects the following signature:
 #      Game(visualMode, towers, gameRecord, collectInnerGameData, deepQagent)
@@ -25,5 +25,11 @@ class DeepQlearning:
         deepQ = DeepQagent()
 
         for iteration in range(DEEP_ITERATIONS):
+            # if iteration % 20 == 0 and iteration != 0:
+            if iteration == DEEP_ITERATIONS - 1:   
+               self.visualMode = True
+            else:
+                self.visualMode = False
+
             game = Game(self.visualMode, [], None, False, deepQ)
             deepQ = game.run()

@@ -11,7 +11,7 @@ class Tower:
 
     def __init__(self, position):
         self.name = "No Name"
-        self.cost = 100
+        self.cost = 200
         self.position = position
         self.x = position[0]   # Position on map
         self.y = position[1]
@@ -112,6 +112,7 @@ class Tower:
                 initialDamage = self.projectilesFired[i].damage
                 self.damageDealt += initialDamage
                 
+                # deep Q 
                 self.damageDealtOnTurn += initialDamage
                 if type(self.projectilesFired[i]) == IceBeam:
                     self.damageDealtOnTurn += 2

@@ -76,7 +76,7 @@ class AttackingEnemy(Enemy):
 
         # Display from center of character
         centerX = self.x - (self.width / 2)
-        centerY = self.y - (self.height / 2)
+        centerY = self.y + self.yOffset - (self.height / 2)
 
         # checks projectile magazine for projectiles to render
         i = 0
