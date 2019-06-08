@@ -164,4 +164,3 @@ class Enemy:
         if damageType == DamageType.ice:
             self.frozen = True
             self.frozenDuration = ticks + FROZEN_DURATION
-

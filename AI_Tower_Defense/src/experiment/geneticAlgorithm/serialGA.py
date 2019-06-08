@@ -19,7 +19,7 @@ class SerialGeneticAlgorithm(GeneticAlgorithm):
 
 
     def run(self):
-        
+
         if self.readFile:
             print("** Reading population from file **")
             self.agent.population = self.loadData()

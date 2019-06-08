@@ -390,6 +390,7 @@ class Game:
         self.displayText("Level: " + str(self.level), ((numEnemiesPosition[0] , numEnemiesPosition[1] - 25)), self.uiFont, WHITE)
 
         self.displayText("Dead: " + str(self.totalEnemiesKilled), ((numEnemiesPosition[0] , numEnemiesPosition[1] - 50)), self.uiFont, WHITE)
+        self.displayText("Towers: " + str(len(self.towers)), (numEnemiesPosition[0], numEnemiesPosition[1] - 75), self.uiFont, WHITE)
 
         #Health
         healthText = "Health: " + str(int(self.health))
@@ -481,11 +482,11 @@ class Game:
 
     def gameover(self):
 
+        print('Final Score:          ' + str(self.score))
         print('\nTotal Enemies Killed: ' + str(self.totalEnemiesKilled))
         print('Final Level:          ' + str(self.level))
-        print('Final Score:          ' + str(self.score))
         print('Towers Intact:        ' + str(len(self.towers)-1))
-        print('Coins:                ' + str(self.wallet.coins))
+        print('Coins:                ' + str(self.wallet.coins) + '\n')
 
         if self.gameRecord != None:
             self.gameRecord.fitnessScore = self.score

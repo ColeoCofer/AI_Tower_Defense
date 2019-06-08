@@ -16,10 +16,10 @@ class ParallelGeneticAlgorithm(GeneticAlgorithm):
 
     def __init__(self, visualMode, readFile, saveToDisk, printGraphs):
         super().__init__(visualMode, readFile, saveToDisk, printGraphs)
-        
+
 
     def run(self):
-        
+
         if self.readFile:
             print("** Reading population from file **")
             self.agent.population = self.loadData()
