@@ -101,7 +101,7 @@ class Game:
         self.numEnemiesPerLevel      = 10
         self.remainingEnemies        = self.numEnemiesPerLevel
         self.totalEnemiesKilled      = 0
-        self.spawnChance             = 0.005       # this can be throttled for testing
+        self.spawnChance             = 0.1       # this can be throttled for testing
         self.enemySpawnProbs         = []
         self.showPathBounds          = False
 
@@ -379,7 +379,7 @@ class Game:
             if shouldSpawn <= self.spawnChance:
                 #Pick an enemy to spawn based on their probabilities
                 randVerticalOffset = random.randint(-Y_MAX_OFFSET, (Y_MAX_OFFSET - int((Y_MAX_OFFSET / 2))))
-                enemyToSpawn = np.random.choice(ENEMY_INDICES, 1, self.enemySpawnProbs)
+                enemyToSpawn = np.random.choice(ENEMY_INDICES, 1, p=self.enemySpawnProbs)
                 newEnemy = ENEMY_TYPES[enemyToSpawn[0]](randVerticalOffset)
                 self.enemiesSpawnedThisLevel += 1
                 self.updateEnemyHealth()
@@ -556,8 +556,20 @@ class Game:
 
     def updateSpawnProbabilities(self):
         ''' Initialized list of enemy spawn probabilities '''
-        for enemy in self.enemies:
-            self.enemySpawnProbs.append(enemy.spawnChance)
+        spawnChanceArray = []
+        for enemy in ENEMY_TYPES:  #Create an instance of each enemy in order to read current spawn probabilities
+            enemyInstance = enemy(0)
+            spawnChanceArray.append(enemyInstance.spawnChance)
+        print(spawnChanceArray)
+        spawnChanceSum = 0
+        for x in spawnChanceArray:  #Calculate sum of all probabilities
+            spawnChanceSum += x
+        self.enemySpawnProbs.clear()
+        for x in spawnChanceArray:  #Divide spawn chances by sum to ensure probabilities sum to 1.0
+            self.enemySpawnProbs.append(x/spawnChanceSum)
+        print(self.enemySpawnProbs)
+
+
 
 
     def updateEnemyWalkingSpeed(self):
