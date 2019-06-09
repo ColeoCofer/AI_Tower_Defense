@@ -8,10 +8,10 @@ from joblib import Parallel, delayed
 
 from constants.aiConstants import *
 from constants.gameConstants import *
-from agent.deepQagent import DeepQagent
+from agent.deepQagent import DeepQagent, DataAgent
 from game.game import Game
 
-DEEP_ITERATIONS = 2000
+DEEP_ITERATIONS = 40
 GENERATIONS_BETWEEN_UPDATE = 50
 PARALLEL_MODE = False
 
@@ -27,45 +27,75 @@ class DeepQlearning:
         self.currentGameScore = 0
         self.scores = []
         self.levels = []
+        self.dataAgents = []
 
 
     def run(self):
 
-        deepQ = DeepQagent()   
+        masterDeepQ = DeepQagent()   
         saver = tf.train.Saver()
         # saver.restore(deepQ.session, "./deepQmodel/model.ckpt")
 
         for iteration in range(DEEP_ITERATIONS):
-            if iteration % 5 == 0 and iteration != 0:
-                self.visualMode = True
-            else: 
-                self.visualMode = False
-        
-            print('\nIteration: ' + str(iteration + 1))
-            game = Game(self.visualMode, [], None, False, deepQ)
-            deepQ = game.run()
+            self.dataAgents = []
+            self.agentQueue = []
+            self.scores = []
+            self.levels = []
+            for i in range(GENERATIONS_BETWEEN_UPDATE):
+                agent = DataAgent()
 
-            self.scores.append(deepQ.finalScore)
-            self.levels.append(deepQ.finalLevel)
+                # get the 15 tower placements for the agent and remember the actions taken for later update
+                for i in range(NUMBER_OF_STARTING_TOWERS):
+                    gameAction, modelAction = masterDeepQ.getNextAction(agent.towerPlacements)
+                    agent.addNextTower(gameAction)
+                    agent.lastActions.append(modelAction)
+            
+                # spin up 100 agents at a time
+                self.agentQueue.append(agent)
 
-            if iteration % 20 == 0:
-                self.saveStats()
-
-            if iteration % 100 == 0: 
-                saver.save(deepQ.session, "./deepQmodel/model.ckpt")
-
-        saver.save(deepQ.session, "./deepQmodel/model.ckpt")
+            self.dataAgents = Parallel(n_jobs=-1, verbose=0, backend="threading")(map(delayed(self.runGame), self.agentQueue))
 
 
-    def saveStats(self):
+            for dataAgent in self.dataAgents:
+                # update the table with all of the decisions that were made
+                for deepDecision, lastAction in zip(dataAgent.deepDecisions, dataAgent.lastActions):    
+                    masterDeepQ.update(deepDecision[0], deepDecision[1], deepDecision[2], lastAction)
+                self.scores.append(dataAgent.finalScore)
+                self.levels.append(dataAgent.finalLevel)
+
+            scoresForRound = sum(self.scores)
+            levelsForRound = sum(self.levels)
+            avgScore = scoresForRound / len(self.scores)
+            avgLevel = levelsForRound / len(self.levels)
+
+            print('**** DEEP Q-LEARNING END OF GENERATION ****')
+            print('Average score for generation: ' + str(avgScore))
+            print('Average level for round:      ' + str(avgLevel))
+
+            # if iteration % 20 == 0:
+            self.saveStats(avgScore, avgLevel)
+
+            # if iteration % 100 == 0: 
+            saver.save(masterDeepQ.session, "./deepQmodel/model.ckpt")
+
+        saver.save(masterDeepQ.session, "./deepQmodel/model.ckpt")
+
+
+    def runGame(self, agent):
+        game = Game(self.visualMode, [], None, False, agent)
+        return game.run()  
+
+
+
+    def saveStats(self, avgScore, avgLevel):
         ''' Saves the last trained population so you can load it later and continue training '''
-        statsFile = open("deep_stats.txt","w")
+        statsFile = open("deep_stats.txt","a")
         levelToFile = ''
         scoreToFile = ''
         for score, level in zip(self.scores, self.levels):
             levelToFile += str(level) + ','
             scoreToFile += str(score) + ','
-        toFile = levelToFile + '\n' + scoreToFile     
+        toFile = levelToFile + str(avgLevel) + '\n' + scoreToFile + str(avgScore) + '\n'    
 
         statsFile.write(toFile)
         statsFile.close()
