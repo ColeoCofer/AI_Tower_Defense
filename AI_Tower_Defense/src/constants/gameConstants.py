@@ -34,7 +34,7 @@ TOWER_GRID_SIZE = 64
 GRID_DISPLAY_SIZE = 45
 
 TRAINING_MODE = True    #If true will uncap framerates  TODO  not sure this is used anymore
-VISUAL_MODE = False     #Set false to stop rendering
+# VISUAL_MODE = False     #Set false to stop rendering
 FPS = 60
 
 #Player
@@ -48,10 +48,10 @@ ENEMY_SPAWN_INC = 0.30         # Increments individual enemies spawn chances
 
 #Level increase constants
 # STARTING_LEVEL  = 10
-HEALTH_INCREASE = 3                     # how much health is added to enemies when increased
-SPEED_INCREASE  = 2                     # how much speed is added to enemies when increased
-NUMBER_LEVELS_HEALTH_INCREASE = 2       # how many levels before an enemy health increase
-NUMBER_LEVELS_SPEED_INCREASE  = 3       # how many levels before an enemy speed increase
+HEALTH_INCREASE = 2                     # how much health is added to enemies when increased
+SPEED_INCREASE  = 1                     # how much speed is added to enemies when increased
+NUMBER_LEVELS_HEALTH_INCREASE = 3       # how many levels before an enemy health increase
+NUMBER_LEVELS_SPEED_INCREASE  = 6       # how many levels before an enemy speed increase
 
 #Window Dimensions
 WIN_WIDTH = 1200

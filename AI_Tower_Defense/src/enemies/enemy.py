@@ -47,30 +47,31 @@ class Enemy:
         self.path.append((1250 + (self.width * 2), self.path[-1][1]))
 
 
-    def draw(self, win, ticks):
-        # if the enemy is frozen display snowman
-        if self.frozen:
-            self.image = self.snowman
-        else:
-            ''' Draws the enemy with given images '''
-            numImages = len(self.images)
-            # Set the image for # of frames ('//' means integer division)
-            self.image = self.images[self.animationCount // self.animationSpeed]
+    def draw(self, win, ticks, visualMode):
+        if visualMode:
+            # if the enemy is frozen display snowman
+            if self.frozen:
+                self.image = self.snowman
+            else:
+                ''' Draws the enemy with given images '''
+                numImages = len(self.images)
+                # Set the image for # of frames ('//' means integer division)
+                self.image = self.images[self.animationCount // self.animationSpeed]
 
-            # Iterate to the next animation image
-            self.animationCount += 1
+                # Iterate to the next animation image
+                self.animationCount += 1
 
-            # Reset the animation count if we rendered the last image
-            if self.animationCount >= (numImages * self.animationSpeed):
-                self.animationCount = 0
+                # Reset the animation count if we rendered the last image
+                if self.animationCount >= (numImages * self.animationSpeed):
+                    self.animationCount = 0
 
-        # Display from center of character
-        centerX = self.x - (self.width / 2)
-        centerY = self.y - (self.height / 2) + self.yOffset
+            # Display from center of character
+            centerX = self.x - (self.width / 2)
+            centerY = self.y - (self.height / 2) + self.yOffset
 
-        # draw health box, render sprite, and move
-        self.drawHealthBox(win, centerX, centerY)
-        win.blit(self.image, (centerX, centerY))
+            # draw health box, render sprite, and move
+            self.drawHealthBox(win, centerX, centerY)
+            win.blit(self.image, (centerX, centerY))
         # self.move()
 
 

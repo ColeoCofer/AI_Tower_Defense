@@ -75,6 +75,8 @@ class Game:
                 self.win = pygame.display.set_mode((self.width, self.height), FULLSCREEN | DOUBLEBUF)
             else:
                 self.win = pygame.display.set_mode((self.width, self.height))
+        else:
+            self.win = None
 
         self.enemies      = []
         self.towerGrid    = [] #Holds all possible locations for a tower to be placed, and whether one is there or not, and the type of tower placed
@@ -122,7 +124,8 @@ class Game:
         self.dqCurrentReward   = 0
         # deep Q reward things?? the damage dealt worries me for the igloo
         self.dqDamageDealt     = 0
-        self.dqDamageTaken     = 0  
+        self.dqDamageTaken     = 0 
+        self.dqMaxedTowers     = False 
         self.deepDecisions     = []      
 
         self.isPaused          = False
@@ -147,9 +150,9 @@ class Game:
             playerHasQuit = self.handleEvents()
             if self.isPaused == False:
                 # entry point for GAagent for data collection
-                if self.collectInnerGameData:
-                    if self.wallet.coins >= BUYING_THRESHOLD and len(self.towers) <= NUMBER_OF_STARTING_TOWERS:
-                        self.chooseNewTowerRandomly()
+                # if self.collectInnerGameData:
+                #     if self.wallet.coins >= BUYING_THRESHOLD and len(self.towers) <= NUMBER_OF_STARTING_TOWERS:
+                #         self.chooseNewTowerRandomly()
                 self.spawnEnemies()
                 self.towerHealthCheck()
                 self.towersAttack()
@@ -168,7 +171,10 @@ class Game:
                 #                                       newGameState is the current tower arrangement
                 # signature for next action:    getNextAction(currentGameState):
                 if self.deepQagent != None:
-                    if self.wallet.coins >= DEEP_BUYING_THRESHOLD and len(self.towers) <= NUMBER_OF_STARTING_TOWERS:
+                    towerLength = len(self.towers)
+                    if towerLength == NUMBER_OF_STARTING_TOWERS:
+                        self.dqMaxedTowers = True
+                    if self.wallet.coins >= DEEP_BUYING_THRESHOLD and towerLength < NUMBER_OF_STARTING_TOWERS and not self.dqMaxedTowers:
                         
                         # this is returning a tower grid tuple from the agent
                         newTower = self.deepQagent.getNextAction(self.towerGrid)
@@ -199,12 +205,12 @@ class Game:
                         self.deepDecisions.append((oldTowerGrid, newTowerGrid, self.dqLastTowerPlaced))
 
             
-            if self.visualMode:
-                self.draw()
+            # if self.visualMode:
+            self.draw()
 
         self.gameover()
 
-        if self.collectInnerGameData:
+        if self.collectInnerGameData or self.gameRecord != None:
             return self.gameRecord
         elif self.deepQagent != None:
             # return self.deepDecisions
@@ -410,41 +416,47 @@ class Game:
 
 
     def draw(self):
+        
+        
+
         '''
         Redraw objects onces per frame.
         Objects will be rendered sequentially,
         meaning the code at the end will be rendered above all.
         '''
+        if self.visualMode:
+            #Render the background
+            self.win.blit(self.bg, (0, 0))
 
-        #Render the background
-        self.win.blit(self.bg, (0, 0))
+            #Displays click locations and rectangles where clicked
+            self.showClicks()
 
-        #Displays click locations and rectangles where clicked
-        self.showClicks()
+            #Render coin animation
+            self.wallet.draw(self.win)
 
-        #Render towers
+            #Render UI Text Elements
+            self.displayTextUI(self.win)
+
+            self.menu.draw(self.win)
+
+            if SHOW_PATH_BOUNDS and self.showPathBounds:
+                self.drawPathBounds(self.win)
+                self.drawTowerGrid(self.win)
+                self.drawTowerRadius(self.win)
+
+
+         # have towers fire even in non-visual mode
         for tower in self.towers:
-            tower.draw(self.win, self.ticks)
+            tower.draw(self.win, self.ticks, self.visualMode)
 
         #Render enemies
         for enemy in self.enemies:
-            enemy.draw(self.win, self.ticks)
+            enemy.draw(self.win, self.ticks, self.visualMode)
 
-        #Render coin animation
-        self.wallet.draw(self.win)
-
-        #Render UI Text Elements
-        self.displayTextUI(self.win)
-
-        self.menu.draw(self.win)
-
-        if SHOW_PATH_BOUNDS and self.showPathBounds:
-            self.drawPathBounds(self.win)
-            self.drawTowerGrid(self.win)
-            self.drawTowerRadius(self.win)
-
-        #Update the window
-        pygame.display.update()
+        if self.visualMode:
+            #Update the window
+            pygame.display.update()
+            
 
 
     def placeTower(self, towerType, towerLocation, index):
@@ -642,7 +654,7 @@ class Game:
             self.gameRecord.towersRemaining = len(self.towers) - 1
             self.gameRecord.earnings = self.wallet.coins
 
-            self.gameRecord.randomChoicesMade = self.innerGameRecords
+            # self.gameRecord.randomChoicesMade = self.innerGameRecords
 
         if self.deepQagent != None:
             self.updateDecisions()

@@ -19,8 +19,8 @@ class MODE(Enum):
     deepQlearning    = 3
 
 
-GAME_MODE = MODE.qLearning  # Select which mode to run the game in
-PARALLEL_MODE  = False          # Run a game on each processor core (only when visual_mode is off)
+GAME_MODE = MODE.deepQlearning  # Select which mode to run the game in
+PARALLEL_MODE  = True          # Run a game on each processor core (only when visual_mode is off)
 COLLECT_WHOLE_GAME_DATA = False  # Game data collection for the GA 
 COLLECT_INNER_GAME_DATA = True  # "     "
 Q_TRAINING_MODE = True         # Update Q table after every game

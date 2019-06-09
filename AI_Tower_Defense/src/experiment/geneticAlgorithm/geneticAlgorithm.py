@@ -105,7 +105,7 @@ class GeneticAlgorithm:
         # 12: The y-position on the screen of the tower that has been placed
         # 13-126: The digital representation of the tower grid and its constituents  
 
-        averageScoresFile = open("averageScores.txt", "a")
+        averageScoresFile = open("averageScores.txt", "w")
         averageScoreString = ','.join(str(n) for n in self.averageScores)
         averageScoresFile.write(averageScoreString)
         averageScoresFile.close()
@@ -170,7 +170,6 @@ class GeneticAlgorithm:
                 i += 1
             populationList.append(citizen)
 
-        print(populationList)
         return populationList
 
 
@@ -296,6 +295,7 @@ class GeneticAlgorithm:
                 i += n
 
         else:
+            print(self.agent.fitnessScores)
             # partition the fitness scores into buckets, thats why it is skipping the first index
             for i in range(1, populationSize):
                 self.agent.fitnessScores[i] += self.agent.fitnessScores[i-1]

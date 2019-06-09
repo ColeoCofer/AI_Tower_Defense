@@ -30,23 +30,25 @@ class RangeProjectile(Projectile):
 
 
     # draw a ranged weapon
-    def draw(self, win, ticks):
-        ''' Draws the enemy with given images '''
-        numImages = len(self.images)
-        self.image = self.images[self.animationCount // self.animationSpeed]
+    def draw(self, win, ticks, visualMode):
+        if visualMode:
+            ''' Draws the enemy with given images '''
+            numImages = len(self.images)
+            self.image = self.images[self.animationCount // self.animationSpeed]
 
-        #Iterate to the next animation image
-        self.animationCount += 1
+            #Iterate to the next animation image
+            self.animationCount += 1
 
-        #Reset the animation count if we rendered the last image
-        if self.animationCount >= (numImages * self.animationSpeed):
-            self.animationCount = 0
+            #Reset the animation count if we rendered the last image
+            if self.animationCount >= (numImages * self.animationSpeed):
+                self.animationCount = 0
 
-        #Display from center of character
-        centerX = self.x - (self.width / 2)
-        centerY = self.y - (self.height / 2)
+            #Display from center of character
+            centerX = self.x - (self.width / 2)
+            centerY = self.y - (self.height / 2)
 
-        win.blit(self.image, (centerX, centerY))
+            win.blit(self.image, (centerX, centerY))
+            
         return self.move(ticks)
 
 
