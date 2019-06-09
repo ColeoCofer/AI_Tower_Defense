@@ -101,7 +101,7 @@ class Game:
         self.numEnemiesPerLevel      = 10
         self.remainingEnemies        = self.numEnemiesPerLevel
         self.totalEnemiesKilled      = 0
-        self.spawnChance             = 0.005       # this can be throttled for testing
+        self.spawnChance             = 0.5       # this can be throttled for testing
         self.enemySpawnProbs         = []
         self.showPathBounds          = False
 
@@ -147,9 +147,9 @@ class Game:
             playerHasQuit = self.handleEvents()
             if self.isPaused == False:
                 # entry point for GAagent for data collection
-                if self.collectInnerGameData:
-                    if self.wallet.coins >= BUYING_THRESHOLD and len(self.towers) <= NUMBER_OF_STARTING_TOWERS:
-                        self.chooseNewTowerRandomly()
+                # if self.collectInnerGameData:
+                #     if self.wallet.coins >= BUYING_THRESHOLD and len(self.towers) <= NUMBER_OF_STARTING_TOWERS:
+                #         self.chooseNewTowerRandomly()
                 self.spawnEnemies()
                 self.towerHealthCheck()
                 self.towersAttack()
@@ -204,7 +204,7 @@ class Game:
 
         self.gameover()
 
-        if self.collectInnerGameData:
+        if self.collectInnerGameData or self.gameRecord != None:
             return self.gameRecord
         elif self.deepQagent != None:
             # return self.deepDecisions
@@ -642,7 +642,7 @@ class Game:
             self.gameRecord.towersRemaining = len(self.towers) - 1
             self.gameRecord.earnings = self.wallet.coins
 
-            self.gameRecord.randomChoicesMade = self.innerGameRecords
+            # self.gameRecord.randomChoicesMade = self.innerGameRecords
 
         if self.deepQagent != None:
             self.updateDecisions()
