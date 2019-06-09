@@ -11,7 +11,8 @@ class Trump(AttackingEnemy):
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        self.startingHealth = 50                        # Trump is hard to kill
+        self.initialHealth = 50                        # Trump is hard to kill
+        self.startingHealth = self.initialHealth
         self.health = self.startingHealth
         self.coinReward = 100
         self.attackRadius = 125

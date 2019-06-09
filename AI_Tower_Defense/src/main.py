@@ -19,14 +19,14 @@ class MODE(Enum):
     deepQlearning    = 3
 
 
-GAME_MODE = MODE.deepQlearning  # Select which mode to run the game in
-PARALLEL_MODE  = True          # Run a game on each processor core (only when visual_mode is off)
+GAME_MODE = MODE.manual  # Select which mode to run the game in
+PARALLEL_MODE  = False          # Run a game on each processor core (only when visual_mode is off)
 COLLECT_WHOLE_GAME_DATA = False  # Game data collection for the GA
-COLLECT_INNER_GAME_DATA = True  # "     "
+COLLECT_INNER_GAME_DATA = False  # "     "
 Q_TRAINING_MODE = True         # Update Q table after every game
-VISUAL_MODE    = False          # Display Graphics
-READ_FILE      = True          # Read model from file and continue training from it
-SAVE_TO_DISK   = True          # Collect and store data
+VISUAL_MODE    = True          # Display Graphics
+READ_FILE      = False          # Read model from file and continue training from it
+SAVE_TO_DISK   = False          # Collect and store data
 PRINT_GRAPHS   = False          # Prints graphs of score averages
 
 

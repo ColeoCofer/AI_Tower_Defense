@@ -367,7 +367,12 @@ class Game:
 
         for enemy in self.enemies:
             if enemy.x > WIN_WIDTH:
-                self.health -= enemy.initialHealth
+                if enemy.health <= enemy.initialHealth and enemy.health >= 0:
+                    # Decrease by current health if it's less then the base starting health
+                    self.health -= enemy.health
+                else:
+                    # Otherwise just decrease by the initial health
+                    self.health -= enemy.initialHealth
 
             if enemy.health <= 0:
                 self.score += enemy.initialHealth
@@ -400,9 +405,8 @@ class Game:
                 self.enemiesSpawnedThisLevel += 1
                 self.updateEnemyHealth()
                 self.updateEnemyWalkingSpeed()
-
-                # newEnemy.health += self.addedHealth
                 newEnemy.startingHealth +=  self.addedHealth
+                newEnemy.health += self.addedHealth
                 newEnemy.velocity += self.addedSpeed
                 self.enemies.append(newEnemy)
         else:
