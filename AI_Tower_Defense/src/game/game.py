@@ -205,7 +205,6 @@ class Game:
                         self.deepDecisions.append((oldTowerGrid, newTowerGrid, self.dqLastTowerPlaced))
 
 
-            if self.visualMode:
                 self.draw()
 
         self.gameover()
