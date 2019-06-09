@@ -5,14 +5,14 @@ import tensorflow as tf
 import numpy as np
 
 INPUT_NODES = (NUMBER_OF_TOWERS + 1) * STARTING_POSITIONS    # the +1 is for the empty state  (798 input nodes currently)
-OUTPUT_NODES = NUMBER_OF_TOWERS * STARTING_POSITIONS
+OUTPUT_NODES = INPUT_NODES #(NUMBER_OF_TOWERS + 1) * STARTING_POSITIONS
 NUMBER_OF_HIDDEN_NODES = OUTPUT_NODES
 
 
 class DeepQagent:
 
     # making iterations smaller will decrease how long the agent explores and increase time spent
-    def __init__(self, learningRate=0.1, discountRate=0.95, explorationRate=1.0, iterations=2000):
+    def __init__(self, learningRate=0.1, discountRate=0.95, explorationRate=1.0, iterations=30000):
         
         self.learningRate = learningRate
         self.discountRate = discountRate
@@ -28,9 +28,11 @@ class DeepQagent:
         self.defineModel()
         self.session.run(self.initializer)
 
-        self.lastAction = []
+        # self.lastActions = []
         self.finalScore = 0
         self.finalLevel = 0
+
+        self.deepDecisions = []
 
 
     # this gets ran once on creation of a new DeepQlearning object (init)
@@ -57,15 +59,15 @@ class DeepQagent:
 
     # the old and new states are the tower grid list from the game and need to be translated to the models form for states
     # we need to also pass in the reward for the previous action
-    def update(self, oldGameState, newGameState, reward):
+    def update(self, oldGameState, newGameState, reward, action):
         
         # translate the tower grid arrangments into binary representations for the model to consume
         oldState = self.translateGameState(oldGameState)
         newState = self.translateGameState(newGameState)        
         
         # Train our model with new data, we have saved the previous action returned
-        # to train the model with as lastAction
-        self.train(oldState, self.lastAction, reward, newState)
+        # to train the model with as actions
+        self.train(oldState, action, reward, newState)
 
         # Reduce the exploration rate at each iteration
         if self.explorationRate > 0:
@@ -79,9 +81,9 @@ class DeepQagent:
 
         # Ask the model for the Q values of the new state
         newStateQvalues = self.getQ(newState)
-
+        index = np.amax(action)
         # Real Q value for the action we took. This is what we will train towards.
-        oldStateQvalues[action] = reward + self.discountRate * np.amax(newStateQvalues)
+        oldStateQvalues[index] = reward + self.discountRate * np.amax(newStateQvalues)
         
         # Setup training data 
         trainingInput = oldState
@@ -104,13 +106,17 @@ class DeepQagent:
             # need to translate game state into model state
             currentState = self.translateGameState(gameState)
             newAction = self.greedyAction(currentState)
+            # newAction = self.greedyAction(gameState)
             # saving this form of the action for the models next iteration
-            self.lastAction = newAction
-            return self.translateModelAction(newAction)
+            # self.lastActions.append(newAction)
+            return self.translateModelAction(newAction), newAction
+            # return newAction
+
         else:
             randomAction = self.randomAction()
-            self.lastAction = randomAction
-            return self.translateModelAction(randomAction)
+            # self.lastActions.append(randomAction)
+            return self.translateModelAction(randomAction), randomAction
+            # return randomAction
 
 
     # we should return an action in the format of the model, it will need translated into game form
@@ -156,10 +162,30 @@ class DeepQagent:
         actionIndex = actionList.index(1)
 
         # this will give us an index between 0-113 which is for a grid position in the tower grid
-        gridLocation = actionIndex // NUMBER_OF_TOWERS
+        gridLocation = actionIndex // (NUMBER_OF_TOWERS + 1)
         # this will give us a number between 0-5 which is for a tower type which is a list from 0-5
-        towerType = actionIndex %  NUMBER_OF_TOWERS
+        towerType = actionIndex %  (NUMBER_OF_TOWERS + 1)
         
-        towerGridPosition = tuple((TOWER_GRID[gridLocation], True, towerType))
+        towerGridPosition = tuple((TOWER_GRID[gridLocation], True, towerType - 1))
 
         return towerGridPosition
+
+
+class DataAgent:
+
+    def __init__(self):
+
+        self.towerPlacements = []
+        self.lastActions = []
+        self.currentTowerIndex = 0
+        self.deepDecisions = []
+        self.finalScore = 0
+        self.finalLevel = 0
+
+    def getNextTower(self):
+        # newTower = self.towerPlacements.pop()
+        return self.towerPlacements.pop()
+
+    def addNextTower(self, tower):
+        self.towerPlacements.append(tower)
+        return
