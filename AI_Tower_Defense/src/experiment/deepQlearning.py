@@ -36,7 +36,7 @@ class DeepQlearning:
         highLevel = 0
 
         for iteration in range(DEEP_ITERATIONS):
-            if iteration % 50 == 0 and iteration != 0:
+            if iteration % 10 == 0 and iteration != 0:
                 self.visualMode = True
             else: 
                 self.visualMode = False
