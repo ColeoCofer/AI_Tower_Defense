@@ -9,8 +9,8 @@ class ParallelQLearning(QLearning):
     Parallel version of Q learning
 
     '''
-    def __init__(self, visualMode, loadQTableFromFile, saveQTableToFile, printGraphs):
-        super().__init__(visualMode, loadQTableFromFile, saveQTableToFile, printGraphs)
+    def __init__(self, visualMode, trainingMode, loadQTableFromFile, saveQTableToFile, printGraphs):
+        super().__init__(visualMode, trainingMode, loadQTableFromFile, saveQTableToFile, printGraphs)
 
     def run(self):
         pass

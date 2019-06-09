@@ -10,8 +10,8 @@ NUM_GAMES_BEFORE_SAVING_GRAPH = 20
 NUM_GAMES_BEFORE_PLOTTING_SCORE = 10
 
 class SerialQLearning(QLearning):
-    def __init__(self, visualMode, loadQTableFromFile, saveQTableToFile, printGraphs):
-        super().__init__(visualMode, loadQTableFromFile, saveQTableToFile, printGraphs)
+    def __init__(self, visualMode, trainingMode, loadQTableFromFile, saveQTableToFile, printGraphs):
+        super().__init__(visualMode, trainingMode, loadQTableFromFile, saveQTableToFile, printGraphs)
         self.gameScores = []
 
 
@@ -25,7 +25,7 @@ class SerialQLearning(QLearning):
         for N in range(N_EPISODES):
             print(f"Game #: {N + 1}")
             # decrease epsilon every 50 episodes
-            if self.epsilon >= 0:  #  and self.trainingMode == ON:
+            if self.epsilon >= 0 and self.trainingMode == True:
                 if N % EPSILON_PERIOD == 0:
                     self.epsilon -= EPSILON_STEP
 
@@ -36,7 +36,7 @@ class SerialQLearning(QLearning):
                 self.addTower(location, tower)
 
             # Run the game until it's over
-            game = Game(self.visualMode, self.towers, None, None)
+            game = Game(self.visualMode, self.towers, None, None, None)
             game.run()
 
             # Update q-table for each tower placement using the final game score
