@@ -13,7 +13,6 @@ class SquareTower(Tower):
         self.name = "Cannon Castle"
         self.startingHealth = 250                            # tough with cannnonballs
         self.health = self.startingHealth
-        self.attackRadius = 250
         self.weaknesses.append(DamageType.lazer)        # impervious to fire
         self.weaknesses.append(DamageType.lightning)
 

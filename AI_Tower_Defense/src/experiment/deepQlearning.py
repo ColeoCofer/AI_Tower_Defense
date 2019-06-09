@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pygame
 import tensorflow as tf
-# from joblib import Parallel, delayed
+from joblib import Parallel, delayed
 
 
 from constants.aiConstants import *

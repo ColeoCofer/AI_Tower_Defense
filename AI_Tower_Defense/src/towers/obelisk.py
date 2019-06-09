@@ -12,7 +12,6 @@ class Obelisk(Tower):
         self.name = "Obelisk"
         self.startingHealth = 100                    # weak but with short range
         self.health = self.startingHealth
-        self.attackRadius = 150
         self.weaknesses.append(DamageType.lightning)
 
         self.projectileColor = (100, 100, 100)

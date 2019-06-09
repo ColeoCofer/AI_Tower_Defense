@@ -11,7 +11,6 @@ class WizardTower(Tower):
         self.name = "Wizard Tower"
         self.startingHealth = 350                # tough and long range
         self.health = self.startingHealth
-        self.attackRadius = 275
         self.projectileColor = (150, 150, 150)
 
         self.image = pygame.image.load(os.path.join("../assets/towers/wizard_tower/", "wizardTower.png"))

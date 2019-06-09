@@ -15,7 +15,7 @@ class Tower:
         self.position = position
         self.x = position[0]   # Position on map
         self.y = position[1]
-        self.attackRadius = 0  # Distance it can attach enemies from
+        self.attackRadius = 192  # Distance it can attack enemies from, two grid squares
         self.closeEnemies = []
         self.startingHealth = 5
         self.health = self.startingHealth

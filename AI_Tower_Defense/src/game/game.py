@@ -103,7 +103,7 @@ class Game:
         self.numEnemiesPerLevel      = 10
         self.remainingEnemies        = self.numEnemiesPerLevel
         self.totalEnemiesKilled      = 0
-        self.spawnChance             = 0.05       # this can be throttled for testing
+        self.spawnChance             = 0.005       # this can be throttled for testing
         self.enemySpawnProbs         = []
         self.showPathBounds          = False
 
@@ -184,7 +184,7 @@ class Game:
                         for i in range(len(self.towerGrid)):
                             if self.towerGrid[i][0][0] == newTower[0][0] and self.towerGrid[i][0][1] == newTower[0][1]:
                                 if self.towerGrid[i][2] != -1:
-                                    print('********Taken********')
+                                    # print('********Taken********')
                                     taken = True
                                     break
                                 else:
@@ -675,11 +675,9 @@ class Game:
     def getReward(self, tower):
         reward = 0
         if tower != None:
-            reward =  tower.damageDealtOnTurn 
-            reward -= tower.damageTakenOnTurn
-            reward += self.score // 10            # reduce the influence of the final score
-            # if self.score == 0:
-            #     reward -= 100
+            reward =  tower.damageDealtOnTurn * 5
+            reward -= tower.damageTakenOnTurn * 2
+            reward += self.score // 2            # reduce the influence of the final score
         else:
             reward += TOWER_POSITION_TAKEN_PENALTY
 
