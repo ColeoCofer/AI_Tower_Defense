@@ -11,6 +11,7 @@ class SquareTower(Tower):
     def __init__(self, position):
         super().__init__(position)
         self.name = "Cannon Castle"
+        self.attackRadius = 250
         self.startingHealth = 250                            # tough with cannnonballs
         self.health = self.startingHealth
         self.weaknesses.append(DamageType.lazer)        # impervious to fire

@@ -12,6 +12,7 @@ class Igloo(Tower):
         super().__init__(position)
         self.name = "Igloo"
         self.startingHealth = 80  # TODO change back
+        self.attackRadius = 200
         self.health = self.startingHealth
         self.coolDown = 1000
         self.damage = 0

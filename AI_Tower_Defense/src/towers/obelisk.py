@@ -10,6 +10,7 @@ class Obelisk(Tower):
     def __init__(self, position):
         super().__init__(position)
         self.name = "Obelisk"
+        self.attackRadius = 100
         self.startingHealth = 100                    # weak but with short range
         self.health = self.startingHealth
         self.weaknesses.append(DamageType.lightning)

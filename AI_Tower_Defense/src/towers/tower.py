@@ -15,7 +15,7 @@ class Tower:
         self.position = position
         self.x = position[0]   # Position on map
         self.y = position[1]
-        self.attackRadius = 192  # Distance it can attack enemies from, two grid squares
+        self.attackRadius = 128  # Distance it can attack enemies from, two grid squares
         self.closeEnemies = []
         self.startingHealth = 5
         self.health = self.startingHealth
@@ -108,16 +108,16 @@ class Tower:
             if self.projectilesFired[i].draw(win, ticks, visualMode) == True:
                 initialDamage = self.projectilesFired[i].damage
                 self.damageDealt += initialDamage
-                
-                # deep Q 
+
+                # deep Q
                 self.damageDealtOnTurn += initialDamage
                 if type(self.projectilesFired[i]) == IceBeam:
                     self.damageDealtOnTurn += 2
-                
+
                 if visualMode:
                     # replace the projectile with its final animation in the same postion
                     self.addAnimationToQueue(self.projectilesFired[i], ticks)
-                
+
                 del self.projectilesFired[i]
             i += 1
 
