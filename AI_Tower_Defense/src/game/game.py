@@ -560,14 +560,12 @@ class Game:
         for enemy in ENEMY_TYPES:  #Create an instance of each enemy in order to read current spawn probabilities
             enemyInstance = enemy(0)
             spawnChanceArray.append(enemyInstance.spawnChance)
-        print(spawnChanceArray)
         spawnChanceSum = 0
         for x in spawnChanceArray:  #Calculate sum of all probabilities
             spawnChanceSum += x
         self.enemySpawnProbs.clear()
         for x in spawnChanceArray:  #Divide spawn chances by sum to ensure probabilities sum to 1.0
             self.enemySpawnProbs.append(x/spawnChanceSum)
-        print(self.enemySpawnProbs)
 
 
 
