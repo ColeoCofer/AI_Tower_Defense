@@ -36,23 +36,11 @@ class DeepQlearning:
         highLevel = 0
 
         for iteration in range(DEEP_ITERATIONS):
-            # if (iteration == DEEP_ITERATIONS - 1) and (not PARALLEL_MODE):   
-            #     self.visualMode = True
-            # if iteration % 10 == 0 and iteration != 0:
-            #     self.visualMode = True
-            # elif (iteration - 1) % 10 == 0 and iteration != 1:
-            #     self.visualMode = True
-            # else:
-            #     self.visualMode = False
-            # if iteration % 2 == 0:
-            #     self.visualMode = True
-            # else:
-            #     self.visualMode = False
-            # if iteration % 5 == 0 and iteration != 0:
-            #     self.visualMode = True
-            # else:
-            #     self.visualMode = False
-            self.visualMode = True
+            if iteration % 50 == 0 and iteration != 0:
+                self.visualMode = True
+            else: 
+                self.visualMode = False
+            
 
             print('\nIteration: ' + str(iteration + 1))
 

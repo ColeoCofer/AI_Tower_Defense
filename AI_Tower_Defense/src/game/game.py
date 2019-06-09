@@ -75,6 +75,8 @@ class Game:
                 self.win = pygame.display.set_mode((self.width, self.height), FULLSCREEN | DOUBLEBUF)
             else:
                 self.win = pygame.display.set_mode((self.width, self.height))
+        else:
+            self.win = None
 
         self.enemies      = []
         self.towerGrid    = [] #Holds all possible locations for a tower to be placed, and whether one is there or not, and the type of tower placed
@@ -101,7 +103,7 @@ class Game:
         self.numEnemiesPerLevel      = 10
         self.remainingEnemies        = self.numEnemiesPerLevel
         self.totalEnemiesKilled      = 0
-        self.spawnChance             = 0.5       # this can be throttled for testing
+        self.spawnChance             = 0.005       # this can be throttled for testing
         self.enemySpawnProbs         = []
         self.showPathBounds          = False
 
@@ -122,7 +124,8 @@ class Game:
         self.dqCurrentReward   = 0
         # deep Q reward things?? the damage dealt worries me for the igloo
         self.dqDamageDealt     = 0
-        self.dqDamageTaken     = 0  
+        self.dqDamageTaken     = 0 
+        self.dqMaxedTowers     = False 
         self.deepDecisions     = []      
 
         self.isPaused          = False
@@ -168,7 +171,10 @@ class Game:
                 #                                       newGameState is the current tower arrangement
                 # signature for next action:    getNextAction(currentGameState):
                 if self.deepQagent != None:
-                    if self.wallet.coins >= DEEP_BUYING_THRESHOLD and len(self.towers) <= NUMBER_OF_STARTING_TOWERS:
+                    towerLength = len(self.towers)
+                    if towerLength == NUMBER_OF_STARTING_TOWERS:
+                        self.dqMaxedTowers = True
+                    if self.wallet.coins >= DEEP_BUYING_THRESHOLD and towerLength < NUMBER_OF_STARTING_TOWERS and not self.dqMaxedTowers:
                         
                         # this is returning a tower grid tuple from the agent
                         newTower = self.deepQagent.getNextAction(self.towerGrid)
@@ -411,13 +417,7 @@ class Game:
 
     def draw(self):
         
-         # have towers fire even in non-visual mode
-        for tower in self.towers:
-            tower.draw(self.win, self.ticks, self.visualMode)
-
-        #Render enemies
-        for enemy in self.enemies:
-            enemy.draw(self.win, self.ticks, self.visualMode)
+        
 
         '''
         Redraw objects onces per frame.
@@ -444,6 +444,16 @@ class Game:
                 self.drawTowerGrid(self.win)
                 self.drawTowerRadius(self.win)
 
+
+         # have towers fire even in non-visual mode
+        for tower in self.towers:
+            tower.draw(self.win, self.ticks, self.visualMode)
+
+        #Render enemies
+        for enemy in self.enemies:
+            enemy.draw(self.win, self.ticks, self.visualMode)
+
+        if self.visualMode:
             #Update the window
             pygame.display.update()
             

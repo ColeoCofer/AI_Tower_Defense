@@ -20,11 +20,12 @@ class IceBeam(Projectile):
 
     # draws a simple blue line
     def draw(self, win, ticks, visualMode):
-        newColor = []
-        for channel in self.color:
-            newColor.append(channel + random.randint(-8, 45))
-        color = tuple(newColor)
-        pygame.draw.line(win, color, self.towerPosition, (self.targetEnemy.x, self.targetEnemy.y), 5)
+        if visualMode:    
+            newColor = []
+            for channel in self.color:
+                newColor.append(channel + random.randint(-8, 45))
+            color = tuple(newColor)
+            pygame.draw.line(win, color, self.towerPosition, (self.targetEnemy.x, self.targetEnemy.y), 5)
 
 
     def fire(self, ticks):
