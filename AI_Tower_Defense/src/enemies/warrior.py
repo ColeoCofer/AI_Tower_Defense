@@ -11,9 +11,10 @@ class Warrior(AttackingEnemy):
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        self.startingHealth = 16
+        self.initialHealth = 16
         self.attackRadius = 30
         self.coinReward = 50
+        self.startingHealth = self.initialHealth
         self.health = self.startingHealth
         self.velocity = random.randint(10,12)            # warriors are pretty fast
         self.weaknesses.append(DamageType.fire)
@@ -127,7 +128,7 @@ class Warrior(AttackingEnemy):
                 del self.projectilesFired[i]
             i += 1
 
-        
+
         # self.move(ticks)
 
 

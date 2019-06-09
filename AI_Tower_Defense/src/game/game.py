@@ -190,7 +190,7 @@ class Game:
                                 else:
                                     self.towerGrid[i] = ((self.towerGrid[i][0], True, newTower[2]))
 
-                        
+
                         # store a copy of the old tower grid state
                         oldTowerGrid = copy.deepcopy(self.towerGrid)
 
@@ -361,7 +361,12 @@ class Game:
 
         for enemy in self.enemies:
             if enemy.x > WIN_WIDTH:
-                self.health -= enemy.initialHealth
+                if enemy.health <= enemy.initialHealth and enemy.health >= 0:
+                    # Decrease by current health if it's less then the base starting health
+                    self.health -= enemy.health
+                else:
+                    # Otherwise just decrease by the initial health
+                    self.health -= enemy.initialHealth
 
             if enemy.health <= 0:
                 self.score += enemy.initialHealth
@@ -394,9 +399,8 @@ class Game:
                 self.enemiesSpawnedThisLevel += 1
                 self.updateEnemyHealth()
                 self.updateEnemyWalkingSpeed()
-
-                # newEnemy.health += self.addedHealth
                 newEnemy.startingHealth +=  self.addedHealth
+                newEnemy.health += self.addedHealth
                 newEnemy.velocity += self.addedSpeed
                 self.enemies.append(newEnemy)
         else:
@@ -667,7 +671,7 @@ class Game:
         # a decision: (oldTowerGrid, newTowerGrid, self.dqLastTowerPlaced) <-- reference to last tower placed
         for decision in self.deepDecisions:
             newReward = self.getReward(decision[1])
-            # update the model 
+            # update the model
             # self.deepQagent.update(decision[0], decision[1], newReward)
             self.deepQagent.update(decision[0], self.towerGrid, newReward)
 

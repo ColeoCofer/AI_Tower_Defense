@@ -9,8 +9,9 @@ class Dragon(Enemy):
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        self.startingHealth = 14                               # dragons have medium health
+        self.initialHealth = 14                               # dragons have medium health
         self.coinReward = 30
+        self.startingHealth = self.initialHealth
         self.health = self.startingHealth
         self.velocity = random.randint(9, 12)             # dragons are pretty fast
         self.weaknesses.append(DamageType.lazer)
