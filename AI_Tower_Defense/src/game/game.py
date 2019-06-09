@@ -173,8 +173,9 @@ class Game:
                 towerLength = len(self.towers)
                 if towerLength == NUMBER_OF_STARTING_TOWERS:
                     self.dqMaxedTowers = True
-                if len(self.deepQagent.towerPlacements) <= 0:
-                    self.dqMaxedTowers = True            
+                if self.deepQagent != None:
+                    if len(self.deepQagent.towerPlacements) <= 0:
+                        self.dqMaxedTowers = True            
                 if self.deepQagent != None and not self.dqMaxedTowers:
                     if self.wallet.coins >= DEEP_BUYING_THRESHOLD and towerLength < NUMBER_OF_STARTING_TOWERS and not self.dqMaxedTowers:
 
