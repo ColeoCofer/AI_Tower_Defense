@@ -12,7 +12,8 @@ class Robot(AttackingEnemy):
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        self.startingHealth = 25                             # robots are tough
+        self.initialHealth = 25                             # robots are tough
+        self.startingHealth = self.initialHealth
         self.health = self.startingHealth
         self.velocity = random.randint(8, 11)            # robots are slow
         self.weaknesses.append(DamageType.fire)

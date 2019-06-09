@@ -58,7 +58,6 @@ class TowerButton:
             towerLocation = self.canPlaceTower(towerGrid)
             if towerLocation != None:
                 self.placedTowerSound.play()
-                wallet.spendCoins(self.cost)
                 self.isSelected = False
                 return False, self.type, towerLocation
 

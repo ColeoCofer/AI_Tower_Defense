@@ -9,8 +9,9 @@ class Zombie(Enemy):
 
     def __init__(self, yOffset):
         super().__init__(yOffset)
-        self.startingHealth = 40                         # zombies are tough to kill
+        self.initialHealth = 40                         # zombies are tough to kill
         self.coinReward = 20
+        self.startingHealth = self.initialHealth
         self.health = self.startingHealth
         self.velocity = random.randint(5, 8)        # zombies are slow as hell
         self.weaknesses.append(DamageType.fire)     # zombies are only weak to fire, exploding, ice, and super weak to fire

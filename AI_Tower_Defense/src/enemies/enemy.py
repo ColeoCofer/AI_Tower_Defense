@@ -80,7 +80,6 @@ class Enemy:
         ''' Draws a health box above each character '''
         if self.health > 0:
             healthBarX = self.x - (self.healthBarWidth / 2)
-            # healthBarY = self.y - self.height + self.healthBarYOffset
             healthBarY = centerY - (self.height / 2) + (self.healthBarYOffset)
             if self.health == self.levelHealth:
                 pygame.draw.rect(win, HEALTH_GREEN, (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Outline of health bar
