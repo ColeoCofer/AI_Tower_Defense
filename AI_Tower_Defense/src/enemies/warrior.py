@@ -83,33 +83,37 @@ class Warrior(AttackingEnemy):
 
 
     # draw one of many awesome attacking enemies
-    def draw(self, win, ticks):
+    def draw(self, win, ticks, visualMode):
+        if visualMode:
+            #Since the attacking images have one more image than the walking images
+            #If we are on the last attacking image, then we know we have finished the
+            #attacking animation.
+            if self.animationCount == (self.numImages):
+                self.images = self.walkingImages
+                self.isAttacking = False
 
-        #Since the attacking images have one more image than the walking images
-        #If we are on the last attacking image, then we know we have finished the
-        #attacking animation.
-        if self.animationCount == (self.numImages):
-            self.images = self.walkingImages
-            self.isAttacking = False
+            # check to see if enemy is frozen so as to display a snowman
+            if self.frozen:
+                self.image = self.snowman
+            else:
+                ''' Draws the enemy with given images '''
+                # Set the image for # of frames ('//' means integer division)
+                self.image = self.images[self.animationCount // self.animationSpeed]
 
-        # check to see if enemy is frozen so as to display a snowman
-        if self.frozen:
-            self.image = self.snowman
-        else:
-            ''' Draws the enemy with given images '''
-            # Set the image for # of frames ('//' means integer division)
-            self.image = self.images[self.animationCount // self.animationSpeed]
+                # Iterate to the next animation image
+                self.animationCount += 1
 
-            # Iterate to the next animation image
-            self.animationCount += 1
+                # Reset the animation count if we rendered the last image
+                if self.animationCount >= (self.numImages * self.animationSpeed):
+                    self.animationCount = 0
 
-            # Reset the animation count if we rendered the last image
-            if self.animationCount >= (self.numImages * self.animationSpeed):
-                self.animationCount = 0
+            # Display from center of character
+            centerX = self.x - (self.width / 2)
+            centerY = self.y - (self.height / 2)
 
-        # Display from center of character
-        centerX = self.x - (self.width / 2)
-        centerY = self.y - (self.height / 2)
+            # draw health box, render sprite, and move sprite for next iteration
+            self.drawHealthBox(win, centerX, centerY)
+            win.blit(self.image, (centerX, centerY))
 
         # checks projectile magazine for projectiles to render
         i = 0
@@ -118,14 +122,12 @@ class Warrior(AttackingEnemy):
             if self.projectilesFired[i].attackAnimationStopTime < ticks:
                 del self.projectilesFired[i]
             # TODO I think we may want to think about this. It currently is saying that a projectile has hit it's target
-            elif self.projectilesFired[i].draw(win, ticks) == True:
+            elif self.projectilesFired[i].draw(win, ticks, visualMode) == True:
                 del self.projectilesFired[i]
             i += 1
 
-        # draw health box, render sprite, and move sprite for next iteration
-        self.drawHealthBox(win, centerX, centerY)
-        win.blit(self.image, (centerX, centerY))
-        self.move(ticks)
+        
+        # self.move(ticks)
 
 
     # overrides base class version

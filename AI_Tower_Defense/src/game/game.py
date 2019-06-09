@@ -199,8 +199,8 @@ class Game:
                         self.deepDecisions.append((oldTowerGrid, newTowerGrid, self.dqLastTowerPlaced))
 
             
-            if self.visualMode:
-                self.draw()
+            # if self.visualMode:
+            self.draw()
 
         self.gameover()
 
@@ -410,41 +410,43 @@ class Game:
 
 
     def draw(self):
+        
+         # have towers fire even in non-visual mode
+        for tower in self.towers:
+            tower.draw(self.win, self.ticks, self.visualMode)
+
+        #Render enemies
+        for enemy in self.enemies:
+            enemy.draw(self.win, self.ticks, self.visualMode)
+
         '''
         Redraw objects onces per frame.
         Objects will be rendered sequentially,
         meaning the code at the end will be rendered above all.
         '''
+        if self.visualMode:
+            #Render the background
+            self.win.blit(self.bg, (0, 0))
 
-        #Render the background
-        self.win.blit(self.bg, (0, 0))
+            #Displays click locations and rectangles where clicked
+            self.showClicks()
 
-        #Displays click locations and rectangles where clicked
-        self.showClicks()
+            #Render coin animation
+            self.wallet.draw(self.win)
 
-        #Render towers
-        for tower in self.towers:
-            tower.draw(self.win, self.ticks)
+            #Render UI Text Elements
+            self.displayTextUI(self.win)
 
-        #Render enemies
-        for enemy in self.enemies:
-            enemy.draw(self.win, self.ticks)
+            self.menu.draw(self.win)
 
-        #Render coin animation
-        self.wallet.draw(self.win)
+            if SHOW_PATH_BOUNDS and self.showPathBounds:
+                self.drawPathBounds(self.win)
+                self.drawTowerGrid(self.win)
+                self.drawTowerRadius(self.win)
 
-        #Render UI Text Elements
-        self.displayTextUI(self.win)
-
-        self.menu.draw(self.win)
-
-        if SHOW_PATH_BOUNDS and self.showPathBounds:
-            self.drawPathBounds(self.win)
-            self.drawTowerGrid(self.win)
-            self.drawTowerRadius(self.win)
-
-        #Update the window
-        pygame.display.update()
+            #Update the window
+            pygame.display.update()
+            
 
 
     def placeTower(self, towerType, towerLocation, index):

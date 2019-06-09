@@ -55,5 +55,5 @@ class Projectile:
 
 
     # draw base class stub
-    def draw(self, win, ticks):
+    def draw(self, win, ticks, visualMode):
         return

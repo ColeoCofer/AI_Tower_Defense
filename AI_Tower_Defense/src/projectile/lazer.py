@@ -16,7 +16,7 @@ class Lazer(Projectile):
 
 
     # draws a simple line
-    def draw(self, win, ticks):
+    def draw(self, win, ticks, visualMode):
         newColor = []
         for channel in self.color:
             newColor.append(channel + random.randint(-50, 50))

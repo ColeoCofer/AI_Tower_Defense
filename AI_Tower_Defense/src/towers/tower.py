@@ -95,10 +95,7 @@ class Tower:
 
 
     # draw the tower and any of its projectiles/animations
-    def draw(self, win, ticks):
-        ''' Render the tower to the map '''
-        centerX = self.x - (self.width / 2)
-        centerY = self.y - (self.height / 2)
+    def draw(self, win, ticks, visualMode):
 
         i = 0
         # cycle through the prpjectiles in our magazine
@@ -108,7 +105,7 @@ class Tower:
                 del self.projectilesFired[i]
                 continue
             # TODO I think we may want to think about this. It currently is saying that a projectile has hit it's target
-            if self.projectilesFired[i].draw(win, ticks) == True:
+            if self.projectilesFired[i].draw(win, ticks, visualMode) == True:
                 initialDamage = self.projectilesFired[i].damage
                 self.damageDealt += initialDamage
                 
@@ -117,25 +114,31 @@ class Tower:
                 if type(self.projectilesFired[i]) == IceBeam:
                     self.damageDealtOnTurn += 2
                 
-                # replace the projectile with its final animation in the same postion
-                self.addAnimationToQueue(self.projectilesFired[i], ticks)
+                if visualMode:
+                    # replace the projectile with its final animation in the same postion
+                    self.addAnimationToQueue(self.projectilesFired[i], ticks)
+                
                 del self.projectilesFired[i]
             i += 1
 
-        # cycle through our animations for drawing, i.e. explosions
-        # for j in range(len(self.animations)):
-        j = 0
-        while j < len(self.animations):
-            self.animations[j].draw(win)
-            # remove any animations that have exceeded their durations
-            if self.animations[j].attackAnimationStopTime < ticks:
-                del self.animations[j]
-            j += 1
-                # continue
+        if visualMode:
+            ''' Render the tower to the map '''
+            centerX = self.x - (self.width / 2)
+            centerY = self.y - (self.height / 2)
+            # cycle through our animations for drawing, i.e. explosions
+            # for j in range(len(self.animations)):
+            j = 0
+            while j < len(self.animations):
+                self.animations[j].draw(win)
+                # remove any animations that have exceeded their durations
+                if self.animations[j].attackAnimationStopTime < ticks:
+                    del self.animations[j]
+                j += 1
+                    # continue
 
-        # draw health bar and render sprite
-        self.drawHealthBox(win, centerX, centerY)
-        win.blit(self.image, (self.x - (self.width / 2), self.y - (self.height / 2)))
+            # draw health bar and render sprite
+            self.drawHealthBox(win, centerX, centerY)
+            win.blit(self.image, (self.x - (self.width / 2), self.y - (self.height / 2)))
 
 
     # this is called when an enemy has hit a tower to reduce the towers health

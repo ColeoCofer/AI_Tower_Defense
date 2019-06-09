@@ -34,7 +34,7 @@ TOWER_GRID_SIZE = 64
 GRID_DISPLAY_SIZE = 45
 
 TRAINING_MODE = True    #If true will uncap framerates  TODO  not sure this is used anymore
-VISUAL_MODE = False     #Set false to stop rendering
+# VISUAL_MODE = False     #Set false to stop rendering
 FPS = 60
 
 #Player

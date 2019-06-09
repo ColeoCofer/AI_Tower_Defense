@@ -48,7 +48,12 @@ class DeepQlearning:
             #     self.visualMode = True
             # else:
             #     self.visualMode = False
+            # if iteration % 5 == 0 and iteration != 0:
+            #     self.visualMode = True
+            # else:
+            #     self.visualMode = False
             self.visualMode = True
+
             print('\nIteration: ' + str(iteration + 1))
 
             game = Game(self.visualMode, [], None, False, deepQ)

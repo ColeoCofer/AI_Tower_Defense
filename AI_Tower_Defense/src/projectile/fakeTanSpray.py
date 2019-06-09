@@ -24,7 +24,7 @@ class FakeTanSpray(Projectile):
         self.animationCount = 0
         self.attackAnimationDuration = 10
 
-    def draw(self, win, ticks):
+    def draw(self, win, ticks, visualMode):
         ''' Draws the enemy with given images '''
         numImages = len(self.images)
         self.image = self.images[self.animationCount // self.animationSpeed]
