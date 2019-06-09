@@ -13,7 +13,6 @@ class Igloo(Tower):
         self.name = "Igloo"
         self.startingHealth = 80  # TODO change back
         self.health = self.startingHealth
-        self.attackRadius = 250                             # does 0 damage but freezes enemies
         self.coolDown = 1000
         self.damage = 0
         self.weaknesses.append(DamageType.lazer)

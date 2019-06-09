@@ -181,17 +181,23 @@ class Game:
 
                         # place the model chosen tower if possible
                         taken = False
-                        for location in self.towerGrid:
-                            if location[1] == True and location[0][0] == newTower[0][0] and location[0][1] == newTower[0][1]:
-                                taken = True
-                                break
+                        for i in range(len(self.towerGrid)):
+                            if self.towerGrid[i][0][0] == newTower[0][0] and self.towerGrid[i][0][1] == newTower[0][1]:
+                                if self.towerGrid[i][2] != -1:
+                                    # print('********Taken********')
+                                    taken = True
+                                    break
+                                else:
+                                    self.towerGrid[i] = ((self.towerGrid[i][0], True, newTower[2]))
 
+                        
                         # store a copy of the old tower grid state
                         oldTowerGrid = copy.deepcopy(self.towerGrid)
 
                         if not taken:
                             # should place a tower of the given type between 0-5, and with a position from the model
                             self.dqLastTowerPlaced = self.placeTower(newTower[2], newTower[0], -1)
+
                             # print('Tower length = ' + str(len(self.towers)))
 
                         else:
@@ -200,9 +206,10 @@ class Game:
                             self.dqLastTowerPlaced = None
 
                         # store a copy of the new grid state
-                        newTowerGrid = copy.deepcopy(self.towerGrid)
+                        # newTowerGrid = copy.deepcopy(self.towerGrid)
 
-                        self.deepDecisions.append((oldTowerGrid, newTowerGrid, self.dqLastTowerPlaced))
+                        # self.deepDecisions.append((oldTowerGrid, newTowerGrid, self.dqLastTowerPlaced))
+                        self.deepDecisions.append((oldTowerGrid, self.dqLastTowerPlaced))
 
 
                 self.draw()
@@ -275,7 +282,7 @@ class Game:
                 j = 0
                 for j in range(len(self.towerGrid)):
                     if self.towerGrid[j][0][0] == (self.towers[i].position[0] - (TOWER_GRID_SIZE / 2)) and self.towerGrid[j][0][1] == (self.towers[i].position[1] - (TOWER_GRID_SIZE / 2)):
-                        self.towerGrid[j] = ((self.towerGrid[j][0], False, -1))
+                        self.towerGrid[j] = ((self.towerGrid[j][0], False, -1 ))
 
         self.towers = newTowers
 
@@ -413,9 +420,6 @@ class Game:
 
 
     def draw(self):
-
-
-
         '''
         Redraw objects onces per frame.
         Objects will be rendered sequentially,
@@ -662,22 +666,21 @@ class Game:
     def updateDecisions(self):
         # a decision: (oldTowerGrid, newTowerGrid, self.dqLastTowerPlaced) <-- reference to last tower placed
         for decision in self.deepDecisions:
-            newReward = self.getReward(decision[2])
-            # update the model
-            self.deepQagent.update(decision[0], decision[1], newReward)
+            newReward = self.getReward(decision[1])
+            # update the model 
+            # self.deepQagent.update(decision[0], decision[1], newReward)
+            self.deepQagent.update(decision[0], self.towerGrid, newReward)
 
 
     def getReward(self, tower):
         reward = 0
         if tower != None:
-            reward =  tower.damageDealtOnTurn
-            reward -= tower.damageTakenOnTurn
-            reward += self.score # // 10              # reduce the influence of the final score
-            # if self.score == 0:
-            #     reward -= 100
+            reward =  tower.damageDealtOnTurn * 5
+            reward -= tower.damageTakenOnTurn * 2
+            reward += self.score // 2            # reduce the influence of the final score
         else:
             reward += TOWER_POSITION_TAKEN_PENALTY
 
         return reward
 
-TOWER_POSITION_TAKEN_PENALTY = -100.0
+TOWER_POSITION_TAKEN_PENALTY = -1000

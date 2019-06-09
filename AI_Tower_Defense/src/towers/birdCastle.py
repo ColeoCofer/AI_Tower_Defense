@@ -13,7 +13,6 @@ class BirdCastle(Tower):
         self.name = "Bird Castle"
         self.startingHealth = 250                            # pretty tough
         self.health = self.startingHealth
-        self.attackRadius = 300
         self.weaknesses.append(DamageType.lazer)
         self.weaknesses.append(DamageType.lightning)    # not weak to fire
 

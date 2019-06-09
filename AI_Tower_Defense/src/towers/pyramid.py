@@ -13,7 +13,6 @@ class Pyramid(Tower):
         self.name = "Pyramid"
         self.startingHealth = 450                                # tough
         self.health = self.startingHealth
-        self.attackRadius = 300
         self.weaknesses.append(DamageType.lightning)
         self.projectileColor = (200, 69, 50)
         self.healthBarYOffset = 30
