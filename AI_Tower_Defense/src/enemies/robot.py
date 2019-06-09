@@ -25,6 +25,7 @@ class Robot(AttackingEnemy):
         self.height = 54
         self.numImages = 3
         self.animationSpeed = 5
+        self.healthBarYOffset = 5
 
         self.spawnChance = 0.4
         self.spawnChanceLimit = 0.85
