@@ -14,7 +14,7 @@ from game.game import Game
 
 class QLearning:
 
-    def __init__(self, visualMode, loadQTableFromFile, saveQTableToFile, printGraphs):
+    def __init__(self, visualMode, trainingMode, loadQTableFromFile, saveQTableToFile, printGraphs):
         self.epsilon    = EPSILON
 
         # Array of position indices to track which locations have a tower placed there. -1 for empty position, and tower type index otherwise
@@ -24,6 +24,7 @@ class QLearning:
 
         #Flags
         self.visualMode = visualMode
+        self.trainingMode = trainingMode
         self.loadQTableFromFile = loadQTableFromFile
         self.saveQTableToFile = saveQTableToFile
         self.printGraphs = printGraphs
@@ -81,9 +82,11 @@ class QLearning:
 
     def applyReward(self, score):
         ''' Updates the q-table for each placed tower with the overall reward / game score '''
-        for location in range(len(self.towerPlacements)):
-            if self.towerPlacements[location] != -1:
-                self.updateQtable(self.towerPlacements[location], location, score)
+        ''' Only updates Q Table when training mode is set'''
+        if self.trainingMode:
+            for location in range(len(self.towerPlacements)):
+                if self.towerPlacements[location] != -1:
+                    self.updateQtable(self.towerPlacements[location], location, score)
 
     def updateQtable(self, tower, placement, score):
         ''' Updates the q-table after finishing one game '''
@@ -113,7 +116,7 @@ class QLearning:
 
         # Load game scores
         qtableScoresFile = open("qLearningGameScores.txt", "r")
-        scoresString = qtableScoresFile.readLine()
+        scoresString = qtableScoresFile.readline()
         scores = [int(x) for x in scoresString.split(',')]
         print(f"Test Scores: {scores}")
         self.gameScores = scores

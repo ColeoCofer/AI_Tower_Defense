@@ -23,8 +23,9 @@ GAME_MODE = MODE.deepQlearning  # Select which mode to run the game in
 PARALLEL_MODE  = True          # Run a game on each processor core (only when visual_mode is off)
 COLLECT_WHOLE_GAME_DATA = False  # Game data collection for the GA 
 COLLECT_INNER_GAME_DATA = True  # "     "
+Q_TRAINING_MODE = True         # Update Q table after every game
 VISUAL_MODE    = False          # Display Graphics
-READ_FILE      = False          # Read model from file and continue training from it
+READ_FILE      = True          # Read model from file and continue training from it
 SAVE_TO_DISK   = True          # Collect and store data
 PRINT_GRAPHS   = False          # Prints graphs of score averages
 
@@ -57,9 +58,9 @@ def main():
     elif GAME_MODE == MODE.qLearning:
 
         if PARALLEL_MODE:
-            qLearning = ParallelQLearning(VISUAL_MODE, READ_FILE, SAVE_TO_DISK, PRINT_GRAPHS)
+            qLearning = ParallelQLearning(VISUAL_MODE, Q_TRAINING_MODE, READ_FILE, SAVE_TO_DISK, PRINT_GRAPHS)
         else:
-            qLearning = SerialQLearning(VISUAL_MODE, READ_FILE, SAVE_TO_DISK, PRINT_GRAPHS)
+            qLearning = SerialQLearning(VISUAL_MODE, Q_TRAINING_MODE, READ_FILE, SAVE_TO_DISK, PRINT_GRAPHS)
         qLearning.run()
 
     elif GAME_MODE == MODE.deepQlearning:
@@ -72,6 +73,8 @@ def displaySettings():
     ''' Displays the current game settings '''
     print(f"\n=== AI Tower Defense Settings ===")
     print(f"Game Mode:              {GAME_MODE.name}")
+    if GAME_MODE.name == "qLearning":
+        print(f"Training Mode:          {Q_TRAINING_MODE}")
     print(f"Parallel Mode:          {PARALLEL_MODE}")
     print(f"Visual Mode:            {VISUAL_MODE}")
     print(f"Load model from file:   {READ_FILE}")
