@@ -13,7 +13,7 @@ from game.game import Game
 
 DEEP_ITERATIONS = 1000
 GENERATIONS_BETWEEN_UPDATE = 50
-PARALLEL_MODE = True
+PARALLEL_MODE = False
 
 # the game expects the following signature:
 #      Game(visualMode, towers, gameRecord, collectInnerGameData, deepQagent)
@@ -36,14 +36,11 @@ class DeepQlearning:
         highLevel = 0
 
         for iteration in range(DEEP_ITERATIONS):
-            # if (iteration == DEEP_ITERATIONS - 1) and (not PARALLEL_MODE):   
-            #     self.visualMode = True
-            if iteration % 10 == 0:
+            if iteration % 10 == 0 and iteration != 0:
                 self.visualMode = True
-            elif (iteration - 1) % 10 == 0:
-                self.visualMode = True
-            else:
+            else: 
                 self.visualMode = False
+            
 
             print('\nIteration: ' + str(iteration + 1))
 
