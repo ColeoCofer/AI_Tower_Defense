@@ -56,7 +56,7 @@ Keeps track of score.
 class Game:
 
     def __init__(self, visualMode, towers, gameRecord, collectInnerGameData, deepQagent):
-        
+
         self.visualMode           = visualMode
         self.gameRecord           = gameRecord
         self.collectInnerGameData = collectInnerGameData
@@ -122,8 +122,8 @@ class Game:
         self.dqCurrentReward   = 0
         # deep Q reward things?? the damage dealt worries me for the igloo
         self.dqDamageDealt     = 0
-        self.dqDamageTaken     = 0  
-        self.deepDecisions     = []      
+        self.dqDamageTaken     = 0
+        self.deepDecisions     = []
 
         self.isPaused          = False
         self.currSelectedTower = None   #Type of tower currently being selected from menu
@@ -163,13 +163,13 @@ class Game:
                 # entry point for the deepQ agent to make decisions and learn from
 
                 # all game states are the full tower grid of tuples
-                # signature for update model:   update(oldGameState, newGameState, reward):   
+                # signature for update model:   update(oldGameState, newGameState, reward):
                 #                                       oldGameState is the tower arrangment that is a result of the previous arrangment,
                 #                                       newGameState is the current tower arrangement
                 # signature for next action:    getNextAction(currentGameState):
                 if self.deepQagent != None:
                     if self.wallet.coins >= DEEP_BUYING_THRESHOLD and len(self.towers) <= NUMBER_OF_STARTING_TOWERS:
-                        
+
                         # this is returning a tower grid tuple from the agent
                         newTower = self.deepQagent.getNextAction(self.towerGrid)
 
@@ -179,17 +179,17 @@ class Game:
                             if location[1] == True and location[0][0] == newTower[0][0] and location[0][1] == newTower[0][1]:
                                 taken = True
                                 break
-                        
+
                         # store a copy of the old tower grid state
                         oldTowerGrid = copy.deepcopy(self.towerGrid)
-                        
+
                         if not taken:
                             # should place a tower of the given type between 0-5, and with a position from the model
                             self.dqLastTowerPlaced = self.placeTower(newTower[2], newTower[0], -1)
                             # print('Tower length = ' + str(len(self.towers)))
 
                         else:
-                            # this will be a flag to say that a tower was placed on an existing tower location when we 
+                            # this will be a flag to say that a tower was placed on an existing tower location when we
                             # calculate the results later
                             self.dqLastTowerPlaced = None
 
@@ -198,7 +198,7 @@ class Game:
 
                         self.deepDecisions.append((oldTowerGrid, newTowerGrid, self.dqLastTowerPlaced))
 
-            
+
             if self.visualMode:
                 self.draw()
 
@@ -349,12 +349,10 @@ class Game:
 
         for enemy in self.enemies:
             if enemy.x > WIN_WIDTH:
-                self.health -= enemy.startingHealth
-
+                self.health -= enemy.initialHealth
 
             if enemy.health <= 0:
-                # print('Enemy Died!!')
-                self.score += enemy.startingHealth
+                self.score += enemy.initialHealth
                 self.wallet.coins += enemy.coinReward
 
             if enemy.x > WIN_WIDTH or enemy.health <= 0:
@@ -384,9 +382,9 @@ class Game:
                 self.enemiesSpawnedThisLevel += 1
                 self.updateEnemyHealth()
                 self.updateEnemyWalkingSpeed()
-                
-                newEnemy.health += self.addedHealth
-                # newEnemy.startingHealth = newEnemy.health
+
+                # newEnemy.health += self.addedHealth
+                newEnemy.startingHealth +=  self.addedHealth
                 newEnemy.velocity += self.addedSpeed
                 self.enemies.append(newEnemy)
         else:
@@ -450,13 +448,13 @@ class Game:
     def placeTower(self, towerType, towerLocation, index):
         if type(towerType) != int:
             towerType = TOWER_TYPES.index(towerType)
-        
+
         newTowerLocation = (towerLocation[0] + (TOWER_GRID_SIZE / 2), towerLocation[1] + (TOWER_GRID_SIZE / 2))
         newTower = TOWER_TYPES[towerType](newTowerLocation)
-        
+
         # this is just for the GA
         newTower.indexForRecordTable = index
-        
+
         self.towers.append(newTower)
         self.showPathBounds = False
         self.wallet.spendCoins(newTower.cost)
@@ -654,7 +652,7 @@ class Game:
         # a decision: (oldTowerGrid, newTowerGrid, self.dqLastTowerPlaced) <-- reference to last tower placed
         for decision in self.deepDecisions:
             newReward = self.getReward(decision[2])
-            # update the model 
+            # update the model
             self.deepQagent.update(decision[0], decision[1], newReward)
 
 

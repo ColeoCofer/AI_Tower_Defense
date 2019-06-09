@@ -22,6 +22,7 @@ class Dragon(Enemy):
         self.animationSpeed = 5
         self.healthBarYOffset = 30
         self.images = []
+        self.healthBarYOffset = 2
 
         self.spawnChance = 0.5
         self.spawnChanceLimit = 0.9

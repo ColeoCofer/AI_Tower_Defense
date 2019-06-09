@@ -9,8 +9,9 @@ from constants.animationConstants import *
 class Enemy:
 
     def __init__(self, yOffset):
-        self.startingHealth = 5
-        self.health = self.startingHealth
+        self.initialHealth = 5                   # Amt of health at level 1
+        self.startingHealth = self.initialHealth # Starting health at each level (it increments after x number of levels go by)
+        self.health = self.startingHealth        # Current health
         self.levelHealth = 0
         self.coinReward = 5
         self.velocity = 0
@@ -28,7 +29,7 @@ class Enemy:
         self.image = None            # Current image to render
         self.healthBarWidth = 50
         self.healthBarHeight = 10
-        self.healthBarYOffset = 10    #Larger numbers will move the health bar closer to the enemies head
+        self.healthBarYOffset = 2    #Larger numbers will move the health bar closer to the enemies head
         self.numImages = 0
         self.yOffset = yOffset
 
@@ -78,7 +79,8 @@ class Enemy:
         ''' Draws a health box above each character '''
         if self.health > 0:
             healthBarX = self.x - (self.healthBarWidth / 2)
-            healthBarY = self.y - self.height + self.healthBarYOffset
+            # healthBarY = self.y - self.height + self.healthBarYOffset
+            healthBarY = centerY - (self.height / 2) + (self.healthBarYOffset)
             if self.health == self.levelHealth:
                 pygame.draw.rect(win, HEALTH_GREEN, (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight)) #Outline of health bar
                 pygame.draw.rect(win, HEALTH_RED, (healthBarX, healthBarY, self.healthBarWidth, self.healthBarHeight))   #Inside of health bar

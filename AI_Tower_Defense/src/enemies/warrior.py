@@ -29,6 +29,7 @@ class Warrior(AttackingEnemy):
         self.attackingImages = []
         self.isAttacking = False
         self.animationSpeed = 2
+        self.healthBarYOffset = 10
 
         self.spawnChance = 0.3
         self.spawnChanceLimit = 0.9
