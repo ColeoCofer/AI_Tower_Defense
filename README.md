@@ -17,6 +17,8 @@ I'm currently using `3.7.3` and it works great.
 Simply run `python3 main.py` located in the `AI_Tower_Defense/src/` directory.
 See main.py to change the game mode. For example, set `GAME_MODE = MODE.manual` to play the game manually.
 
+Sample video of gameplay: https://www.youtube.com/watch?v=bxZmVyfHosE
+
 ### Assets
 All assets are royalty free - mostly all provided from https://opengameart.org/art-search?keys=tower&page=1.
 Specific links will be posted in the near future.
