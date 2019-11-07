@@ -30,8 +30,9 @@ I'm currently using `3.7.3` and it works great.
 We were very pleased at the outcome of our AI agents. The most successful agent was trained using a genetic algorithm, which ended up exploiting the game in a manner that we did not expect. The agent received much higher scores than us humans could. When analyzing it's tower placements after training, we discovered that it concentrated towers at the end of the path near the "City" tower - which is a given default tower that each player gets and is placed at the end of the path. This made sense to us because the City can also attack, and you are wasting resources by putting towers near the front during the early game. After learning about this and changing our tactics we could achieve higher scores than the AI, but not by much. 
 
 # Genetic Algorithm
-Here is a graph of an agent playing games trained using a genetic algorithm. Each data point is an average score for ten games that ran in parallel, for a total of 1000 games. You can see it getting better and better scores as it learns more about the game play.
-![Example of the enemy and tower assets.](https://raw.githubusercontent.com/ColeoCofer/AI_Tower_Defense/master/Images/<name.png>)
+Here is a graph of an agent playing games trained using a genetic algorithm. Each data point is an average score for ten games that ran in parallel, for a total of 1000 games. You can see it getting better and better scores as it learns more about the game play. <br>
+![Results from GA agent.](https://raw.githubusercontent.com/ColeoCofer/AI_Tower_Defense/master/AI_Tower_Defense/Images/GA_Results.png)
+![Example tower placement from a randomly selected game.](https://raw.githubusercontent.com/ColeoCofer/AI_Tower_Defense/master/AI_Tower_Defense/Images/GA_Gameplay.png)
 
 For more information about the algorithms used, please view our slide deck: https://docs.google.com/presentation/d/1mFf90QteQjmz9a49Rur2uVP5XGhfNgp2cQkRj2i9yeQ/edit?usp=sharing
 
@@ -39,7 +40,7 @@ Sample video of gameplay: https://www.youtube.com/watch?v=bxZmVyfHosE
 
 ### Assets
 All assets are royalty free - provided from https://opengameart.org/art-search?keys=tower&page=1.
-![Example of the enemy and tower assets.](https://raw.githubusercontent.com/ColeoCofer/AI_Tower_Defense/master/Images/<name.png>)
+![Example of the enemy and tower assets.](https://raw.githubusercontent.com/ColeoCofer/AI_Tower_Defense/master/AI_Tower_Defense/Images/Assets.png)
 
 ### License
 This project is licensed under the terms of the MIT license.
