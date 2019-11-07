@@ -4,7 +4,7 @@ Artificial Intelligence Project PSU 2019 AI Tower Defense Game
 We built this tower defense game from scratch using Pygame with the motivation of training an AI agent that could exploit flaws in the games mechanics and ultimately outplay us at the game. 
 
 ### Modes
-There is a manual game playing mode with an interface for purchasing and placing towers, as well as a training mode for three different types of AI agents including: Genetics Algorithm, Q-Learning, and Deep Q-Learning. This mode does not render the screen for added efficiency, and will run multiple games in parallel it `PARALLEL_MODE` is set to `True`.
+There is a manual game playing mode with an interface for purchasing and placing towers, as well as a training mode for three different types of AI agents including: Genetics Algorithm, Q-Learning, and Deep Q-Learning. This mode does not render the screen for added efficiency, and will run multiple games in parallel if `PARALLEL_MODE` is set to `True`.
 
 ### Setup
 Install the following packages:
@@ -32,6 +32,7 @@ We were very pleased at the outcome of our AI agents. The most successful agent 
 # Genetic Algorithm
 Here is a graph of an agent playing games trained using a genetic algorithm. Each data point is an average score for ten games that ran in parallel, for a total of 1000 games. You can see it getting better and better scores as it learns more about the game play. <br>
 ![Results from GA agent.](https://raw.githubusercontent.com/ColeoCofer/AI_Tower_Defense/master/AI_Tower_Defense/Images/GA_Results.png)
+<br>Here is a random game sample to see how the GA agent placed towers after it figured out how to play the game.
 ![Example tower placement from a randomly selected game.](https://raw.githubusercontent.com/ColeoCofer/AI_Tower_Defense/master/AI_Tower_Defense/Images/GA_Gameplay.png)
 
 For more information about the algorithms used, please view our slide deck: https://docs.google.com/presentation/d/1mFf90QteQjmz9a49Rur2uVP5XGhfNgp2cQkRj2i9yeQ/edit?usp=sharing
