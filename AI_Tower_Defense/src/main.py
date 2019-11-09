@@ -7,6 +7,7 @@ from experiment.qLearning.parallelQLearning import ParallelQLearning
 from experiment.geneticAlgorithm.parallelGA import ParallelGeneticAlgorithm
 from experiment.geneticAlgorithm.serialGA import SerialGeneticAlgorithm
 from experiment.deepQlearning import DeepQlearning
+from ui.StartGameUI import StartUpWindow
 
 from agent.geneticAgent import GeneticAgent
 from constants.gameConstants import *
@@ -35,6 +36,8 @@ PRINT_GRAPHS   = False          # Prints graphs of score averages
 
 def main():
     ''' Entry point for game '''
+
+    window = StartUpWindow()
 
     #Setup Game
     pygame.init()
