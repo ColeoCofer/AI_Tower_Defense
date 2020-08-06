@@ -1,4 +1,4 @@
-# general constants
+# General constants
 X   = 0
 Y   = 1
 ON  = True
